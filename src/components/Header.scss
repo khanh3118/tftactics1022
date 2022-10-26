@@ -1,0 +1,44 @@
+#root-header {
+  width: 100%;
+  background-color: #0d202b;
+  .wrapper {
+    width: 100%;
+    max-width: 1200px;
+    height: 50px;
+    display: flex;
+    margin: 0 auto;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 15px;
+    .icon-version {
+      display: flex;
+      align-items: center;
+      margin-right: 5px;
+      .version-dropdown {
+        span {
+          
+        }
+      }
+      .icon {
+        margin-right: 15px;
+        img {
+          height: 22px;
+          vertical-align: middle;
+        }
+      }
+    }
+    .search-bar {
+      flex-grow: 1;
+      margin: 0 150px;
+    }
+    .download {
+      .download-btn {
+        background-color: rgb(64, 128, 176);
+        border-radius: 4px;
+        span {
+          text-transform: uppercase;
+        }
+      }
+    }
+  }
+}
