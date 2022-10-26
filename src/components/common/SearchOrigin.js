@@ -6,18 +6,17 @@ import SelectDropdown from "./SelectDropdown";
 
 function SearchOrigin(props) {
   const [text, setText] = useState("");
-  const [originSearchClass, setoriginSearchClass] = useState("");
   function hanleChange(e) {
     setText(e.target.value);
   }
-  function hanleFocus() {
-    setoriginSearchClass("focused");
+  function hanleFocus(e) {
+    e.target.closest("#origin-search").className = `${props.className} focused`;
   }
-  function hanleBlur() {
-    setoriginSearchClass("");
+  function hanleBlur(e) {
+    e.target.closest("#origin-search").className = `${props.className}`;
   }
   return (
-    <div id="origin-search" className={originSearchClass}>
+    <div id="origin-search" className={props.className}>
       {props.leftContentPlaceholder ? (
         <div className="origin">
           <SelectDropdown
@@ -35,8 +34,8 @@ function SearchOrigin(props) {
             type="text"
             placeholder={props.placeholder}
             value={text}
-            onFocus={hanleFocus}
-            onBlur={hanleBlur}
+            onFocus={(e) => hanleFocus(e)}
+            onBlur={(e) => hanleBlur(e)}
           />
           <FontAwesomeIcon
             className="search-icon"

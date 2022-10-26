@@ -14,7 +14,7 @@ function Select(props) {
     return "dropdown-item";
   }
   return (
-    <div id="default-select" onClick={hanleClick}>
+    <div className={props.className} id="default-select" onClick={hanleClick}>
       <div className="value">
         <span>{props.placeholder}</span>
       </div>
@@ -28,6 +28,7 @@ function Select(props) {
               <Button
                 className={dropdownItemClass(item?.isSelected)}
                 btnText={item.text}
+                key={item}
               />
             );
           })}

@@ -1,7 +1,7 @@
 import "./Header.scss";
-import SelectDropdown from "./common/SelectDropdown";
-import SearchOrigin from "./common/SearchOrigin";
-import Button from "./common/Button";
+import SelectDropdown from "../common/SelectDropdown";
+import SearchOrigin from "../common/SearchOrigin";
+import Button from "../common/Button";
 
 function Header() {
   return (

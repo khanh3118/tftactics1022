@@ -1,0 +1,25 @@
+#content-layout-default {
+  .wrapper {
+    display: grid;
+    grid-template-columns: 27.8% auto;
+    grid-template-rows: auto;
+    .navigation {
+      border-right: 1px solid #17313a;
+      padding-right: 30px;
+      .title {
+        min-height: 35px;
+        padding-bottom: 20px;
+        border-bottom: 1px solid #17313a;
+        span {
+          display: block;
+          min-height: 32px;
+          font-size: 21px;
+          font-weight: 600;
+        }
+      }
+    }
+    .main-content {
+      padding-top: 20px;
+    }
+  }
+}

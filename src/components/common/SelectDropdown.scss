@@ -6,7 +6,7 @@
   padding: 6px 12px;
   border-radius: 4px;
   min-width: 100px;
-  width: 100%;
+  width: max-content;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -22,6 +22,7 @@
     width: 100%;
     left: 0;
     background-color: #102531;
+    z-index: 1;
     .dropdown-item {
       transition: all 0.3s;
       height: 40px;
