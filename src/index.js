@@ -2,10 +2,12 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 import "./index.css";
 import reportWebVitals from "./reportWebVitals";
-import { createBrowserRouter, RouterProvider, Route } from "react-router-dom";
-import RootLayout from "./layouts/RootLayout";
-import Database from "./views/Database";
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import RootLayout from "./layouts/Root";
+import Database, { loader as databaseLoader } from "./views/Database/Database";
 import ItemBuilder from "./views/ItemBuilder";
+import Champions from "./views/Database/Contents/Champions";
+import ChampionsStats from "./views/Database/Contents/ChampionsStats";
 
 const router = createBrowserRouter([
   {
@@ -15,14 +17,15 @@ const router = createBrowserRouter([
       {
         path: "database",
         element: <Database />,
+        loader: databaseLoader,
         children: [
           {
             path: "champions",
-            element: <div>champions</div>,
+            element: <Champions />,
           },
           {
             path: "championstats",
-            element: <div>championstats</div>,
+            element: <ChampionsStats />,
           },
           {
             path: "origins",
