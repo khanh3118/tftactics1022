@@ -3,12 +3,18 @@ import { Outlet, NavLink } from "react-router-dom";
 import SelectDropDown from "../../components/common/SelectDropdown";
 import SearchOrigin from "../../components/common/SearchOrigin";
 import styled from "styled-components";
-
-export function loader() {
-  console.log("object");
-}
+import { useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
 
 function Database() {
+  const [searchText, setSearchText] = useState("");
+  const navigate = useNavigate();
+  useEffect(() => {
+    navigate("/database/origins");
+  }, []);
+  function hanleSearch(searchText) {
+    setSearchText(searchText);
+  }
   return (
     <DatabaseDefault id="database-default">
       <ContentMainLayout
@@ -63,13 +69,14 @@ function Database() {
               <SearchOrigin
                 placeholder="Search for a champion..."
                 className="search"
+                hanleSearch={hanleSearch}
               />
             </div>
           </Title>
         }
         mainContent={
           <MainContent className="main-content">
-            <Outlet />
+            <Outlet context={searchText} />
           </MainContent>
         }
       />

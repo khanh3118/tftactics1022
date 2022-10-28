@@ -20,6 +20,7 @@ function ContentLayout(props) {
 export default ContentLayout;
 
 const Wrapper = styled.div`
+  min-height: 100vh;
   display: grid;
   grid-template-columns: 27.8% auto;
   grid-template-rows: auto;

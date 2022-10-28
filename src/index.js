@@ -4,12 +4,25 @@ import "./index.css";
 import reportWebVitals from "./reportWebVitals";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import RootLayout from "./layouts/Root";
-import Database, { loader as databaseLoader } from "./views/Database/Database";
+import Database from "./views/Database/Database";
 import ItemBuilder from "./views/ItemBuilder";
 import Champions from "./views/Database/Contents/Champions";
 import ChampionsStats from "./views/Database/Contents/ChampionsStats";
+import Origins from "./views/Database/Contents/Origins";
+import Classes from "./views/Database/Contents/Classes";
+import Login from "./views/Manager/Login";
+import "./firebase/main";
+import SynergysManager from "./views/Manager/SynergysManager";
 
 const router = createBrowserRouter([
+  {
+    path: "login",
+    element: <Login />,
+  },
+  {
+    path: "manager/origins",
+    element: <SynergysManager />,
+  },
   {
     path: "/",
     element: <RootLayout />,
@@ -17,7 +30,6 @@ const router = createBrowserRouter([
       {
         path: "database",
         element: <Database />,
-        loader: databaseLoader,
         children: [
           {
             path: "champions",
@@ -29,11 +41,11 @@ const router = createBrowserRouter([
           },
           {
             path: "origins",
-            element: <div>origins</div>,
+            element: <Origins />,
           },
           {
             path: "classes",
-            element: <div>classes</div>,
+            element: <Classes />,
           },
           {
             path: "rolling",
@@ -48,17 +60,13 @@ const router = createBrowserRouter([
       {
         path: "itembuilder",
         element: <ItemBuilder />,
-      }
+      },
     ],
   },
 ]);
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
-root.render(
-  <React.StrictMode>
-    <RouterProvider router={router} />
-  </React.StrictMode>
-);
+root.render(<RouterProvider router={router} />);
 
 // If you want to start measuring performance in your app, pass a function
 // to log results (for example: reportWebVitals(console.log))

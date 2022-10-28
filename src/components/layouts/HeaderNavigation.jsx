@@ -1,7 +1,7 @@
 import { NavLink } from "react-router-dom";
 import styled from "styled-components";
 
-function HeaderNavigation(props) {
+function HeaderNavigation() {
   return (
     <HeaderNavigationDefault id="header-navigation">
       <div className="wrapper">
@@ -46,8 +46,8 @@ function HeaderNavigation(props) {
             </NavLink>
           </li>
           <li>
-            <NavLink to="patchnotes" className="header-item">
-              Patch Notes
+            <NavLink to="manager/origins" className="header-item">
+              Manager
             </NavLink>
           </li>
         </ul>
@@ -72,6 +72,7 @@ const HeaderNavigationDefault = styled.div`
       display: flex;
       list-style: none;
       flex-grow: 1;
+      margin-bottom: 0;
       li {
         flex-grow: 1;
         height: 100%;

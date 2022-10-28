@@ -1,8 +1,13 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { solid } from "@fortawesome/fontawesome-svg-core/import.macro"; // <-- import styles to be used
+import { solid } from "@fortawesome/fontawesome-svg-core/import.macro";
 import styled from "styled-components";
+import AvatarChampion from "../../../components/common/AvatarChampion";
+import SynergyIcon from "../../../components/common/SynergyIcon";
+import { useState } from "react";
+import championsService from "../../../services/champions";
 
 function Champions() {
+  const [championsData, setChampionsData] = useState([]);
   function hanleClick(e) {
     let a = document.querySelectorAll(".table-header-item");
     a.forEach((item) => {
@@ -11,6 +16,10 @@ function Champions() {
     e.target.className = "table-header-item active";
     console.log(e.target.innerText);
   }
+  useState(async () => {
+    let data = await championsService.getAllChampions();
+    setChampionsData(data);
+  }, []);
   return (
     <ChampionsDefault id="champions-default">
       <div className="wrapper">
@@ -36,33 +45,38 @@ function Champions() {
             </div>
           </div>
           <div className="table-items">
-            <div className="table-item">
-              <div className="item-name-img">
-                <img
-                  src="https://rerollcdn.com/characters/Skin/7.5/AoShin.png"
-                  alt="Ao Shin"
-                />
-                <span>Ao shin</span>
-              </div>
-              <div className="item-origin">
-                <img
-                  src="https://rerollcdn.com/icons/tempest.png"
-                  alt="Tempest"
-                />
-                <span>Tempest</span>
-              </div>
-              <div className="item-class">
-                <img
-                  src="https://rerollcdn.com/icons/dragon.png"
-                  alt="Dragon"
-                />
-                <span>Dragon</span>
-              </div>
-              <div className="item-cost">
-                <FontAwesomeIcon className="coin" icon={solid("coins")} />
-                <span>8</span>
-              </div>
-            </div>
+            {championsData.map((item, index) => {
+              return (
+                <div key={index} className="table-item">
+                  <div className="item-name-img">
+                    <AvatarChampion
+                      img_src={item.img_link}
+                      width="40px"
+                      height="40px"
+                      className="item-name-img-l"
+                      cost={item.stats.cost}
+                    />
+                    <span>{item.name}</span>
+                  </div>
+                  <SynergyIcon
+                    name={item.origin[0].name}
+                    img_src={item.origin[0].img}
+                    img_alt={item.origin[0].name}
+                    className="item-origin"
+                  />
+                  <SynergyIcon
+                    name={item.class[0].name}
+                    img_src={item.class[0].img}
+                    img_alt={item.class[0].name}
+                    className="item-class"
+                  />
+                  <div className="item-cost">
+                    <FontAwesomeIcon className="coin" icon={solid("coins")} />
+                    <span>{item.stats.cost}</span>
+                  </div>
+                </div>
+              );
+            })}
           </div>
         </div>
       </div>
@@ -129,31 +143,12 @@ const ChampionsDefault = styled.div`
           }
           .item-name-img {
             padding-left: 20px;
-            img {
-              vertical-align: middle;
-              width: 40px;
-              height: 40px;
+            .item-name-img-l {
               margin-right: 10px;
-              border: 1px solid #fff;
-              border-image: linear-gradient(
-                to bottom right,
-                #b89d27 0,
-                #fff 25%,
-                #b89d27 50%,
-                #fff 75%,
-                #b89d27
-              );
-              border-image-slice: 1;
             }
           }
           .item-origin,
           .item-class {
-            img {
-              vertical-align: middle;
-              height: 22px;
-              width: 22px;
-              margin-right: 10px;
-            }
             span {
               color: white;
             }

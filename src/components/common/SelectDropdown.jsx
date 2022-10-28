@@ -51,7 +51,7 @@ const SelectDefault = styled.div`
   cursor: pointer;
   background-color: #123040;
   color: white;
-  padding: 6px 12px;
+  padding: 4px 12px;
   border-radius: 4px;
   min-width: 100px;
   width: max-content;

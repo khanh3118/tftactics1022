@@ -9,6 +9,7 @@ function SearchOrigin(props) {
   const [isFocus, setIsFocus] = useState(false);
   function hanleChange(e) {
     setText(e.target.value);
+    props.hanleSearch(e.target.value);
   }
   return (
     <OriginSeachDefault isFocus={isFocus} id="origin-search" className={props.className}>
@@ -57,7 +58,7 @@ const OriginSeachDefault = styled.div`
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 6px 10px;
+    padding: 4px 10px;
     width: 100%;
     .search {
       display: flex;

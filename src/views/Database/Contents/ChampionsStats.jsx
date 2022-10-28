@@ -34,7 +34,7 @@ function ChampionsStats() {
             <span>offense</span>
           </div>
           <div className="btn">
-            <span>offense</span>
+            <span>defense</span>
           </div>
           <div className="level">
             <FontAwesomeIcon
