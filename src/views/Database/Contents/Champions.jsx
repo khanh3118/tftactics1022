@@ -9,23 +9,80 @@ import { useOutletContext } from "react-router-dom";
 
 function Champions() {
   const { championsData, synergysData } = useContext(DatabaseContext);
-  const [ c_data, setC_data] = useState(championsData);
+  const [c_data, setC_data] = useState(
+    championsData.sort((a, b) => a.champion_name.localeCompare(b.champion_name))
+  );
+  const [increaseByName, setIncreaseByName] = useState(false);
+  const [increaseByCost, setIncreaseByCost] = useState(false);
   const searchText = useOutletContext();
-  // useEffect(() => {
-  //   setC_data(championsData.filter(item => item.champion_name.toLowerCase().includes(searchText.trim().toLowerCase())));
-  // }, [searchText]);
+  useEffect(() => {
+    setC_data(
+      championsData.filter((item) =>
+        item.champion_name
+          .toLowerCase()
+          .includes(searchText.trim().toLowerCase())
+      )
+    );
+  }, [searchText]);
   function hanleClick(e) {
     let a = document.querySelectorAll(".table-header-item");
     a.forEach((item) => {
       item.className = "table-header-item";
     });
-    e.target.className = "table-header-item active";
-    console.log(e.target.innerText);
+    let sortType = e.target.innerText;
+    if (sortType === "Champion") {
+      setIncreaseByCost(false);
+      if (increaseByName === false) {
+        setIncreaseByName(true);
+        setC_data([
+          ...championsData.sort((a, b) =>
+            a.champion_name.localeCompare(b.champion_name)
+          ),
+        ]);
+        e.target.className = "table-header-item increase";
+      } else {
+        setIncreaseByName(false);
+        setC_data([
+          ...championsData.sort((a, b) =>
+            b.champion_name.localeCompare(a.champion_name)
+          ),
+        ]);
+        e.target.className = "table-header-item decrease";
+      }
+    }
+    if (sortType === "Cost") {
+      setIncreaseByName(false);
+      if (increaseByCost === false) {
+        setIncreaseByCost(true);
+        setC_data([
+          ...championsData.sort((a, b) =>
+            a.champion_cost.localeCompare(b.champion_cost)
+          ),
+        ]);
+        e.target.className = "table-header-item increase";
+      } else {
+        setIncreaseByCost(false);
+        setC_data([
+          ...championsData.sort((a, b) =>
+            b.champion_cost.localeCompare(a.champion_cost)
+          ),
+        ]);
+        e.target.className = "table-header-item decrease";
+      }
+    }
   }
   function getSynergyImg(synergyName) {
     return synergysData.find(
       (item) => item.synergy_name.toLowerCase() === synergyName
     ).synergy_image;
+  }
+  function getSynergysData(arrSynergy) {
+    return synergysData.filter((item) =>
+      arrSynergy.includes(item.synergy_name.toLowerCase())
+    );
+  }
+  function getItemsData(arrItems) {
+    console.log(arrItems);
   }
   return (
     <ChampionsDefault id="champions-default">
@@ -52,38 +109,55 @@ function Champions() {
             </div>
           </div>
           <div className="table-items">
-            {c_data
-            .sort((a, b) => a.champion_name.localeCompare(b.champion_name))
-            .map((item, index) => {
+            {c_data.map((item, index) => {
               return (
                 <div key={index} className="table-item">
                   <div className="item-name-img">
-                    <AvatarChampion
-                      img_src={item.champion_img_link}
-                      width="40px"
-                      height="40px"
-                      className="item-name-img-l"
-                      cost={item.champion_cost}
-                    />
-                    <span>{item.champion_name}</span>
+                    <div className="item-name-img-wrapper">
+                      <AvatarChampion
+                        img_src={item.champion_img_link}
+                        width="40px"
+                        height="40px"
+                        className="item-name-img-l"
+                        cost={item.champion_cost}
+                        champion_name={item.champion_name}
+                        synergysData={getSynergysData(
+                          item.champion_origin.concat(item.champion_class)
+                        )}
+                        itemsData={getItemsData(item.champion_items)}
+                      />
+                      <span>{item.champion_name}</span>
+                    </div>
                   </div>
                   {item.champion_origin.length > 0 ? (
-                    <SynergyIcon
-                      name={item.champion_origin[0]}
-                      img_src={getSynergyImg(item.champion_origin[0])}
-                      img_alt={item.champion_origin[0]}
-                      className="item-origin"
-                    />
+                    <div className="item-origin">
+                      {item.champion_origin.map((originName) => {
+                        return (
+                          <SynergyIcon
+                            key={originName}
+                            name={originName}
+                            img_src={getSynergyImg(originName)}
+                            img_alt={originName}
+                          />
+                        );
+                      })}
+                    </div>
                   ) : (
                     <div className="item-origin"></div>
                   )}
                   {item.champion_class.length > 0 ? (
-                    <SynergyIcon
-                    name={item.champion_class[0]}
-                    img_src={getSynergyImg(item.champion_class[0])}
-                    img_alt={item.champion_class[0]}
-                    className="item-class"
-                  />
+                    <div className="item-class">
+                      {item.champion_class.map((className) => {
+                        return (
+                          <SynergyIcon
+                            key={className}
+                            name={className}
+                            img_src={getSynergyImg(className)}
+                            img_alt={className}
+                          />
+                        );
+                      })}
+                    </div>
                   ) : (
                     <div className="item-origin"></div>
                   )}
@@ -134,8 +208,11 @@ const ChampionsDefault = styled.div`
             padding-left: 20px;
           }
         }
-        .table-header-item.active {
+        .table-header-item.increase {
           box-shadow: inset 0 2px 0 0 #d47559;
+        }
+        .table-header-item.decrease {
+          box-shadow: inset 0 -2px 0 0 #d47559;
         }
       }
       .table-items {
@@ -150,7 +227,7 @@ const ChampionsDefault = styled.div`
             color: #6287a7;
             vertical-align: middle;
           }
-          .item-name-img,
+          .item-name-img-wrapper,
           .item-origin,
           .item-class,
           .item-cost {
@@ -158,17 +235,31 @@ const ChampionsDefault = styled.div`
             align-items: center;
             padding: 10px;
           }
-          .item-name-img {
+          .item-name-img-wrapper {
+            cursor: pointer;
+            width: max-content;
             padding-left: 20px;
             .item-name-img-l {
               margin-right: 10px;
             }
+            span {
+              transition: all 0.2s;
+            }
+            &:hover {
+              span {
+                color: white;
+              }
+            }
           }
           .item-origin,
           .item-class {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            justify-content: center;
             span {
               text-transform: capitalize;
-              color: white;
+              color: hsla(0, 0%, 100%, 0.9);
             }
           }
           .item-cost {

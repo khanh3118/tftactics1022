@@ -15,6 +15,10 @@ export default SynergyIcon;
 
 const SynergyIconDefault = styled.div`
   .wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    width: max-content;
     img {
       vertical-align: middle;
       height: 22px;

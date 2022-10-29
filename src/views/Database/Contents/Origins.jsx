@@ -1,16 +1,15 @@
 import styled from "styled-components";
 import AvatarChampion from "components/common/AvatarChampion";
 import SynergyIcon from "components/common/SynergyIcon";
-import { useEffect, useContext, useState } from "react";
+import { useEffect, useContext } from "react";
 import { useOutletContext } from "react-router-dom";
 import { DatabaseContext } from "../Contexts/DatbaseContext";
 
 function Origins() {
-  const { championsData, synergysData } = useContext(DatabaseContext);
-  const [ s_data, setS_data] = useState(synergysData);
+  const { synergysData } = useContext(DatabaseContext);
   const searchText = useOutletContext();
   useEffect(() => {
-    setS_data(synergysData.filter(item => item.synergy_name.toLowerCase().includes(searchText.trim().toLowerCase())));
+    console.log(searchText);
   }, [searchText]);
   return (
     <OriginDefault id="origin-default">
@@ -28,7 +27,7 @@ function Origins() {
             <div className="table-header-item">Unit</div>
           </div>
           <div className="table-items">
-            {s_data
+            {synergysData
               .filter((item) => item.type === "origin")
               .sort((a, b) => a.synergy_name.localeCompare(b.synergy_name))
               .map((item) => {
@@ -62,19 +61,62 @@ function Origins() {
                     </div>
                     <div className="item-unit">
                       <div className="wrapper">
-                        {championsData.filter(champion => champion.champion_origin.includes(item.synergy_name.toLowerCase())).map(a => {
-                          return (
-                            <AvatarChampion
-                              key={a.champion_name}
-                              img_src={a.champion_img_link}
-                              img_alt={a.champion_name}
-                              width="30px"
-                              height="30px"
-                              className="item-unit-img"
-                              cost={a.champion_cost}
-                            />
-                          );
-                        })}
+                        <AvatarChampion
+                          img_src="https://rerollcdn.com/characters/Skin/7.5/AurelionSol.png"
+                          img_alt="AurelionSol"
+                          width="30px"
+                          height="30px"
+                          className="item-unit-img"
+                          cost="5"
+                        />
+                        <AvatarChampion
+                          img_src="https://rerollcdn.com/characters/Skin/7.5/Lux.png"
+                          img_alt="AurelionSol"
+                          width="30px"
+                          height="30px"
+                          className="item-unit-img"
+                          cost="1"
+                        />
+                        <AvatarChampion
+                          img_src="https://rerollcdn.com/characters/Skin/7.5/Nidalee.png"
+                          img_alt="AurelionSol"
+                          width="30px"
+                          height="30px"
+                          className="item-unit-img"
+                          cost="1"
+                        />
+                        <AvatarChampion
+                          img_src="https://rerollcdn.com/characters/Skin/7.5/Lux.png"
+                          img_alt="AurelionSol"
+                          width="30px"
+                          height="30px"
+                          className="item-unit-img"
+                          cost="1"
+                        />
+                        <AvatarChampion
+                          img_src="https://rerollcdn.com/characters/Skin/7.5/Skarner.png"
+                          img_alt="AurelionSol"
+                          width="30px"
+                          height="30px"
+                          className="item-unit-img"
+                          cost="1"
+                        />
+                        <AvatarChampion
+                          img_src="https://rerollcdn.com/characters/Skin/7.5/Varus.png"
+                          img_alt="AurelionSol"
+                          width="30px"
+                          height="30px"
+                          className="item-unit-img"
+                          cost="1"
+                        />
+                        <AvatarChampion
+                          img_src="https://rerollcdn.com/characters/Skin/7.5/Vladimir.png"
+                          img_alt="AurelionSol"
+                          width="30px"
+                          height="30px"
+                          className="item-unit-img"
+                          cost="1"
+                        />
                       </div>
                     </div>
                   </div>
