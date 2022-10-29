@@ -3,11 +3,17 @@ import { solid } from "@fortawesome/fontawesome-svg-core/import.macro";
 import styled from "styled-components";
 import AvatarChampion from "components/common/AvatarChampion";
 import SynergyIcon from "components/common/SynergyIcon";
-import { useContext } from "react";
+import { useContext, useState, useEffect } from "react";
 import { DatabaseContext } from "../Contexts/DatbaseContext";
+import { useOutletContext } from "react-router-dom";
 
 function Champions() {
   const { championsData, synergysData } = useContext(DatabaseContext);
+  const [ c_data, setC_data] = useState(championsData);
+  const searchText = useOutletContext();
+  // useEffect(() => {
+  //   setC_data(championsData.filter(item => item.champion_name.toLowerCase().includes(searchText.trim().toLowerCase())));
+  // }, [searchText]);
   function hanleClick(e) {
     let a = document.querySelectorAll(".table-header-item");
     a.forEach((item) => {
@@ -46,7 +52,9 @@ function Champions() {
             </div>
           </div>
           <div className="table-items">
-            {championsData.map((item, index) => {
+            {c_data
+            .sort((a, b) => a.champion_name.localeCompare(b.champion_name))
+            .map((item, index) => {
               return (
                 <div key={index} className="table-item">
                   <div className="item-name-img">
@@ -59,18 +67,26 @@ function Champions() {
                     />
                     <span>{item.champion_name}</span>
                   </div>
-                  <SynergyIcon
-                    name={item.champion_origin[0]}
-                    img_src={getSynergyImg(item.champion_origin[0])}
-                    img_alt={item.champion_origin[0]}
-                    className="item-origin"
-                  />
-                  <SynergyIcon
+                  {item.champion_origin.length > 0 ? (
+                    <SynergyIcon
+                      name={item.champion_origin[0]}
+                      img_src={getSynergyImg(item.champion_origin[0])}
+                      img_alt={item.champion_origin[0]}
+                      className="item-origin"
+                    />
+                  ) : (
+                    <div className="item-origin"></div>
+                  )}
+                  {item.champion_class.length > 0 ? (
+                    <SynergyIcon
                     name={item.champion_class[0]}
                     img_src={getSynergyImg(item.champion_class[0])}
                     img_alt={item.champion_class[0]}
                     className="item-class"
                   />
+                  ) : (
+                    <div className="item-origin"></div>
+                  )}
                   <div className="item-cost">
                     <FontAwesomeIcon className="coin" icon={solid("coins")} />
                     <span>{item.champion_cost}</span>

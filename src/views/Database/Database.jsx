@@ -68,7 +68,7 @@ function Database() {
             </div>
             <div className="title-2">
               <SearchOrigin
-                placeholder="Search for a champion..."
+                placeholder="Search by name..."
                 className="search"
                 hanleSearch={hanleSearch}
               />
