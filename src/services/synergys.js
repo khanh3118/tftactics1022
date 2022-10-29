@@ -10,6 +10,8 @@ async function getAllSynergys() {
   return data;
 }
 
-export default {
+const services = {
   getAllSynergys,
-}
+};
+
+export default services;

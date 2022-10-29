@@ -10,18 +10,16 @@ import Champions from "./views/Database/Contents/Champions";
 import ChampionsStats from "./views/Database/Contents/ChampionsStats";
 import Origins from "./views/Database/Contents/Origins";
 import Classes from "./views/Database/Contents/Classes";
-import Login from "./views/Manager/Login";
 import "./firebase/main";
-import SynergysManager from "./views/Manager/SynergysManager";
+import ChampionsManager, {
+  loader as ChampionsManagerLoader,
+} from "views/Manager/ChampionsManager";
 
 const router = createBrowserRouter([
   {
-    path: "login",
-    element: <Login />,
-  },
-  {
     path: "manager/origins",
-    element: <SynergysManager />,
+    element: <ChampionsManager />,
+    loader: ChampionsManagerLoader,
   },
   {
     path: "/",
@@ -32,6 +30,7 @@ const router = createBrowserRouter([
         element: <Database />,
         children: [
           {
+            name: "champion",
             path: "champions",
             element: <Champions />,
           },

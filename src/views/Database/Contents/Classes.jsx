@@ -1,27 +1,16 @@
 import styled from "styled-components";
-import AvatarChampion from "../../../components/common/AvatarChampion";
-import SynergyIcon from "../../../components/common/SynergyIcon";
-import { useState } from "react";
-import synergysService from "../../../services/synergys";
+import AvatarChampion from "components/common/AvatarChampion";
+import SynergyIcon from "components/common/SynergyIcon";
+import { useContext, useEffect } from "react";
+import { useOutletContext } from "react-router-dom";
+import { DatabaseContext } from "../Contexts/DatbaseContext";
 
 function Classes() {
-  const [classes, setClasses] = useState([]);
-  function hanleClick(e) {
-    let a = document.querySelectorAll(".table-header-item");
-    a.forEach((item) => {
-      item.className = "table-header-item";
-    });
-    e.target.className = "table-header-item active";
-    console.log(e.target.innerText);
-  }
-  useState(async () => {
-    let data = await synergysService.getAllSynergys();
-    setClasses(
-      data
-        .filter((item) => item.type === "class")
-        .sort((a, b) => a.synergy_name.localeCompare(b.synergy_name))
-    );
-  }, []);
+  const { synergysData } = useContext(DatabaseContext);
+  const searchText = useOutletContext();
+  useEffect(() => {
+    console.log(searchText);
+  }, [searchText]);
   return (
     <OriginDefault id="origin-default">
       <div className="wrapper">
@@ -33,109 +22,106 @@ function Classes() {
         </div>
         <div className="table">
           <div className="table-header">
-            <div onClick={(e) => hanleClick(e)} className="table-header-item">
-              Origin
-            </div>
-            <div onClick={(e) => hanleClick(e)} className="table-header-item">
-              Bonus
-            </div>
-            <div onClick={(e) => hanleClick(e)} className="table-header-item">
-              Unit
-            </div>
+            <div className="table-header-item">Origin</div>
+            <div className="table-header-item">Bonus</div>
+            <div className="table-header-item">Unit</div>
           </div>
           <div className="table-items">
-            {classes.map((item) => {
-              return (
-                <div key={item.synergy_image} className="table-item">
-                  <div className="item-origin">
-                    <SynergyIcon
-                      img_src={item.synergy_image}
-                      name={item.synergy_name}
-                    />
-                  </div>
-                  <div className="item-bonus">
-                    <div className="item-bonus-description">
-                      <p>{item.synergy_description}</p>
-                    </div>
-                    <div className="item-bonus-level">
-                      <ul>
-                        {item.synergy_description_level
-                          .split("/")
-                          .map((item) => {
-                            let a = item.split("$");
-                            return (
-                              <li key={item}>
-                                <span>{a[0]}</span>
-                                {a[1]}
-                              </li>
-                            );
-                          })}
-                      </ul>
-                    </div>
-                  </div>
-                  <div className="item-unit">
-                    <div className="wrapper">
-                      <AvatarChampion
-                        img_src="https://rerollcdn.com/characters/Skin/7.5/AurelionSol.png"
-                        img_alt="AurelionSol"
-                        width="30px"
-                        height="30px"
-                        className="item-unit-img"
-                        cost="5"
-                      />
-                      <AvatarChampion
-                        img_src="https://rerollcdn.com/characters/Skin/7.5/Lux.png"
-                        img_alt="AurelionSol"
-                        width="30px"
-                        height="30px"
-                        className="item-unit-img"
-                        cost="1"
-                      />
-                      <AvatarChampion
-                        img_src="https://rerollcdn.com/characters/Skin/7.5/Nidalee.png"
-                        img_alt="AurelionSol"
-                        width="30px"
-                        height="30px"
-                        className="item-unit-img"
-                        cost="1"
-                      />
-                      <AvatarChampion
-                        img_src="https://rerollcdn.com/characters/Skin/7.5/Lux.png"
-                        img_alt="AurelionSol"
-                        width="30px"
-                        height="30px"
-                        className="item-unit-img"
-                        cost="1"
-                      />
-                      <AvatarChampion
-                        img_src="https://rerollcdn.com/characters/Skin/7.5/Skarner.png"
-                        img_alt="AurelionSol"
-                        width="30px"
-                        height="30px"
-                        className="item-unit-img"
-                        cost="1"
-                      />
-                      <AvatarChampion
-                        img_src="https://rerollcdn.com/characters/Skin/7.5/Varus.png"
-                        img_alt="AurelionSol"
-                        width="30px"
-                        height="30px"
-                        className="item-unit-img"
-                        cost="1"
-                      />
-                      <AvatarChampion
-                        img_src="https://rerollcdn.com/characters/Skin/7.5/Vladimir.png"
-                        img_alt="AurelionSol"
-                        width="30px"
-                        height="30px"
-                        className="item-unit-img"
-                        cost="1"
+            {synergysData
+              .filter((item) => item.type === "class")
+              .sort((a, b) => a.synergy_name.localeCompare(b.synergy_name))
+              .map((item) => {
+                return (
+                  <div key={item.synergy_image} className="table-item">
+                    <div className="item-origin">
+                      <SynergyIcon
+                        img_src={item.synergy_image}
+                        name={item.synergy_name}
                       />
                     </div>
+                    <div className="item-bonus">
+                      <div className="item-bonus-description">
+                        <p>{item.synergy_description}</p>
+                      </div>
+                      <div className="item-bonus-level">
+                        <ul>
+                          {item.synergy_description_level
+                            .split("/")
+                            .map((item) => {
+                              let a = item.split("$");
+                              return (
+                                <li key={item}>
+                                  <span>{a[0]}</span>
+                                  {a[1]}
+                                </li>
+                              );
+                            })}
+                        </ul>
+                      </div>
+                    </div>
+                    <div className="item-unit">
+                      <div className="wrapper">
+                        <AvatarChampion
+                          img_src="https://rerollcdn.com/characters/Skin/7.5/AurelionSol.png"
+                          img_alt="AurelionSol"
+                          width="30px"
+                          height="30px"
+                          className="item-unit-img"
+                          cost="5"
+                        />
+                        <AvatarChampion
+                          img_src="https://rerollcdn.com/characters/Skin/7.5/Lux.png"
+                          img_alt="AurelionSol"
+                          width="30px"
+                          height="30px"
+                          className="item-unit-img"
+                          cost="1"
+                        />
+                        <AvatarChampion
+                          img_src="https://rerollcdn.com/characters/Skin/7.5/Nidalee.png"
+                          img_alt="AurelionSol"
+                          width="30px"
+                          height="30px"
+                          className="item-unit-img"
+                          cost="1"
+                        />
+                        <AvatarChampion
+                          img_src="https://rerollcdn.com/characters/Skin/7.5/Lux.png"
+                          img_alt="AurelionSol"
+                          width="30px"
+                          height="30px"
+                          className="item-unit-img"
+                          cost="1"
+                        />
+                        <AvatarChampion
+                          img_src="https://rerollcdn.com/characters/Skin/7.5/Skarner.png"
+                          img_alt="AurelionSol"
+                          width="30px"
+                          height="30px"
+                          className="item-unit-img"
+                          cost="1"
+                        />
+                        <AvatarChampion
+                          img_src="https://rerollcdn.com/characters/Skin/7.5/Varus.png"
+                          img_alt="AurelionSol"
+                          width="30px"
+                          height="30px"
+                          className="item-unit-img"
+                          cost="1"
+                        />
+                        <AvatarChampion
+                          img_src="https://rerollcdn.com/characters/Skin/7.5/Vladimir.png"
+                          img_alt="AurelionSol"
+                          width="30px"
+                          height="30px"
+                          className="item-unit-img"
+                          cost="1"
+                        />
+                      </div>
+                    </div>
                   </div>
-                </div>
-              );
-            })}
+                );
+              })}
           </div>
         </div>
       </div>
@@ -175,9 +161,6 @@ const OriginDefault = styled.div`
           &:nth-child(1) {
             padding-left: 20px;
           }
-        }
-        .table-header-item.active {
-          box-shadow: inset 0 2px 0 0 #d47559;
         }
       }
       .table-items {

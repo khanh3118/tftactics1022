@@ -1,16 +1,17 @@
-import ContentMainLayout from "../../layouts/ContentMainLayout";
+import ContentMainLayout from "layouts/ContentMainLayout";
 import { Outlet, NavLink } from "react-router-dom";
-import SelectDropDown from "../../components/common/SelectDropdown";
-import SearchOrigin from "../../components/common/SearchOrigin";
+import SelectDropDown from "components/common/SelectDropdown";
+import SearchOrigin from "components/common/SearchOrigin";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
+import { DatabaseProvider } from "./Contexts/DatbaseContext";
 
 function Database() {
   const [searchText, setSearchText] = useState("");
   const navigate = useNavigate();
   useEffect(() => {
-    navigate("/database/origins");
+    navigate("/database/champions");
   }, []);
   function hanleSearch(searchText) {
     setSearchText(searchText);
@@ -75,9 +76,11 @@ function Database() {
           </Title>
         }
         mainContent={
-          <MainContent className="main-content">
-            <Outlet context={searchText} />
-          </MainContent>
+          <DatabaseProvider>
+            <MainContent className="main-content">
+              <Outlet context={searchText} />
+            </MainContent>
+          </DatabaseProvider>
         }
       />
     </DatabaseDefault>
@@ -103,7 +106,7 @@ const DatabaseDefault = styled.div`
           color: #88a0a7;
           font-size: 16px;
           font-weight: 400;
-          padding: 10px 0 10px 0;
+          padding: 4px 0 4px 0;
           width: 100%;
           display: inline-block;
         }

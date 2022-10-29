@@ -1,6 +1,6 @@
-import SelectDropdown from "../common/SelectDropdown";
-import SearchOrigin from "../common/SearchOrigin";
-import Button from "../common/Button";
+import SelectDropdown from "components/common/SelectDropdown";
+import SearchOrigin from "components/common/SearchOrigin";
+import Button from "components/common/Button";
 import styled from "styled-components";
 
 function Header() {

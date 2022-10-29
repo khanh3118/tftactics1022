@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import React from "react";
 import { PlusOutlined } from "@ant-design/icons";
-import { Form, Input, Button, Upload, Typography, Select, Row } from "antd";
+import { Form, Input, Button, Upload, Typography, Select } from "antd";
 import { db, storage } from "../../firebase/main";
 import { collection, addDoc } from "firebase/firestore";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";

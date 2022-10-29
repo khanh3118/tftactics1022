@@ -10,6 +10,8 @@ async function getAllChampions() {
   return data;
 }
 
-export default {
+const services = {
   getAllChampions,
 };
+
+export default services;

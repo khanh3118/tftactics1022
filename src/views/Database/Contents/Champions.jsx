@@ -1,13 +1,13 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { solid } from "@fortawesome/fontawesome-svg-core/import.macro";
 import styled from "styled-components";
-import AvatarChampion from "../../../components/common/AvatarChampion";
-import SynergyIcon from "../../../components/common/SynergyIcon";
-import { useState } from "react";
-import championsService from "../../../services/champions";
+import AvatarChampion from "components/common/AvatarChampion";
+import SynergyIcon from "components/common/SynergyIcon";
+import { useContext } from "react";
+import { DatabaseContext } from "../Contexts/DatbaseContext";
 
 function Champions() {
-  const [championsData, setChampionsData] = useState([]);
+  const { championsData, synergysData } = useContext(DatabaseContext);
   function hanleClick(e) {
     let a = document.querySelectorAll(".table-header-item");
     a.forEach((item) => {
@@ -16,10 +16,11 @@ function Champions() {
     e.target.className = "table-header-item active";
     console.log(e.target.innerText);
   }
-  useState(async () => {
-    let data = await championsService.getAllChampions();
-    setChampionsData(data);
-  }, []);
+  function getSynergyImg(synergyName) {
+    return synergysData.find(
+      (item) => item.synergy_name.toLowerCase() === synergyName
+    ).synergy_image;
+  }
   return (
     <ChampionsDefault id="champions-default">
       <div className="wrapper">
@@ -50,29 +51,29 @@ function Champions() {
                 <div key={index} className="table-item">
                   <div className="item-name-img">
                     <AvatarChampion
-                      img_src={item.img_link}
+                      img_src={item.champion_img_link}
                       width="40px"
                       height="40px"
                       className="item-name-img-l"
-                      cost={item.stats.cost}
+                      cost={item.champion_cost}
                     />
-                    <span>{item.name}</span>
+                    <span>{item.champion_name}</span>
                   </div>
                   <SynergyIcon
-                    name={item.origin[0].name}
-                    img_src={item.origin[0].img}
-                    img_alt={item.origin[0].name}
+                    name={item.champion_origin[0]}
+                    img_src={getSynergyImg(item.champion_origin[0])}
+                    img_alt={item.champion_origin[0]}
                     className="item-origin"
                   />
                   <SynergyIcon
-                    name={item.class[0].name}
-                    img_src={item.class[0].img}
-                    img_alt={item.class[0].name}
+                    name={item.champion_class[0]}
+                    img_src={getSynergyImg(item.champion_class[0])}
+                    img_alt={item.champion_class[0]}
                     className="item-class"
                   />
                   <div className="item-cost">
                     <FontAwesomeIcon className="coin" icon={solid("coins")} />
-                    <span>{item.stats.cost}</span>
+                    <span>{item.champion_cost}</span>
                   </div>
                 </div>
               );
@@ -150,6 +151,7 @@ const ChampionsDefault = styled.div`
           .item-origin,
           .item-class {
             span {
+              text-transform: capitalize;
               color: white;
             }
           }

@@ -1,6 +1,6 @@
 import styled from "styled-components";
 import { useState } from "react";
-import { login } from "../../services/auth";
+import { login } from "services/auth";
 import { useNavigate } from "react-router-dom";
 
 export default function Login() {

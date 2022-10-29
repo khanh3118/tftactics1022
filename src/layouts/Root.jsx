@@ -1,6 +1,6 @@
-import Header from "../components/layouts/Header";
-import HeaderNavigation from "../components/layouts/HeaderNavigation";
-import Content from "../components/layouts/Content";
+import Header from "components/layouts/Header";
+import HeaderNavigation from "components/layouts/HeaderNavigation";
+import Content from "components/layouts/Content";
 import { Outlet } from "react-router-dom";
 import styled from "styled-components";
 
