@@ -14,6 +14,7 @@ import "./firebase/main";
 import ChampionsManager, {
   loader as ChampionsManagerLoader,
 } from "views/Manager/ChampionsManager";
+import ItemsManager from "views/Manager/ItemsManager";
 import SignUp from "components/auth/SignUp";
 import { AuthProvider } from "contexts/AuthContext";
 import PrivateRoute from "components/auth/PrivateRoute";
@@ -29,6 +30,15 @@ const router = createBrowserRouter([
     element: (
       <PrivateRoute>
         <ChampionsManager />
+      </PrivateRoute>
+    ),
+    loader: ChampionsManagerLoader,
+  },
+  {
+    path: "/manager/items",
+    element: (
+      <PrivateRoute>
+        <ItemsManager />
       </PrivateRoute>
     ),
     loader: ChampionsManagerLoader,
