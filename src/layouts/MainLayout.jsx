@@ -1,6 +1,6 @@
 import styled from "styled-components";
 
-function ContentLayout(props) {
+function MainLayout(props) {
   return (
     <div id="content-layout-default">
       <Wrapper>
@@ -17,7 +17,7 @@ function ContentLayout(props) {
   );
 }
 
-export default ContentLayout;
+export default MainLayout;
 
 const Wrapper = styled.div`
   min-height: 100vh;

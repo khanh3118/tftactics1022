@@ -1,15 +1,16 @@
 import styled from "styled-components";
 import AvatarChampion from "components/common/AvatarChampion";
 import SynergyIcon from "components/common/SynergyIcon";
-import { useEffect, useContext } from "react";
+import { useEffect, useContext, useState } from "react";
 import { useOutletContext } from "react-router-dom";
-import { DatabaseContext } from "../Contexts/DatbaseContext";
+import { DataContext } from "contexts/DataContext";
 
 function Origins() {
-  const { synergysData } = useContext(DatabaseContext);
+  const { championsData, synergysData } = useContext(DataContext);
   const searchText = useOutletContext();
+  const [ s_data, setS_data] = useState(synergysData);
   useEffect(() => {
-    console.log(searchText);
+    setS_data(synergysData.filter(item => item.synergy_name.toLowerCase().includes(searchText.trim().toLowerCase())))
   }, [searchText]);
   return (
     <OriginDefault id="origin-default">
@@ -27,7 +28,7 @@ function Origins() {
             <div className="table-header-item">Unit</div>
           </div>
           <div className="table-items">
-            {synergysData
+            {s_data
               .filter((item) => item.type === "origin")
               .sort((a, b) => a.synergy_name.localeCompare(b.synergy_name))
               .map((item) => {
@@ -61,62 +62,17 @@ function Origins() {
                     </div>
                     <div className="item-unit">
                       <div className="wrapper">
-                        <AvatarChampion
-                          img_src="https://rerollcdn.com/characters/Skin/7.5/AurelionSol.png"
-                          img_alt="AurelionSol"
-                          width="30px"
-                          height="30px"
-                          className="item-unit-img"
-                          cost="5"
-                        />
-                        <AvatarChampion
-                          img_src="https://rerollcdn.com/characters/Skin/7.5/Lux.png"
-                          img_alt="AurelionSol"
-                          width="30px"
-                          height="30px"
-                          className="item-unit-img"
-                          cost="1"
-                        />
-                        <AvatarChampion
-                          img_src="https://rerollcdn.com/characters/Skin/7.5/Nidalee.png"
-                          img_alt="AurelionSol"
-                          width="30px"
-                          height="30px"
-                          className="item-unit-img"
-                          cost="1"
-                        />
-                        <AvatarChampion
-                          img_src="https://rerollcdn.com/characters/Skin/7.5/Lux.png"
-                          img_alt="AurelionSol"
-                          width="30px"
-                          height="30px"
-                          className="item-unit-img"
-                          cost="1"
-                        />
-                        <AvatarChampion
-                          img_src="https://rerollcdn.com/characters/Skin/7.5/Skarner.png"
-                          img_alt="AurelionSol"
-                          width="30px"
-                          height="30px"
-                          className="item-unit-img"
-                          cost="1"
-                        />
-                        <AvatarChampion
-                          img_src="https://rerollcdn.com/characters/Skin/7.5/Varus.png"
-                          img_alt="AurelionSol"
-                          width="30px"
-                          height="30px"
-                          className="item-unit-img"
-                          cost="1"
-                        />
-                        <AvatarChampion
-                          img_src="https://rerollcdn.com/characters/Skin/7.5/Vladimir.png"
-                          img_alt="AurelionSol"
-                          width="30px"
-                          height="30px"
-                          className="item-unit-img"
-                          cost="1"
-                        />
+                        {championsData.filter(champion => champion.champion_origin.includes(item.synergy_name.toLowerCase())).map(a => {
+                          return (
+                            <AvatarChampion
+                              key={a.champion_name}
+                              champion_name={a.champion_name}
+                              width="30px"
+                              height="30px"
+                              className="item-unit-img"
+                            />
+                          );
+                        })}
                       </div>
                     </div>
                   </div>

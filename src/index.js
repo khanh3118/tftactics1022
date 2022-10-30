@@ -4,7 +4,7 @@ import "./index.css";
 import reportWebVitals from "./reportWebVitals";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import RootLayout from "./layouts/Root";
-import Database from "./views/Database/Database";
+import DatabaseLayout from "./views/Database/DatabaseLayout";
 import ItemBuilder from "./views/ItemBuilder";
 import Champions from "./views/Database/Contents/Champions";
 import ChampionsStats from "./views/Database/Contents/ChampionsStats";
@@ -14,11 +14,23 @@ import "./firebase/main";
 import ChampionsManager, {
   loader as ChampionsManagerLoader,
 } from "views/Manager/ChampionsManager";
+import SignUp from "components/auth/SignUp";
+import { AuthProvider } from "contexts/AuthContext";
+import PrivateRoute from "components/auth/PrivateRoute";
+import { DataProvider } from "contexts/DataContext";
 
 const router = createBrowserRouter([
   {
-    path: "manager/origins",
-    element: <ChampionsManager />,
+    path: "/login",
+    element: <SignUp />,
+  },
+  {
+    path: "/manager/origins",
+    element: (
+      <PrivateRoute>
+        <ChampionsManager />
+      </PrivateRoute>
+    ),
     loader: ChampionsManagerLoader,
   },
   {
@@ -27,7 +39,7 @@ const router = createBrowserRouter([
     children: [
       {
         path: "database",
-        element: <Database />,
+        element: <DatabaseLayout />,
         children: [
           {
             name: "champion",
@@ -65,7 +77,13 @@ const router = createBrowserRouter([
 ]);
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
-root.render(<RouterProvider router={router} />);
+root.render(
+  <AuthProvider>
+    <DataProvider>
+      <RouterProvider router={router} />
+    </DataProvider>
+  </AuthProvider>
+);
 
 // If you want to start measuring performance in your app, pass a function
 // to log results (for example: reportWebVitals(console.log))

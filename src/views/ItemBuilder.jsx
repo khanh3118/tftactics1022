@@ -1,4 +1,4 @@
-import ContentMainLayout from "../layouts/ContentMainLayout";
+import ContentMainLayout from "../layouts/MainLayout";
 import styled from "styled-components";
 
 function ItemBuilder() {

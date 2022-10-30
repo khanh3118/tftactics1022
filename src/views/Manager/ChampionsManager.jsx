@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import React, { useEffect } from "react";
+import React from "react";
 import { PlusOutlined } from "@ant-design/icons";
 import {
   Form,
@@ -18,6 +18,7 @@ import { useState } from "react";
 import synergysServices from "services/synergys";
 import { useLoaderData } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
+
 
 export async function loader() {
   let synergysData = await synergysServices.getAllSynergys();

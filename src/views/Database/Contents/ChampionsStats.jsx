@@ -1,8 +1,20 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { solid } from "@fortawesome/fontawesome-svg-core/import.macro";
 import styled from "styled-components";
+import { useContext, useState } from "react";
+import { DataContext } from "contexts/DataContext";
+import AvatarChampion from "components/common/AvatarChampion";
 
 function ChampionsStats() {
+  const [level, setLevel] = useState(1);
+  const [type, setType] = useState("offense");
+  const { championsData, synergysData } = useContext(DataContext);
+  const [sorted, setSorted] = useState(championsData);
+  const [filterOptions, setFilterOptions] = useState({
+    name: "dps",
+    type: "increase",
+    text: "ao"
+  })
   function hanleClick(e) {
     let a = document.querySelectorAll(".table-header-item");
     a.forEach((item) => {
@@ -11,6 +23,7 @@ function ChampionsStats() {
     e.target.className = "table-header-item active";
     console.log(e.target.innerText);
   }
+
   function hanleLevel(e, level) {
     let svgs = document.querySelectorAll("#champions-stats .level svg");
     svgs.forEach((item) => {
@@ -19,6 +32,7 @@ function ChampionsStats() {
     for (let i = 0; i < level; i++) {
       svgs[i].style.color = "orange";
     }
+    setLevel(level);
   }
   return (
     <ChampionsStatsDefault id="champions-stats">
@@ -30,10 +44,10 @@ function ChampionsStats() {
           </p>
         </div>
         <div className="options">
-          <div className="btn">
+          <div onClick={() => setType("offense")} className="btn">
             <span>offense</span>
           </div>
-          <div className="btn">
+          <div onClick={() => setType("defense")} className="btn">
             <span>defense</span>
           </div>
           <div className="level">
@@ -60,40 +74,60 @@ function ChampionsStats() {
               Champion
             </div>
             <div onClick={(e) => hanleClick(e)} className="table-header-item">
-              DPS
+              {type === 'offense' ? "DPS" : "Health"}
             </div>
             <div onClick={(e) => hanleClick(e)} className="table-header-item">
-              Atk Spd
+              {type === 'offense' ? "Atk Spd" : "Mana"}
             </div>
             <div onClick={(e) => hanleClick(e)} className="table-header-item">
-              Damage
+              {type === 'offense' ? "Damage" : "Armor"}
             </div>
             <div onClick={(e) => hanleClick(e)} className="table-header-item">
-              Range
+              {type === 'offense' ? "Range" : "MR"}
             </div>
           </div>
           <div className="table-items">
-            <div className="table-item">
-              <div className="item-name-img">
-                <img
-                  src="https://rerollcdn.com/characters/Skin/7.5/Shyvana.png"
-                  alt="Shyvana"
-                />
-                <span>Shyvana</span>
-              </div>
-              <div className="item-stats">
-                <span>48</span>
-              </div>
-              <div className="item-stats">
-                <span>0.8</span>
-              </div>
-              <div className="item-stats">
-                <span>60</span>
-              </div>
-              <div className="item-stats">
-                <span>4</span>
-              </div>
-            </div>
+            {sorted.map(item => {
+              return (<div className="table-item" key={item.champion_name}>
+                <div className="item-name-img">
+                  <AvatarChampion 
+                    champion_name={item.champion_name}
+                    width="40px"
+                    height="40px"
+                    className="item-name-img-l"
+                  />
+                  <span>{item.champion_name}</span>
+                </div>
+                <div className="item-stats">
+                  {type === 'offense' ? (
+                    <span>{item.champion_dps.split("/")[level-1].trim()}</span>
+                  ): (
+                    <span>{item.champion_health.split("/")[level-1].trim()}</span>
+                  )}
+                </div>
+                <div className="item-stats">
+                  {type === 'offense' ? (
+                    <span>{item.champion_akt_spd}</span>
+                  ): (
+                    <span>{item.champion_mana}</span>
+                  )}
+                </div>
+                <div className="item-stats">
+                  {type === 'offense' ? (
+                    <span>{item.champion_damage.split("/")[level-1].trim()}</span>
+                  ): (
+                    <span>{item.champion_armor}</span>
+                  )}
+                </div>
+                <div className="item-stats">
+                  {type === 'offense' ? (
+                    <span>{item.champion_range}</span>
+                  ): (
+                    <span>{item.champion_mr}</span>
+                  )}
+                </div>
+              </div>)
+            })}
           </div>
         </div>
       </div>
@@ -157,7 +191,7 @@ const ChampionsStatsDefault = styled.div`
     .table {
       .table-header {
         display: grid;
-        grid-template-columns: repeat(5, 1fr);
+        grid-template-columns: 24% 19% 19% 19% 19%;
         border: 1px solid #17313a;
         text-align: right;
         .table-header-item {
@@ -171,6 +205,9 @@ const ChampionsStatsDefault = styled.div`
             text-align: left;
             padding-left: 20px;
           }
+          &:nth-child(5) {
+            padding-right: 20px;
+          }
         }
         .table-header-item.active {
           box-shadow: inset 0 2px 0 0 #d47559;
@@ -179,7 +216,7 @@ const ChampionsStatsDefault = styled.div`
       .table-items {
         .table-item {
           display: grid;
-          grid-template-columns: repeat(5, 1fr);
+          grid-template-columns: 24% 19% 19% 19% 19%;
           border-right: 1px solid #17313a;
           border-left: 1px solid #17313a;
           border-bottom: 1px solid #17313a;
@@ -193,24 +230,14 @@ const ChampionsStatsDefault = styled.div`
             display: flex;
             align-items: center;
             padding: 10px;
+            &:nth-child(5) {
+              padding-right: 20px;
+            }
           }
           .item-name-img {
             padding-left: 20px;
-            img {
-              vertical-align: middle;
-              width: 40px;
-              height: 40px;
-              margin-right: 10px;
-              border: 1px solid #fff;
-              border-image: linear-gradient(
-                to bottom right,
-                #b89d27 0,
-                #fff 25%,
-                #b89d27 50%,
-                #fff 75%,
-                #b89d27
-              );
-              border-image-slice: 1;
+            span {
+              margin-left: 15px;
             }
           }
           .item-stats {

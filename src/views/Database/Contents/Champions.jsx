@@ -4,17 +4,18 @@ import styled from "styled-components";
 import AvatarChampion from "components/common/AvatarChampion";
 import SynergyIcon from "components/common/SynergyIcon";
 import { useContext, useState, useEffect } from "react";
-import { DatabaseContext } from "../Contexts/DatbaseContext";
+import { DataContext } from "contexts/DataContext";
 import { useOutletContext } from "react-router-dom";
 
 function Champions() {
-  const { championsData, synergysData } = useContext(DatabaseContext);
+  const { championsData, synergysData } = useContext(DataContext);
   const [c_data, setC_data] = useState(
     championsData.sort((a, b) => a.champion_name.localeCompare(b.champion_name))
   );
   const [increaseByName, setIncreaseByName] = useState(false);
   const [increaseByCost, setIncreaseByCost] = useState(false);
   const searchText = useOutletContext();
+  
   useEffect(() => {
     setC_data(
       championsData.filter((item) =>
@@ -23,7 +24,7 @@ function Champions() {
           .includes(searchText.trim().toLowerCase())
       )
     );
-  }, [searchText]);
+  }, [championsData, searchText]);
   function hanleClick(e) {
     let a = document.querySelectorAll(".table-header-item");
     a.forEach((item) => {
@@ -76,14 +77,6 @@ function Champions() {
       (item) => item.synergy_name.toLowerCase() === synergyName
     ).synergy_image;
   }
-  function getSynergysData(arrSynergy) {
-    return synergysData.filter((item) =>
-      arrSynergy.includes(item.synergy_name.toLowerCase())
-    );
-  }
-  function getItemsData(arrItems) {
-    console.log(arrItems);
-  }
   return (
     <ChampionsDefault id="champions-default">
       <div className="wrapper">
@@ -115,16 +108,10 @@ function Champions() {
                   <div className="item-name-img">
                     <div className="item-name-img-wrapper">
                       <AvatarChampion
-                        img_src={item.champion_img_link}
+                        champion_name={item.champion_name}
                         width="40px"
                         height="40px"
                         className="item-name-img-l"
-                        cost={item.champion_cost}
-                        champion_name={item.champion_name}
-                        synergysData={getSynergysData(
-                          item.champion_origin.concat(item.champion_class)
-                        )}
-                        itemsData={getItemsData(item.champion_items)}
                       />
                       <span>{item.champion_name}</span>
                     </div>

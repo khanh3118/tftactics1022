@@ -2,9 +2,9 @@ import { createContext, useState, useEffect } from "react";
 import championsService from "services/champions";
 import synergysService from "services/synergys";
 
-export const DatabaseContext = createContext({});
+export const DataContext = createContext({});
 
-export const DatabaseProvider = ({ children }) => {
+export const DataProvider = ({ children }) => {
   const [championsData, setChampionsData] = useState([]);
   const [synergysData, setSynergyData] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -27,8 +27,8 @@ export const DatabaseProvider = ({ children }) => {
   }, []);
 
   return (
-    <DatabaseContext.Provider value={{ championsData, synergysData }}>
+    <DataContext.Provider value={{ championsData, synergysData }}>
       {isLoading || children}
-    </DatabaseContext.Provider>
+    </DataContext.Provider>
   );
 };

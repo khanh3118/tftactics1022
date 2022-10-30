@@ -1,13 +1,12 @@
-import ContentMainLayout from "layouts/ContentMainLayout";
+import MainLayout from "layouts/MainLayout";
 import { Outlet, NavLink } from "react-router-dom";
 import SelectDropDown from "components/common/SelectDropdown";
 import SearchOrigin from "components/common/SearchOrigin";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { DatabaseProvider } from "./Contexts/DatbaseContext";
 
-function Database() {
+function DatabaseLayout() {
   const [searchText, setSearchText] = useState("");
   const navigate = useNavigate();
   useEffect(() => {
@@ -18,7 +17,7 @@ function Database() {
   }
   return (
     <DatabaseDefault id="database-default">
-      <ContentMainLayout
+      <MainLayout
         nameContent={<span>Database</span>}
         sideContent={
           <div className="navigation-items">
@@ -76,18 +75,16 @@ function Database() {
           </Title>
         }
         mainContent={
-          <DatabaseProvider>
-            <MainContent className="main-content">
-              <Outlet context={searchText} />
-            </MainContent>
-          </DatabaseProvider>
+          <MainContent className="main-content">
+            <Outlet context={searchText} />
+          </MainContent>
         }
       />
     </DatabaseDefault>
   );
 }
 
-export default Database;
+export default DatabaseLayout;
 
 const DatabaseDefault = styled.div`
   .navigation-items {

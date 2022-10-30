@@ -3,10 +3,10 @@ import AvatarChampion from "components/common/AvatarChampion";
 import SynergyIcon from "components/common/SynergyIcon";
 import { useContext, useEffect, useState } from "react";
 import { useOutletContext } from "react-router-dom";
-import { DatabaseContext } from "../Contexts/DatbaseContext";
+import { DataContext } from "contexts/DataContext";
 
 function Classes() {
-  const { championsData, synergysData } = useContext(DatabaseContext);
+  const { championsData, synergysData } = useContext(DataContext);
   const [ s_data, setS_data] = useState(synergysData);
   const searchText = useOutletContext();
   useEffect(() => {
@@ -66,12 +66,10 @@ function Classes() {
                           return (
                             <AvatarChampion
                               key={a.champion_name}
-                              img_src={a.champion_img_link}
-                              img_alt={a.champion_name}
+                              champion_name={a.champion_name}
                               width="30px"
                               height="30px"
                               className="item-unit-img"
-                              cost={a.champion_cost}
                             />
                           );
                         })}

@@ -19,6 +19,7 @@ function Content(props) {
 export default Content;
 
 const ContentDefault = styled.div`
+  min-height: 100vh;
   padding-top: 45px;
   background-color: #0d202b;
 `;

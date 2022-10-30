@@ -18,7 +18,7 @@ const SynergyIconDefault = styled.div`
     display: flex;
     align-items: center;
     justify-content: flex-start;
-    width: max-content;
+    width: max-content !important;
     img {
       vertical-align: middle;
       height: 22px;
@@ -26,6 +26,7 @@ const SynergyIconDefault = styled.div`
       margin-right: 10px;
     }
     span {
+      margin-left: 0 !important;
       color: white;
     }
   }
