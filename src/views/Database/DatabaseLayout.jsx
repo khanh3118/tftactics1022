@@ -10,7 +10,7 @@ function DatabaseLayout() {
   const [searchText, setSearchText] = useState("");
   const navigate = useNavigate();
   useEffect(() => {
-    navigate("/database/champions");
+    navigate("/database/championstats");
   }, []);
   function hanleSearch(searchText) {
     setSearchText(searchText);
@@ -18,7 +18,11 @@ function DatabaseLayout() {
   return (
     <DatabaseDefault id="database-default">
       <MainLayout
-        nameContent={<span>Database</span>}
+        nameContent={
+          <DatabaseLayoutTitle>
+            <span className="database-layout-tile">Database</span>
+          </DatabaseLayoutTitle>
+        }
         sideContent={
           <div className="navigation-items">
             <ul>
@@ -40,16 +44,6 @@ function DatabaseLayout() {
               <li>
                 <NavLink to="/database/classes" className="header-item">
                   Classes
-                </NavLink>
-              </li>
-              <li>
-                <NavLink to="/database/rolling" className="header-item">
-                  Rolling
-                </NavLink>
-              </li>
-              <li>
-                <NavLink to="/database/augments" className="header-item">
-                  Augments
                 </NavLink>
               </li>
             </ul>
@@ -86,6 +80,18 @@ function DatabaseLayout() {
 
 export default DatabaseLayout;
 
+const DatabaseLayoutTitle = styled.div`
+  min-height: 35px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid #17313a;
+  span {
+    display: block;
+    min-height: 32px;
+    font-size: 21px;
+    font-weight: 600;
+  }
+`
+
 const DatabaseDefault = styled.div`
   .navigation-items {
     ul {
@@ -98,7 +104,6 @@ const DatabaseDefault = styled.div`
           color: white;
         }
         a {
-          transition: all 0.3s;
           text-decoration: none;
           color: #88a0a7;
           font-size: 16px;

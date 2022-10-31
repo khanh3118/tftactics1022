@@ -1,11 +1,12 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { solid } from "@fortawesome/fontawesome-svg-core/import.macro";
 import styled from "styled-components";
-import AvatarChampion from "components/common/AvatarChampion";
-import SynergyIcon from "components/common/SynergyIcon";
-import { useContext, useState, useEffect } from "react";
+import { useContext, useState, useEffect, lazy, Suspense } from "react";
 import { DataContext } from "contexts/DataContext";
 import { useOutletContext } from "react-router-dom";
+
+const AvatarChampion = lazy(() => import("components/common/AvatarChampion"));
+const SynergyIcon = lazy(() => import("components/common/SynergyIcon"));
 
 function Champions() {
   const { championsData, synergysData } = useContext(DataContext);
@@ -15,7 +16,7 @@ function Champions() {
   const [increaseByName, setIncreaseByName] = useState(false);
   const [increaseByCost, setIncreaseByCost] = useState(false);
   const searchText = useOutletContext();
-  
+
   useEffect(() => {
     setC_data(
       championsData.filter((item) =>
@@ -107,43 +108,49 @@ function Champions() {
                 <div key={index} className="table-item">
                   <div className="item-name-img">
                     <div className="item-name-img-wrapper">
-                      <AvatarChampion
-                        champion_name={item.champion_name}
-                        width="40px"
-                        height="40px"
-                        className="item-name-img-l"
-                      />
+                      <Suspense>
+                        <AvatarChampion
+                          champion_name={item.champion_name}
+                          width="40px"
+                          height="40px"
+                          className="item-name-img-l"
+                        />
+                      </Suspense>
                       <span>{item.champion_name}</span>
                     </div>
                   </div>
                   {item.champion_origin.length > 0 ? (
-                    <div className="item-origin">
-                      {item.champion_origin.map((originName) => {
-                        return (
-                          <SynergyIcon
-                            key={originName}
-                            name={originName}
-                            img_src={getSynergyImg(originName)}
-                            img_alt={originName}
-                          />
-                        );
-                      })}
-                    </div>
+                    <Suspense>
+                      <div className="item-origin">
+                        {item.champion_origin.map((originName) => {
+                          return (
+                            <SynergyIcon
+                              key={originName}
+                              name={originName}
+                              img_src={getSynergyImg(originName)}
+                              img_alt={originName}
+                            />
+                          );
+                        })}
+                      </div>
+                    </Suspense>
                   ) : (
                     <div className="item-origin"></div>
                   )}
                   {item.champion_class.length > 0 ? (
                     <div className="item-class">
-                      {item.champion_class.map((className) => {
-                        return (
-                          <SynergyIcon
-                            key={className}
-                            name={className}
-                            img_src={getSynergyImg(className)}
-                            img_alt={className}
-                          />
-                        );
-                      })}
+                      <Suspense>
+                        {item.champion_class.map((className) => {
+                          return (
+                            <SynergyIcon
+                              key={className}
+                              name={className}
+                              img_src={getSynergyImg(className)}
+                              img_alt={className}
+                            />
+                          );
+                        })}
+                      </Suspense>
                     </div>
                   ) : (
                     <div className="item-origin"></div>

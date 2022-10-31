@@ -5,7 +5,7 @@ import reportWebVitals from "./reportWebVitals";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import RootLayout from "./layouts/Root";
 import DatabaseLayout from "./views/Database/DatabaseLayout";
-import ItemBuilder from "./views/ItemBuilder";
+import ItemBuilder from "./views/ItemBuilder/ItemBuilder";
 import Champions from "./views/Database/Contents/Champions";
 import ChampionsStats from "./views/Database/Contents/ChampionsStats";
 import Origins from "./views/Database/Contents/Origins";

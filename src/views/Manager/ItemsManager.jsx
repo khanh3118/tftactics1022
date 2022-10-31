@@ -19,7 +19,7 @@ const OPTIONS = [
   "Recurve Bow",
   "Sparring Gloves",
   "Spatula",
-  "Tear of the Goddess"
+  "Tear of the Goddess",
 ];
 const OPTIONS_STATS = [
   "damage",
@@ -29,13 +29,15 @@ const OPTIONS_STATS = [
   "mana",
   "crit",
   "armor",
+  "magic",
+  "dodge"
 ];
 
 function SynergysManager() {
   const [stats, setStats] = useState([]);
   const [statsValue, setStatsValue] = useState({});
 
-  const filteredOptionsStats = OPTIONS_STATS.filter(o => !stats.includes(o));
+  const filteredOptionsStats = OPTIONS_STATS.filter((o) => !stats.includes(o));
 
   const [form] = Form.useForm();
   const [img, setImg] = useState("");
@@ -52,7 +54,7 @@ function SynergysManager() {
         const docRef = await addDoc(collection(db, "items"), {
           ...values,
           item_image,
-          item_stats: statsValue
+          item_stats: statsValue,
         });
         console.log("Document written with ID: ", docRef.id);
         form.resetFields();
@@ -67,13 +69,13 @@ function SynergysManager() {
   function hanleImg(file) {
     setImg(file);
   }
-  function hanleStatsChange(e,name) {
+  function hanleStatsChange(e, name) {
     setStatsValue((pre) => {
       return {
         ...pre,
-        [`item_stat_${name}`]: e.target.value
-      }
-    })
+        [`item_stat_${name}`]: e.target.value,
+      };
+    });
   }
   return (
     <ItemsManagerDefault>
@@ -90,8 +92,8 @@ function SynergysManager() {
           }}
           initialValues={{
             is_combined: "true",
-            is_unique_item:"false",
-            is_aura_item:"false",
+            is_unique_item: "false",
+            is_aura_item: "false",
             recipe_1: null,
             recipe_2: null,
           }}
@@ -118,30 +120,26 @@ function SynergysManager() {
               onChange={setStats}
               style={{ width: "100%" }}
             >
-              {filteredOptionsStats
-                .map((item) => (
-                  <Select.Option
-                    key={item}
-                    value={item}
-                  >
-                    {item}
-                  </Select.Option>
-                ))}
+              {filteredOptionsStats.map((item) => (
+                <Select.Option key={item} value={item}>
+                  {item}
+                </Select.Option>
+              ))}
             </Select>
           </Form.Item>
-          {stats.map(item => {
+          {stats.map((item) => {
             return (
               <Form.Item
                 key={item}
-                label={"Item "+item}
+                label={"Item " + item}
                 rules={[
                   {
                     required: true,
                   },
                 ]}
               >
-            <Input onChange={(e) => hanleStatsChange(e, item)}/>
-          </Form.Item>
+                <Input onChange={(e) => hanleStatsChange(e, item)} />
+              </Form.Item>
             );
           })}
           <Form.Item
@@ -186,36 +184,22 @@ function SynergysManager() {
               <Select.Option value="false">false</Select.Option>
             </Select>
           </Form.Item>
-          <Form.Item
-            name="recipe_1"
-            label="Recipe Item 1"
-          >
+          <Form.Item name="recipe_1" label="Recipe Item 1">
             <Select>
-            {OPTIONS
-                .map((item) => (
-                  <Select.Option
-                    key={item}
-                    value={item.toLowerCase()}
-                  >
-                    {item}
-                  </Select.Option>
-                ))}
+              {OPTIONS.map((item) => (
+                <Select.Option key={item} value={item.toLowerCase()}>
+                  {item}
+                </Select.Option>
+              ))}
             </Select>
           </Form.Item>
-          <Form.Item
-            name="recipe_2"
-            label="Recipe Item 2"
-          >
+          <Form.Item name="recipe_2" label="Recipe Item 2">
             <Select>
-            {OPTIONS
-                .map((item) => (
-                  <Select.Option
-                    key={item}
-                    value={item.toLowerCase()}
-                  >
-                    {item}
-                  </Select.Option>
-                ))}
+              {OPTIONS.map((item) => (
+                <Select.Option key={item} value={item.toLowerCase()}>
+                  {item}
+                </Select.Option>
+              ))}
             </Select>
           </Form.Item>
           <Form.Item label="Item Image" valuePropName="fileList">
@@ -242,9 +226,7 @@ function SynergysManager() {
           >
             <TextArea rows={4} />
           </Form.Item>
-          <Form.Item
-            label="Create Synergy"
-          >
+          <Form.Item label="Create Synergy">
             <Button type="primary" htmlType="submit">
               Submit
             </Button>

@@ -4,14 +4,28 @@ import { solid } from "@fortawesome/fontawesome-svg-core/import.macro";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useContext, useState } from "react";
 import { DataContext } from "contexts/DataContext";
+import LoadingCycle from "components/common/LoadingCycle";
+import { useEffect } from "react";
 
 function AvatarChampion(props) {
-  const { championsData, synergysData } = useContext(DataContext);
-  const [championDetail, setChampionDetail] = useState(championsData.find(item => item.champion_name === props.champion_name));
-  const [synergys, setSynergys] = useState(synergysData.filter((item) => {
-    return championDetail.champion_origin.concat(championDetail.champion_class).includes(item.synergy_name.toLowerCase())
-  }
-  ))
+  const [hiddenPopup, setHiddenPopup] = useState(true);
+  const [loadDone, setLoadDone] = useState(false);
+  const { championsData, synergysData, itemsData } = useContext(DataContext);
+  const [championDetail, setChampionDetail] = useState(
+    championsData.find((item) => item.champion_name === props.champion_name)
+  );
+  const [synergys, setSynergys] = useState(
+    synergysData.filter((item) => {
+      return championDetail.champion_origin
+        .concat(championDetail.champion_class)
+        .includes(item.synergy_name.toLowerCase());
+    })
+  )
+  const [itemsRecommend, setItemsRecommend] = useState(
+    itemsData.filter((item) =>
+      championDetail.champion_items.includes(item.item_name)
+    )
+  );
   let borders = {
     1: "#213042",
     2: "#156831",
@@ -29,11 +43,13 @@ function AvatarChampion(props) {
   };
   return (
     <AvatarChampionDefault
+      loadDone={loadDone}
       border_color={borders[championDetail.champion_cost]}
       border_image={borders_image[championDetail.champion_cost]}
       className={props.className}
       width={props.width}
       height={props.height}
+      onMouseEnter={() => setHiddenPopup(false)}
     >
       <div className="wrapper">
         <img
@@ -41,34 +57,56 @@ function AvatarChampion(props) {
           src={championDetail.champion_img_link}
           alt={championDetail.champion_name}
         />
-        <div className="popup">
-          <div className="popup-info">
-            <div className="popup-avatar">
-              <img src={championDetail.champion_img_link} alt="" />
-              <span>{championDetail.champion_name}</span>
+        {hiddenPopup || (
+          <div className="popup">
+            <div className="popup-info">
+              <div className="popup-avatar">
+                <img src={championDetail.champion_img_link} alt="" />
+                <span>{championDetail.champion_name}</span>
+              </div>
+              <div className="popup-synergy">
+                {synergys &&
+                  synergys.map((item) => {
+                    return (
+                      <SynergyIcon
+                        className="popup-synergy-item"
+                        key={item.synergy_name}
+                        img_src={item.synergy_image}
+                        name={item.synergy_name}
+                      />
+                    );
+                  })}
+              </div>
+              <div className="popup-cost">
+                <FontAwesomeIcon className="coin" icon={solid("coins")} />
+                <span>{championDetail.champion_cost}</span>
+              </div>
             </div>
-            <div className="popup-synergy">
-              {synergys &&
-                synergys.map((item) => {
+            <div className="loading">
+              <LoadingCycle />
+            </div>
+            <div className="popup-items">
+              <span>
+                Items:{" "}
+                {itemsRecommend.map((item, index) => {
                   return (
-                    <SynergyIcon
-                      className="popup-synergy-item"
-                      key={item.synergy_name}
-                      img_src={item.synergy_image}
-                      name={item.synergy_name}
-                    />
+                    <span key={item.item_name}>
+                      <img
+                        src={item.item_image}
+                        alt=""
+                        onLoad={() => {
+                          if (index === itemsRecommend.length - 1) {
+                            setLoadDone(true);
+                          }
+                        }}
+                      />
+                    </span>
                   );
                 })}
-            </div>
-            <div className="popup-cost">
-              <FontAwesomeIcon className="coin" icon={solid("coins")} />
-              <span>{championDetail.champion_cost}</span>
+              </span>
             </div>
           </div>
-          <div className="popup-items">
-            <span>Items: </span>
-          </div>
-        </div>
+        )}
       </div>
     </AvatarChampionDefault>
   );
@@ -82,7 +120,13 @@ const AvatarChampionDefault = styled.div`
   .wrapper {
     position: relative;
     width: 100%;
+    .loading {
+      display: ${(props) => (props.loadDone === true ? "none" : "block")};
+      padding: 20px;
+      border: 1px solid #17313a;
+    }
     .avatar-champion {
+      cursor: pointer;
       transition: all 0.2s;
       width: 100%;
       height: auto;
@@ -103,11 +147,12 @@ const AvatarChampionDefault = styled.div`
       display: none;
       position: absolute;
       bottom: calc(100% + 6px);
-      transform: translateX(-43%);
+      transform: translateX(-50%)
+        translateX(${(props) => Number(props.width.split("px")[0]) / 2 + "px"});
       background-color: #102531;
       border: 1px solid #17313a;
       .popup-info {
-        display: flex;
+        display: ${(props) => (props.loadDone === true ? "flex" : "none")};
         .popup-avatar {
           padding: 10px;
           display: flex;
@@ -148,9 +193,19 @@ const AvatarChampionDefault = styled.div`
         }
       }
       .popup-items {
+        display: ${(props) => (props.loadDone === true ? "block" : "none")};
         background-color: #0d202b;
         border-top: 1px solid #17313a;
         padding: 10px;
+        img {
+          border: 1px solid #17313a;
+          width: 25px;
+          height: 25px;
+          margin-left: 5px;
+          &:nth-child(1) {
+            margin-left: 10px !important;
+          }
+        }
       }
     }
   }

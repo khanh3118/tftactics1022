@@ -1,27 +1,121 @@
+import { useEffect, lazy, Suspense } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { solid } from "@fortawesome/fontawesome-svg-core/import.macro";
 import styled from "styled-components";
 import { useContext, useState } from "react";
 import { DataContext } from "contexts/DataContext";
-import AvatarChampion from "components/common/AvatarChampion";
+import { useOutletContext } from "react-router-dom";
+
+const AvatarChampion = lazy(() => import("components/common/AvatarChampion"));
 
 function ChampionsStats() {
+  const searchText = useOutletContext();
   const [level, setLevel] = useState(1);
+  const [decreased, setDecreased] = useState(true);
   const [type, setType] = useState("offense");
   const { championsData, synergysData } = useContext(DataContext);
   const [sorted, setSorted] = useState(championsData);
   const [filterOptions, setFilterOptions] = useState({
-    name: "dps",
-    type: "increase",
-    text: "ao"
-  })
+    name: "DPS",
+    type: "decrease",
+    searchText: "",
+  });
+  useEffect(() => {
+    setSorted([
+      ...championsData
+        .filter((item) =>
+          item.champion_name.toLowerCase().includes(filterOptions.searchText)
+        )
+        .sort((a, b) => {
+          if (filterOptions.type === "increase") {
+            if (filterOptions.name === "DPS")
+              return (
+                Number(a.champion_dps.split("/")[level - 1].trim()) -
+                Number(b.champion_dps.split("/")[level - 1].trim())
+              );
+            if (filterOptions.name === "Damage")
+              return (
+                Number(a.champion_damage.split("/")[level - 1]) -
+                Number(b.champion_damage.split("/")[level - 1])
+              );
+            if (filterOptions.name === "Range")
+              return Number(a.champion_range) - Number(b.champion_range);
+            if (filterOptions.name === "Atk Spd")
+              return Number(a.champion_akt_spd) - Number(b.champion_akt_spd);
+            if (filterOptions.name === "Health")
+              return (
+                Number(a.champion_health.split("/")[level - 1].trim()) -
+                Number(b.champion_health.split("/")[level - 1].trim())
+              );
+            if (filterOptions.name === "Mana")
+              return Number(a.champion_mana) - Number(b.champion_mana);
+            if (filterOptions.name === "Armor")
+              return Number(a.champion_armor) - Number(b.champion_armor);
+            if (filterOptions.name === "MR")
+              return Number(a.champion_mr) - Number(b.champion_mr);
+            if (filterOptions.name === "Champion")
+              return a.champion_name.localeCompare(b.champion_name);
+          }
+          if (filterOptions.type === "decrease") {
+            if (filterOptions.name === "DPS")
+              return (
+                b.champion_dps.split("/")[level - 1].trim() -
+                Number(a.champion_dps.split("/")[level - 1].trim())
+              );
+            if (filterOptions.name === "Damage")
+              return (
+                Number(b.champion_damage.split("/")[level - 1].trim()) -
+                a.champion_damage.split("/")[level - 1].trim()
+              );
+            if (filterOptions.name === "Range")
+              return Number(b.champion_range) - a.champion_range;
+            if (filterOptions.name === "Atk Spd")
+              return Number(b.champion_akt_spd) - Number(a.champion_akt_spd);
+            if (filterOptions.name === "Health")
+              return (
+                Number(b.champion_health.split("/")[level - 1].trim()) -
+                Number(a.champion_health.split("/")[level - 1].trim())
+              );
+            if (filterOptions.name === "Mana")
+              return Number(b.champion_mana) - Number(a.champion_mana);
+            if (filterOptions.name === "Armor")
+              return Number(b.champion_armor) - Number(a.champion_armor);
+            if (filterOptions.name === "MR")
+              return Number(b.champion_mr) - Number(a.champion_mr);
+            if (filterOptions.name === "Champion")
+              return b.champion_name.localeCompare(a.champion_name);
+          }
+        }),
+    ]);
+  }, [filterOptions]);
+  useEffect(() => {
+    setFilterOptions({
+      ...filterOptions,
+      searchText,
+    });
+  }, [searchText]);
   function hanleClick(e) {
     let a = document.querySelectorAll(".table-header-item");
     a.forEach((item) => {
       item.className = "table-header-item";
     });
-    e.target.className = "table-header-item active";
-    console.log(e.target.innerText);
+    if (decreased) {
+      e.target.className = "table-header-item increase";
+      setDecreased(false);
+      setFilterOptions({
+        ...filterOptions,
+        type: "increase",
+        name: e.target.innerText,
+      });
+    } else {
+      e.target.className = "table-header-item decrease";
+      setDecreased(true);
+      setFilterOptions({
+        ...filterOptions,
+        type: "decrease",
+        name: e.target.innerText,
+      });
+    }
   }
 
   function hanleLevel(e, level) {
@@ -34,6 +128,32 @@ function ChampionsStats() {
     }
     setLevel(level);
   }
+  function offenseSet() {
+    let a = document.querySelectorAll(".table-header-item");
+    a.forEach((item) => {
+      item.className = "table-header-item";
+    });
+    a[1].classList = "table-header-item decrease";
+    setType("offense");
+    setFilterOptions({
+      ...filterOptions,
+      type: "decrease",
+      name: "DPS",
+    });
+  }
+  function defenseSet() {
+    let a = document.querySelectorAll(".table-header-item");
+    a.forEach((item) => {
+      item.className = "table-header-item";
+    });
+    a[1].classList = "table-header-item decrease";
+    setType("defense");
+    setFilterOptions({
+      ...filterOptions,
+      type: "decrease",
+      name: "Health",
+    });
+  }
   return (
     <ChampionsStatsDefault id="champions-stats">
       <div className="wrapper">
@@ -44,10 +164,10 @@ function ChampionsStats() {
           </p>
         </div>
         <div className="options">
-          <div onClick={() => setType("offense")} className="btn">
+          <div onClick={() => offenseSet()} className="btn">
             <span>offense</span>
           </div>
-          <div onClick={() => setType("defense")} className="btn">
+          <div onClick={() => defenseSet()} className="btn">
             <span>defense</span>
           </div>
           <div className="level">
@@ -73,60 +193,75 @@ function ChampionsStats() {
             <div onClick={(e) => hanleClick(e)} className="table-header-item">
               Champion
             </div>
-            <div onClick={(e) => hanleClick(e)} className="table-header-item">
-              {type === 'offense' ? "DPS" : "Health"}
+            <div
+              onClick={(e) => hanleClick(e)}
+              className="table-header-item decrease"
+            >
+              {type === "offense" ? "DPS" : "Health"}
             </div>
             <div onClick={(e) => hanleClick(e)} className="table-header-item">
-              {type === 'offense' ? "Atk Spd" : "Mana"}
+              {type === "offense" ? "Atk Spd" : "Mana"}
             </div>
             <div onClick={(e) => hanleClick(e)} className="table-header-item">
-              {type === 'offense' ? "Damage" : "Armor"}
+              {type === "offense" ? "Damage" : "Armor"}
             </div>
             <div onClick={(e) => hanleClick(e)} className="table-header-item">
-              {type === 'offense' ? "Range" : "MR"}
+              {type === "offense" ? "Range" : "MR"}
             </div>
           </div>
           <div className="table-items">
-            {sorted.map(item => {
-              return (<div className="table-item" key={item.champion_name}>
-                <div className="item-name-img">
-                  <AvatarChampion 
-                    champion_name={item.champion_name}
-                    width="40px"
-                    height="40px"
-                    className="item-name-img-l"
-                  />
-                  <span>{item.champion_name}</span>
+            {sorted.map((item) => {
+              return (
+                <div className="table-item" key={item.champion_name}>
+                  <div className="item-name-img">
+                    <Suspense>
+                      <AvatarChampion
+                        champion_name={item.champion_name}
+                        width="40px"
+                        height="40px"
+                        className="item-name-img-l"
+                      />
+                    </Suspense>
+                    <span className="item-name-image-span">
+                      {item.champion_name}
+                    </span>
+                  </div>
+                  <div className="item-stats">
+                    {type === "offense" ? (
+                      <span>
+                        {item.champion_dps.split("/")[level - 1].trim()}
+                      </span>
+                    ) : (
+                      <span>
+                        {item.champion_health.split("/")[level - 1].trim()}
+                      </span>
+                    )}
+                  </div>
+                  <div className="item-stats">
+                    {type === "offense" ? (
+                      <span>{item.champion_akt_spd}</span>
+                    ) : (
+                      <span>{item.champion_mana}</span>
+                    )}
+                  </div>
+                  <div className="item-stats">
+                    {type === "offense" ? (
+                      <span>
+                        {item.champion_damage.split("/")[level - 1].trim()}
+                      </span>
+                    ) : (
+                      <span>{item.champion_armor}</span>
+                    )}
+                  </div>
+                  <div className="item-stats">
+                    {type === "offense" ? (
+                      <span>{item.champion_range}</span>
+                    ) : (
+                      <span>{item.champion_mr}</span>
+                    )}
+                  </div>
                 </div>
-                <div className="item-stats">
-                  {type === 'offense' ? (
-                    <span>{item.champion_dps.split("/")[level-1].trim()}</span>
-                  ): (
-                    <span>{item.champion_health.split("/")[level-1].trim()}</span>
-                  )}
-                </div>
-                <div className="item-stats">
-                  {type === 'offense' ? (
-                    <span>{item.champion_akt_spd}</span>
-                  ): (
-                    <span>{item.champion_mana}</span>
-                  )}
-                </div>
-                <div className="item-stats">
-                  {type === 'offense' ? (
-                    <span>{item.champion_damage.split("/")[level-1].trim()}</span>
-                  ): (
-                    <span>{item.champion_armor}</span>
-                  )}
-                </div>
-                <div className="item-stats">
-                  {type === 'offense' ? (
-                    <span>{item.champion_range}</span>
-                  ): (
-                    <span>{item.champion_mr}</span>
-                  )}
-                </div>
-              </div>)
+              );
             })}
           </div>
         </div>
@@ -209,8 +344,11 @@ const ChampionsStatsDefault = styled.div`
             padding-right: 20px;
           }
         }
-        .table-header-item.active {
+        .table-header-item.increase {
           box-shadow: inset 0 2px 0 0 #d47559;
+        }
+        .table-header-item.decrease {
+          box-shadow: inset 0 -2px 0 0 #d47559;
         }
       }
       .table-items {
@@ -236,7 +374,7 @@ const ChampionsStatsDefault = styled.div`
           }
           .item-name-img {
             padding-left: 20px;
-            span {
+            .item-name-image-span {
               margin-left: 15px;
             }
           }
