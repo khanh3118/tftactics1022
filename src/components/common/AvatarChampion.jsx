@@ -51,27 +51,27 @@ function AvatarChampion(props) {
       height={props.height}
       onMouseEnter={() => setHiddenPopup(false)}
     >
+      {props.items_equip !== undefined && props.items_equip.length > 0 && (
+        <div className="item">
+          {props.items_equip.map((itemName) => {
+            return (
+              <AvatarItem
+                className="item-avatar"
+                key={itemName}
+                width="18px"
+                height="18px"
+                name={itemName}
+              />
+            );
+          })}
+        </div>
+      )}
       <div className="wrapper">
         <img
           className="avatar-champion"
           src={championDetail.champion_img_link}
           alt={championDetail.champion_name}
         />
-        {props.items_equip !== undefined && props.items_equip.length > 0 && (
-          <div className="item">
-            {props.items_equip.map((itemName) => {
-              return (
-                <AvatarItem
-                  className="item-avatar"
-                  key={itemName}
-                  width="18px"
-                  height="18px"
-                  name={itemName}
-                />
-              );
-            })}
-          </div>
-        )}
         {hiddenPopup || (
           <div className="popup">
             <div className="popup-info">
@@ -131,19 +131,21 @@ export default AvatarChampion;
 const AvatarChampionDefault = styled.div`
   width: ${(props) => props.width};
   height: ${(props) => props.height};
+  position: relative;
+  .item {
+    position: absolute;
+    display: flex;
+    left: 50%;
+    transform: translateX(-50%) translateY(25%);
+    bottom: 0;
+    z-index: 100;
+    .item-avatar {
+      
+    }
+  }
   .wrapper {
     position: relative;
     width: 100%;
-    .item {
-      position: absolute;
-      display: flex;
-      left: 50%;
-      transform: translateX(-50%) translateY(25%);
-      bottom: 0;
-      .item-avatar {
-        
-      }
-    }
     .loading {
       display: ${(props) => (props.loadDone === true ? "none" : "block")};
       padding: 20px;

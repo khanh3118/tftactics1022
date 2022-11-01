@@ -14,73 +14,8 @@ import { solid } from "@fortawesome/fontawesome-svg-core/import.macro";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import AvatarChampion from "components/common/AvatarChampion";
 
-const team_comps = [
-  {
-    name: "Darkflight Assassins",
-    type: "standard",
-    tier: "s",
-    status: "up",
-    members: [
-      {
-        name: "Aphelios",
-        position: 28,
-        max_level: false,
-        items: [],
-      },
-      {
-        name: "Qiyana",
-        position: 18,
-        max_level: false,
-        items: [],
-      },
-      {
-        name: "Rell",
-        position: 5,
-        max_level: false,
-        items: [],
-      },
-      {
-        name: "Diana",
-        position: 25,
-        max_level: false,
-        items: [],
-      },
-      {
-        name: "Rengar",
-        position: 27,
-        max_level: true,
-        items: ["Hand of Justice", "Infinity Edge", "Runaan's Hurricane"],
-      },
-      {
-        name: "Nilah",
-        position: 26,
-        max_level: false,
-        items: [],
-      },
-      {
-        name: "Swain",
-        position: 12,
-        max_level: false,
-        items: ["Archangel's Staff", "Morellonomicon"],
-      },
-    ],
-    early_comp: ["Ezreal", "Sejuani", "Qiyana", "Rell", "Rengar"],
-    carousel: ["B.F. Sword"],
-    options: [
-      {
-        replace_from: ["lvlup"],
-        replace_to: ["Rengar", "Graves"],
-      },
-      {
-        replace_from: ["Diana", "Nilah"],
-        replace_to: ["Sejuani", "Graves"],
-      },
-    ],
-  },
-];
-
 function ItemBuilder() {
-  const { itemsData } = useContext(DataContext);
+  const { compsData } = useContext(DataContext);
   return (
     <TeamCompsWrapper id="item-builder">
       <MainLayout
@@ -129,7 +64,7 @@ function ItemBuilder() {
             </div>
             <div className="team-comps-wrapper">
               <div className="team-comps">
-                {team_comps.map((team) => {
+                {compsData.map((team) => {
                   return (
                     <div key={team.name} className="team-comps-item">
                       <div className="team-comps-item-line-1">
