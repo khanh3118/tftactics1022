@@ -74,9 +74,7 @@ export const DataProvider = ({ children }) => {
   const [championsData, setChampionsData] = useState([]);
   const [synergysData, setSynergyData] = useState([]);
   const [itemsData, setItemsData] = useState([]);
-  const [isLoading, setIsLoading] = useState(false);
   async function fetData() {
-    setIsLoading(true);
     let champions = championsService.getAllChampions();
     let synergys = synergysService.getAllSynergys();
     let items = itemServices.getAllItems();
@@ -88,7 +86,6 @@ export const DataProvider = ({ children }) => {
     } catch (error) {
       throw new Error(error);
     }
-    setIsLoading(false);
   }
 
   useEffect(() => {
@@ -97,7 +94,7 @@ export const DataProvider = ({ children }) => {
 
   return (
     <DataContext.Provider value={{ championsData, synergysData, itemsData, compsData }}>
-      {isLoading || children}
+      {children}
     </DataContext.Provider>
   );
 };
