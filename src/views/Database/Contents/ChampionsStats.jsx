@@ -4,7 +4,7 @@ import { solid } from "@fortawesome/fontawesome-svg-core/import.macro";
 import styled from "styled-components";
 import { useContext, useState } from "react";
 import { DataContext } from "contexts/DataContext";
-import { useOutletContext } from "react-router-dom";
+import { useOutletContext, NavLink } from "react-router-dom";
 
 const AvatarChampion = lazy(() => import("components/common/AvatarChampion"));
 
@@ -13,7 +13,7 @@ function ChampionsStats() {
   const [level, setLevel] = useState(1);
   const [decreased, setDecreased] = useState(true);
   const [type, setType] = useState("offense");
-  const { championsData, synergysData } = useContext(DataContext);
+  const { championsData } = useContext(DataContext);
   const [sorted, setSorted] = useState(championsData);
   const [filterOptions, setFilterOptions] = useState({
     name: "DPS",
@@ -213,18 +213,20 @@ function ChampionsStats() {
             {sorted.map((item) => {
               return (
                 <div className="table-item" key={item.champion_name}>
-                  <div className="item-name-img">
-                    <Suspense>
-                      <AvatarChampion
-                        champion_name={item.champion_name}
-                        width="40px"
-                        height="40px"
-                        className="item-name-img-l"
-                      />
-                    </Suspense>
-                    <span className="item-name-image-span">
-                      {item.champion_name}
-                    </span>
+                  <div>
+                    <NavLink to="/" className="item-name-img">
+                      <Suspense>
+                        <AvatarChampion
+                          champion_name={item.champion_name}
+                          width="40px"
+                          height="40px"
+                          className="item-name-img-l"
+                        />
+                      </Suspense>
+                      <span className="item-name-image-span">
+                        {item.champion_name}
+                      </span>
+                    </NavLink>
                   </div>
                   <div className="item-stats">
                     {type === "offense" ? (
@@ -373,6 +375,7 @@ const ChampionsStatsDefault = styled.div`
             }
           }
           .item-name-img {
+            width: max-content;
             padding-left: 20px;
             .item-name-image-span {
               margin-left: 15px;

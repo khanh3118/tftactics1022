@@ -1,12 +1,14 @@
 import styled from "styled-components";
 import { DataContext } from "contexts/DataContext";
-import { useContext, useState } from "react";
+import { useContext } from "react";
 
 export default function AvatarItem(props) {
   const { itemsData } = useContext(DataContext);
-  const [itemDetail, setItemDetail] = useState(
-    itemsData.find((item) => item.item_name.toLowerCase() === props.name.toLowerCase())
+
+  const itemDetail = itemsData.find(
+    (item) => item.item_name.toLowerCase() === props.name.toLowerCase()
   );
+
   return (
     <AvatarItemDefault onClick={props.hanleClick} className={props.className}>
       <Wrapper width={props.width} height={props.height}>

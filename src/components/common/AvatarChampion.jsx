@@ -5,42 +5,42 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useContext, useState } from "react";
 import { DataContext } from "contexts/DataContext";
 import LoadingCycle from "components/common/LoadingCycle";
-import { useEffect } from "react";
+
+let borders = {
+  1: "#213042",
+  2: "#156831",
+  3: "#12407c",
+  4: "#893088",
+  5: "#b89d27",
+  6: "#12407c",
+  7: "#fff",
+  8: "#fff",
+};
+let borders_image = {
+  6: "linear-gradient(to bottom right,#12407c 0,#fff 25%,#12407c 50%,#fff 75%,#12407c);",
+  7: "linear-gradient(to bottom right,#893088 0,#fff 25%,#893088 50%,#fff 75%,#893088);",
+  8: "linear-gradient(to bottom right,#b89d27 0,#fff 25%,#b89d27 50%,#fff 75%,#b89d27);",
+};
 
 function AvatarChampion(props) {
   const [hiddenPopup, setHiddenPopup] = useState(true);
   const [loadDone, setLoadDone] = useState(false);
   const { championsData, synergysData, itemsData } = useContext(DataContext);
-  const [championDetail, setChampionDetail] = useState(
-    championsData.find((item) => item.champion_name === props.champion_name)
+
+  const championDetail = championsData.find(
+    (item) => item.champion_name === props.champion_name
   );
-  const [synergys, setSynergys] = useState(
-    synergysData.filter((item) => {
-      return championDetail.champion_origin
-        .concat(championDetail.champion_class)
-        .includes(item.synergy_name.toLowerCase());
-    })
-  )
-  const [itemsRecommend, setItemsRecommend] = useState(
-    itemsData.filter((item) =>
-      championDetail.champion_items.includes(item.item_name)
-    )
+
+  const synergys = synergysData.filter((item) => {
+    return championDetail.champion_origin
+      .concat(championDetail.champion_class)
+      .includes(item.synergy_name.toLowerCase());
+  });
+
+  const itemsRecommend = itemsData.filter((item) =>
+    championDetail.champion_items.includes(item.item_name)
   );
-  let borders = {
-    1: "#213042",
-    2: "#156831",
-    3: "#12407c",
-    4: "#893088",
-    5: "#b89d27",
-    6: "#12407c",
-    7: "#fff",
-    8: "#fff",
-  };
-  let borders_image = {
-    6: "linear-gradient(to bottom right,#12407c 0,#fff 25%,#12407c 50%,#fff 75%,#12407c);",
-    7: "linear-gradient(to bottom right,#893088 0,#fff 25%,#893088 50%,#fff 75%,#893088);",
-    8: "linear-gradient(to bottom right,#b89d27 0,#fff 25%,#b89d27 50%,#fff 75%,#b89d27);",
-  };
+
   return (
     <AvatarChampionDefault
       loadDone={loadDone}
@@ -71,8 +71,7 @@ function AvatarChampion(props) {
                       <SynergyIcon
                         className="popup-synergy-item"
                         key={item.synergy_name}
-                        img_src={item.synergy_image}
-                        name={item.synergy_name}
+                        synergy_name={item.synergy_name}
                       />
                     );
                   })}

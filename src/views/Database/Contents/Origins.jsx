@@ -1,16 +1,23 @@
 import styled from "styled-components";
-import AvatarChampion from "components/common/AvatarChampion";
-import SynergyIcon from "components/common/SynergyIcon";
-import { useEffect, useContext, useState } from "react";
+import { useEffect, useContext, useState, lazy, Suspense } from "react";
 import { useOutletContext } from "react-router-dom";
 import { DataContext } from "contexts/DataContext";
+
+const AvatarChampion = lazy(() => import("components/common/AvatarChampion"));
+const SynergyIcon = lazy(() => import("components/common/SynergyIcon"));
 
 function Origins() {
   const { championsData, synergysData } = useContext(DataContext);
   const searchText = useOutletContext();
-  const [ s_data, setS_data] = useState(synergysData);
+  const [s_data, setS_data] = useState(synergysData);
   useEffect(() => {
-    setS_data(synergysData.filter(item => item.synergy_name.toLowerCase().includes(searchText.trim().toLowerCase())))
+    setS_data(
+      synergysData.filter((item) =>
+        item.synergy_name
+          .toLowerCase()
+          .includes(searchText.trim().toLowerCase())
+      )
+    );
   }, [searchText]);
   return (
     <OriginDefault id="origin-default">
@@ -35,10 +42,9 @@ function Origins() {
                 return (
                   <div key={item.synergy_image} className="table-item">
                     <div className="item-origin">
-                      <SynergyIcon
-                        img_src={item.synergy_image}
-                        name={item.synergy_name}
-                      />
+                      <Suspense>
+                        <SynergyIcon synergy_name={item.synergy_name} />
+                      </Suspense>
                     </div>
                     <div className="item-bonus">
                       <div className="item-bonus-description">
@@ -62,17 +68,25 @@ function Origins() {
                     </div>
                     <div className="item-unit">
                       <div className="wrapper">
-                        {championsData.filter(champion => champion.champion_origin.includes(item.synergy_name.toLowerCase())).map(a => {
-                          return (
-                            <AvatarChampion
-                              key={a.champion_name}
-                              champion_name={a.champion_name}
-                              width="30px"
-                              height="30px"
-                              className="item-unit-img"
-                            />
-                          );
-                        })}
+                        <Suspense>
+                          {championsData
+                            .filter((champion) =>
+                              champion.champion_origin.includes(
+                                item.synergy_name.toLowerCase()
+                              )
+                            )
+                            .map((a) => {
+                              return (
+                                <AvatarChampion
+                                  key={a.champion_name}
+                                  champion_name={a.champion_name}
+                                  width="30px"
+                                  height="30px"
+                                  className="item-unit-img"
+                                />
+                              );
+                            })}
+                        </Suspense>
                       </div>
                     </div>
                   </div>

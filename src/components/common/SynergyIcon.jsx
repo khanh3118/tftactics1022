@@ -1,11 +1,111 @@
 import styled from "styled-components";
+import { useContext, useState } from "react";
+import { DataContext } from "contexts/DataContext";
+import LoadingCycle from "components/common/LoadingCycle";
+
+let borders = {
+  1: "#213042",
+  2: "#156831",
+  3: "#12407c",
+  4: "#893088",
+  5: "#b89d27",
+  6: "#12407c",
+  7: "#fff",
+  8: "#fff",
+};
+let borders_image = {
+  6: "linear-gradient(to bottom right,#12407c 0,#fff 25%,#12407c 50%,#fff 75%,#12407c);",
+  7: "linear-gradient(to bottom right,#893088 0,#fff 25%,#893088 50%,#fff 75%,#893088);",
+  8: "linear-gradient(to bottom right,#b89d27 0,#fff 25%,#b89d27 50%,#fff 75%,#b89d27);",
+};
 
 function SynergyIcon(props) {
+  const { championsData, synergysData } = useContext(DataContext);
+  const [loadDone, setLoadDone] = useState(false);
+  const [hiddenPopup, setHiddenPopup] = useState(true);
+
+  const synergyDetail = synergysData.find(
+    (item) =>
+      item.synergy_name.toLowerCase() === props.synergy_name.toLowerCase()
+  );
+
+  const championsList = championsData.filter(
+    (item) =>
+      item.champion_class.includes(synergyDetail.synergy_name.toLowerCase()) ||
+      item.champion_origin.includes(synergyDetail.synergy_name.toLowerCase())
+  );
+
   return (
-    <SynergyIconDefault className={props.className}>
+    <SynergyIconDefault
+      loadDone={loadDone}
+      className={props.className}
+      onMouseEnter={() => setHiddenPopup(false)}
+    >
       <div className="wrapper">
-        <img src={props.img_src} alt={props.img_alt} />
-        <span>{props.name}</span>
+        <img
+          className="wrapper-synergy-image"
+          src={synergyDetail.synergy_image}
+          alt={synergyDetail.synergy_name}
+        />
+        <span>{synergyDetail.synergy_name}</span>
+        {hiddenPopup || (
+          <div className="popup">
+            <div className="popup-info">
+              <div className="popup-info-title">
+                <div className="popup-info-title-wrapper">
+                  <img src={synergyDetail.synergy_image} alt="" />
+                  <span>{synergyDetail.synergy_name}</span>
+                </div>
+              </div>
+              {synergyDetail.synergy_description !== " " && (
+                <div className="popup-info-description">
+                  {synergyDetail.synergy_description}
+                </div>
+              )}
+              <div className="popup-info-description_level">
+                <ul>
+                  {synergyDetail.synergy_description_level
+                    .split("/")
+                    .map((item, index) => {
+                      let a = item.split("$");
+                      return (
+                        <li key={index}>
+                          <span>{a[0]}</span>
+                          {a[1]}
+                        </li>
+                      );
+                    })}
+                </ul>
+              </div>
+            </div>
+            <div className="loading">
+              <LoadingCycle />
+            </div>
+            <div className="popup-champions">
+              <span>Champions: </span>
+              {championsList.map((item, index) => {
+                return (
+                  <div
+                    key={item.champion_name}
+                    className="champion-img-wrapper"
+                  >
+                    <ChampionImg
+                      onLoad={() => {
+                        if (index === championsList.length - 1) {
+                          setLoadDone(true);
+                        }
+                      }}
+                      border_color={borders[item.champion_cost]}
+                      border_image={borders_image[item.champion_cost]}
+                      src={item.champion_img_link}
+                      alt=""
+                    />
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        )}
       </div>
     </SynergyIconDefault>
   );
@@ -19,7 +119,13 @@ const SynergyIconDefault = styled.div`
     align-items: center;
     justify-content: flex-start;
     width: max-content !important;
-    img {
+    position: relative;
+    .loading {
+      display: ${(props) => (props.loadDone === true ? "none" : "block")};
+      padding: 20px;
+      border: 1px solid #17313a;
+    }
+    .wrapper-synergy-image {
       vertical-align: middle;
       height: 22px;
       width: 22px;
@@ -29,5 +135,81 @@ const SynergyIconDefault = styled.div`
       margin-left: 0 !important;
       color: white;
     }
+    &:hover {
+      .avatar-champion {
+        border-color: #d47559;
+      }
+      .popup {
+        display: block;
+      }
+    }
+    .popup {
+      display: none;
+      position: absolute;
+      bottom: calc(100% + 6px);
+      background-color: #102531;
+      border: 1px solid #17313a;
+      transform: translateX(-25%);
+      .popup-info {
+        min-width: 500px;
+        display: ${(props) => (props.loadDone === true ? "flex" : "none")};
+        flex-direction: column;
+        .popup-info-title {
+          border-bottom: 1px solid #17313a;
+          .popup-info-title-wrapper {
+            padding: 10px;
+            img {
+              width: 25px;
+              height: 25px;
+              margin-right: 5px;
+            }
+          }
+        }
+        .popup-info-description {
+          padding: 10px 15px 0px 15px;
+        }
+        .popup-info-description_level {
+          padding: 10px;
+          ul {
+            list-style: none;
+            li {
+              display: flex;
+              align-items: center;
+              padding: 5px 0;
+              color: white;
+              span {
+                margin-right: 10px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                min-width: 25px;
+                height: 25px;
+                border-radius: 50%;
+                border: 1px solid #17313a;
+              }
+            }
+          }
+        }
+      }
+      .popup-champions {
+        display: ${(props) => (props.loadDone === true ? "flex" : "none")};
+        background-color: #0d202b;
+        border-top: 1px solid #17313a;
+        padding: 10px;
+        align-items: center;
+        .champion-img-wrapper {
+          margin-left: 5px;
+        }
+      }
+    }
   }
+`;
+
+const ChampionImg = styled.img`
+  border: 1px solid #17313a;
+  width: 25px;
+  height: 25px;
+  border-color: ${(props) => props.border_color};
+  border-image: ${(props) => props.border_image};
+  border-image-slice: ${(props) => (props.border_image ? "1" : "")};
 `;

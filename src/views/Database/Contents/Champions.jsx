@@ -9,7 +9,7 @@ const AvatarChampion = lazy(() => import("components/common/AvatarChampion"));
 const SynergyIcon = lazy(() => import("components/common/SynergyIcon"));
 
 function Champions() {
-  const { championsData, synergysData } = useContext(DataContext);
+  const { championsData } = useContext(DataContext);
   const [c_data, setC_data] = useState(
     championsData.sort((a, b) => a.champion_name.localeCompare(b.champion_name))
   );
@@ -73,11 +73,6 @@ function Champions() {
       }
     }
   }
-  function getSynergyImg(synergyName) {
-    return synergysData.find(
-      (item) => item.synergy_name.toLowerCase() === synergyName
-    ).synergy_image;
-  }
   return (
     <ChampionsDefault id="champions-default">
       <div className="wrapper">
@@ -125,10 +120,8 @@ function Champions() {
                         {item.champion_origin.map((originName) => {
                           return (
                             <SynergyIcon
+                              synergy_name={originName}
                               key={originName}
-                              name={originName}
-                              img_src={getSynergyImg(originName)}
-                              img_alt={originName}
                             />
                           );
                         })}
@@ -143,10 +136,8 @@ function Champions() {
                         {item.champion_class.map((className) => {
                           return (
                             <SynergyIcon
+                              synergy_name={className}
                               key={className}
-                              name={className}
-                              img_src={getSynergyImg(className)}
-                              img_alt={className}
                             />
                           );
                         })}
