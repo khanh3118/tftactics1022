@@ -19,6 +19,7 @@ import SignUp from "components/auth/SignUp";
 import { AuthProvider } from "contexts/AuthContext";
 import PrivateRoute from "components/auth/PrivateRoute";
 import { DataProvider } from "contexts/DataContext";
+import TeamComps from "views/TeamComps/TeamComps";
 
 const router = createBrowserRouter([
   {
@@ -81,6 +82,10 @@ const router = createBrowserRouter([
       {
         path: "itembuilder",
         element: <ItemBuilder />,
+      },
+      {
+        path: "teamcomps",
+        element: <TeamComps />,
       },
     ],
   },

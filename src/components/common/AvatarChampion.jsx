@@ -5,6 +5,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useContext, useState } from "react";
 import { DataContext } from "contexts/DataContext";
 import LoadingCycle from "components/common/LoadingCycle";
+import AvatarItem from "components/common/AvatarItem";
 
 let borders = {
   1: "#213042",
@@ -40,8 +41,7 @@ function AvatarChampion(props) {
   const itemsRecommend = itemsData.filter((item) =>
     championDetail.champion_items.includes(item.item_name)
   );
-
-  return (
+  return championDetail && (
     <AvatarChampionDefault
       loadDone={loadDone}
       border_color={borders[championDetail.champion_cost]}
@@ -57,6 +57,21 @@ function AvatarChampion(props) {
           src={championDetail.champion_img_link}
           alt={championDetail.champion_name}
         />
+        {props.items_equip !== undefined && props.items_equip.length > 0 && (
+          <div className="item">
+            {props.items_equip.map((itemName) => {
+              return (
+                <AvatarItem
+                  className="item-avatar"
+                  key={itemName}
+                  width="18px"
+                  height="18px"
+                  name={itemName}
+                />
+              );
+            })}
+          </div>
+        )}
         {hiddenPopup || (
           <div className="popup">
             <div className="popup-info">
@@ -119,6 +134,16 @@ const AvatarChampionDefault = styled.div`
   .wrapper {
     position: relative;
     width: 100%;
+    .item {
+      position: absolute;
+      display: flex;
+      left: 50%;
+      transform: translateX(-50%) translateY(25%);
+      bottom: 0;
+      .item-avatar {
+        
+      }
+    }
     .loading {
       display: ${(props) => (props.loadDone === true ? "none" : "block")};
       padding: 20px;
