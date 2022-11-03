@@ -10,7 +10,8 @@ function DatabaseLayout() {
   const [searchText, setSearchText] = useState("");
   const navigate = useNavigate();
   useEffect(() => {
-  
+    if (window.location.pathname === "/database")
+      navigate("/database/champions");
   }, []);
   function hanleSearch(searchText) {
     setSearchText(searchText);
@@ -90,7 +91,7 @@ const DatabaseLayoutTitle = styled.div`
     font-size: 21px;
     font-weight: 600;
   }
-`
+`;
 
 const DatabaseDefault = styled.div`
   .navigation-items {
