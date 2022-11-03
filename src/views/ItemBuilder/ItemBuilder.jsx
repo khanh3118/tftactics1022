@@ -99,7 +99,7 @@ function ItemBuilder() {
                       className="base-item-avatar"
                       width="40px"
                       height="40px"
-                      name={item.item_name}
+                      item_name={item.item_name}
                     />
                   );
                 })}
@@ -118,7 +118,7 @@ function ItemBuilder() {
                       className="base-item-avatar"
                       width="40px"
                       height="40px"
-                      name={item.item_name}
+                      item_name={item.item_name}
                     />
                   );
                 })}
@@ -163,13 +163,13 @@ function ItemBuilder() {
                           className="main-content-table-item-recipe-img"
                           width="35px"
                           height="35px"
-                          name={capitalize(item.recipe_1)}
+                          item_name={capitalize(item.recipe_1)}
                         />
                         <AvatarItem
                           className="main-content-table-item-recipe-img"
                           width="35px"
                           height="35px"
-                          name={capitalize(item.recipe_2)}
+                          item_name={capitalize(item.recipe_2)}
                         />
                       </div>
                       <div className="main-content-table-item-info">
@@ -177,7 +177,7 @@ function ItemBuilder() {
                           className="main-content-table-item-info-img"
                           width="35px"
                           height="35px"
-                          name={item.item_name}
+                          item_name={item.item_name}
                         />
                         <div className="main-content-table-item-info-description">
                           <p>{item.item_description}</p>

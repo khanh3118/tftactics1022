@@ -43,7 +43,11 @@ function Origins() {
                   <div key={item.synergy_image} className="table-item">
                     <div className="item-origin">
                       <Suspense>
-                        <SynergyIcon synergy_name={item.synergy_name} />
+                        <SynergyIcon
+                          width="22px"
+                          height="22px"
+                          synergy_name={item.synergy_name}
+                        />
                       </Suspense>
                     </div>
                     <div className="item-bonus">

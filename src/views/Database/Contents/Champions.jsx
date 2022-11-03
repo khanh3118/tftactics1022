@@ -120,6 +120,8 @@ function Champions() {
                         {item.champion_origin.map((originName) => {
                           return (
                             <SynergyIcon
+                              width="22px"
+                              height="22px"
                               synergy_name={originName}
                               key={originName}
                             />
@@ -136,6 +138,8 @@ function Champions() {
                         {item.champion_class.map((className) => {
                           return (
                             <SynergyIcon
+                              width="22px"
+                              height="22px"
                               synergy_name={className}
                               key={className}
                             />

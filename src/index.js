@@ -15,11 +15,13 @@ import ChampionsManager, {
   loader as ChampionsManagerLoader,
 } from "views/Manager/ChampionsManager";
 import ItemsManager from "views/Manager/ItemsManager";
+import SynergysManager from "views/Manager/SynergysManager";
 import SignUp from "components/auth/SignUp";
 import { AuthProvider } from "contexts/AuthContext";
 import PrivateRoute from "components/auth/PrivateRoute";
 import { DataProvider } from "contexts/DataContext";
 import TeamComps from "views/TeamComps/TeamComps";
+import TeamCompsManager from "views/Manager/TeamCompsManager";
 
 const router = createBrowserRouter([
   {
@@ -30,7 +32,16 @@ const router = createBrowserRouter([
     path: "/manager/origins",
     element: (
       <PrivateRoute>
-        <ChampionsManager />
+        <SynergysManager />
+      </PrivateRoute>
+    ),
+    loader: ChampionsManagerLoader,
+  },
+  {
+    path: "/manager/teamcomps",
+    element: (
+      <PrivateRoute>
+        <TeamCompsManager />
       </PrivateRoute>
     ),
     loader: ChampionsManagerLoader,

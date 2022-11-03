@@ -37,6 +37,8 @@ function SynergyIcon(props) {
 
   return (
     <SynergyIconDefault
+      width={props.width}
+      height={props.height}
       loadDone={loadDone}
       className={props.className}
       onMouseEnter={() => setHiddenPopup(false)}
@@ -47,7 +49,10 @@ function SynergyIcon(props) {
           src={synergyDetail.synergy_image}
           alt={synergyDetail.synergy_name}
         />
-        <span>{synergyDetail.synergy_name}</span>
+        {props.hide_name || (
+          <span className="synergy-name">{synergyDetail.synergy_name}</span>
+        )}
+        {props.count && <span className="synergy-count">{props.count}</span>}
         {hiddenPopup || (
           <div className="popup">
             <div className="popup-info">
@@ -70,7 +75,13 @@ function SynergyIcon(props) {
                       let a = item.split("$");
                       return (
                         <li key={index}>
-                          <span>{a[0]}</span>
+                          <span
+                            className={
+                              index + 1 === props.bonus_level ? "active" : ""
+                            }
+                          >
+                            {a[0]}
+                          </span>
                           {a[1]}
                         </li>
                       );
@@ -127,13 +138,19 @@ const SynergyIconDefault = styled.div`
     }
     .wrapper-synergy-image {
       vertical-align: middle;
-      height: 22px;
-      width: 22px;
-      margin-right: 10px;
+      height: ${(props) => props.width};
+      width: ${(props) => props.height};
     }
-    span {
-      margin-left: 0 !important;
+    .synergy-name {
+      margin-left: 10px !important;
       color: white;
+    }
+    .synergy-count {
+      margin-left: 6px !important;
+      color: white;
+      font-size: 13px;
+      transform: translateY(-2px);
+      line-height: 100%;
     }
     &:hover {
       .avatar-champion {
@@ -144,6 +161,7 @@ const SynergyIconDefault = styled.div`
       }
     }
     .popup {
+      z-index: 1000;
       display: none;
       position: absolute;
       bottom: calc(100% + 6px);
@@ -186,6 +204,9 @@ const SynergyIconDefault = styled.div`
                 height: 25px;
                 border-radius: 50%;
                 border: 1px solid #17313a;
+              }
+              .active {
+                border-color: #d47559;
               }
             }
           }

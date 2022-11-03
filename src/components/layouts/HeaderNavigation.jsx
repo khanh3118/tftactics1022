@@ -1,4 +1,4 @@
-import { NavLink } from "react-router-dom";
+import { NavLink, Link } from "react-router-dom";
 import styled from "styled-components";
 
 function HeaderNavigation() {
@@ -12,21 +12,6 @@ function HeaderNavigation() {
             </NavLink>
           </li>
           <li>
-            <NavLink to="metareport" className="header-item">
-              Meta Report
-            </NavLink>
-          </li>
-          <li>
-            <NavLink to="champions" className="header-item">
-              Champions
-            </NavLink>
-          </li>
-          <li>
-            <NavLink to="tierlists" className="header-item">
-              Tier Lists
-            </NavLink>
-          </li>
-          <li>
             <NavLink
               to="itembuilder"
               className="header-item"
@@ -36,19 +21,34 @@ function HeaderNavigation() {
             </NavLink>
           </li>
           <li>
-            <NavLink to="teambuilder" className="header-item">
-              Team Builder
-            </NavLink>
-          </li>
-          <li>
             <NavLink to="database" className="header-item">
               Database
             </NavLink>
           </li>
           <li>
-            <NavLink to="manager/origins" className="header-item">
+            <Link to="/manager/teamcomps" className="header-item">
               Manager
-            </NavLink>
+            </Link>
+          </li>
+          <li>
+            <Link to="/" className="header-item">
+              Meta Report
+            </Link>
+          </li>
+          <li>
+            <Link to="/" className="header-item">
+              Champions
+            </Link>
+          </li>
+          <li>
+            <Link to="/" className="header-item">
+              Tier Lists
+            </Link>
+          </li>
+          <li>
+            <Link to="/" className="header-item">
+              Team Builder
+            </Link>
           </li>
         </ul>
       </div>

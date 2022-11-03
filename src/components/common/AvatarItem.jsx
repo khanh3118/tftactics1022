@@ -9,7 +9,7 @@ export default function AvatarItem(props) {
   const [loadDone, setLoadDone] = useState(false);
 
   const itemDetail = itemsData.find(
-    (item) => item.item_name.toLowerCase() === props.name.toLowerCase()
+    (item) => item.item_name.toLowerCase() === props.item_name.toLowerCase()
   );
 
   function getItemRecipeImg(name) {
@@ -138,6 +138,7 @@ const Wrapper = styled.div`
     }
   }
   .avatar-item-popup {
+    z-index: 1000;
     min-width: 500px;
     display: none;
     position: absolute;

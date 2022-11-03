@@ -23,27 +23,30 @@ let borders_image = {
   8: "linear-gradient(to bottom right,#b89d27 0,#fff 25%,#b89d27 50%,#fff 75%,#b89d27);",
 };
 
-function AvatarChampion(props) {
+function HexagonAvatarChampion(props) {
   const [hiddenPopup, setHiddenPopup] = useState(true);
   const [loadDone, setLoadDone] = useState(false);
   const { championsData, synergysData, itemsData } = useContext(DataContext);
+  let championDetail = {};
+  let synergys = [];
+  let itemsRecommend = [];
+  if (props.champion_name) {
+    championDetail = championsData.find(
+      (item) => item.champion_name === props.champion_name
+    );
+    synergys = synergysData.filter((item) => {
+      return championDetail.champion_origin
+        .concat(championDetail.champion_class)
+        .includes(item.synergy_name.toLowerCase());
+    });
+    itemsRecommend = itemsData.filter((item) =>
+      championDetail.champion_items.includes(item.item_name)
+    );
+  }
 
-  const championDetail = championsData.find(
-    (item) => item.champion_name === props.champion_name
-  );
-
-  const synergys = synergysData.filter((item) => {
-    return championDetail.champion_origin
-      .concat(championDetail.champion_class)
-      .includes(item.synergy_name.toLowerCase());
-  });
-
-  const itemsRecommend = itemsData.filter((item) =>
-    championDetail.champion_items.includes(item.item_name)
-  );
   return (
     championDetail && (
-      <AvatarChampionDefault
+      <HexagonAvatarChampionDefault
         loadDone={loadDone}
         border_color={borders[championDetail.champion_cost]}
         border_image={borders_image[championDetail.champion_cost]}
@@ -68,12 +71,20 @@ function AvatarChampion(props) {
           </div>
         )}
         <div className="wrapper">
-          <img
-            className="avatar-champion"
-            src={championDetail.champion_img_link}
-            alt={championDetail.champion_name}
-          />
-          {hiddenPopup || (
+          <div className="hex">
+            <div className="hexIn">
+              <div className="hexLink">
+                {props.champion_name !== undefined && (
+                  <img
+                    className="avatar-champion"
+                    src={championDetail.champion_img_link}
+                    alt={championDetail.champion_name}
+                  />
+                )}
+              </div>
+            </div>
+          </div>
+          {hiddenPopup || props.champion_name === undefined || (
             <div className="popup">
               <div className="popup-info">
                 <div className="popup-avatar">
@@ -125,14 +136,14 @@ function AvatarChampion(props) {
             </div>
           )}
         </div>
-      </AvatarChampionDefault>
+      </HexagonAvatarChampionDefault>
     )
   );
 }
 
-export default AvatarChampion;
+export default HexagonAvatarChampion;
 
-const AvatarChampionDefault = styled.div`
+const HexagonAvatarChampionDefault = styled.div`
   position: relative;
   .item {
     position: absolute;
@@ -232,6 +243,44 @@ const AvatarChampionDefault = styled.div`
           margin-left: 5px;
           &:nth-child(1) {
             margin-left: 10px !important;
+          }
+        }
+      }
+    }
+    .hex {
+      width: 36px !important;
+      height: 32px !important;
+      position: relative;
+      outline: 1px solid transparent;
+      width: 12%;
+      margin: 0;
+      .hexIn {
+        width: 32.39px;
+        height: 37.41px;
+        position: absolute;
+        margin: 0 2%;
+        overflow: hidden;
+        visibility: hidden;
+        outline: 1px solid transparent;
+        transform: rotate(-60deg) skewY(30deg);
+        .hexLink {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          width: 100%;
+          height: 100%;
+          text-align: center;
+          color: #fff;
+          background: #123040;
+          overflow: hidden;
+          position: absolute;
+          visibility: visible;
+          outline: 1px solid transparent;
+          transform: skewY(-30deg) rotate(60deg);
+          .hexImg {
+            img {
+              border: none;
+            }
           }
         }
       }

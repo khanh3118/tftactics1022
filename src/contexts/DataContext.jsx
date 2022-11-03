@@ -56,7 +56,7 @@ const compsData = [
       },
     ],
     early_comp: ["Ezreal", "Sejuani", "Qiyana", "Rell", "Rengar"],
-    carousel: ["B.F. Sword"],
+    carousel: ["B.F. Sword", "Sparring Gloves", "Recurve Bow"],
     options: [
       {
         replace_from: ["lvlup"],
@@ -74,6 +74,7 @@ export const DataProvider = ({ children }) => {
   const [championsData, setChampionsData] = useState([]);
   const [synergysData, setSynergyData] = useState([]);
   const [itemsData, setItemsData] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
   async function fetData() {
     let champions = championsService.getAllChampions();
     let synergys = synergysService.getAllSynergys();
@@ -86,15 +87,17 @@ export const DataProvider = ({ children }) => {
     } catch (error) {
       throw new Error(error);
     }
+    setIsLoading(false);
   }
-
   useEffect(() => {
     fetData();
   }, []);
 
   return (
-    <DataContext.Provider value={{ championsData, synergysData, itemsData, compsData }}>
-      {children}
+    <DataContext.Provider
+      value={{ championsData, synergysData, itemsData, compsData, isLoading }}
+    >
+      { children}
     </DataContext.Provider>
   );
 };

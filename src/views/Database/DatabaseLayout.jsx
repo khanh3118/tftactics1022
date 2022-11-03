@@ -10,7 +10,7 @@ function DatabaseLayout() {
   const [searchText, setSearchText] = useState("");
   const navigate = useNavigate();
   useEffect(() => {
-    navigate("/database/champions");
+  
   }, []);
   function hanleSearch(searchText) {
     setSearchText(searchText);

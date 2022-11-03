@@ -4,15 +4,9 @@ import SelectDropDown from "components/common/SelectDropdown";
 import SearchOrigin from "components/common/SearchOrigin";
 import { DataContext } from "contexts/DataContext";
 import { useContext } from "react";
-import { useState } from "react";
-import AvatarItem from "components/common/AvatarItem";
-import { useEffect } from "react";
-import { capitalize } from "utils/filter";
 import Button from "components/common/Button";
 import Status from "components/common/Status";
-import { solid } from "@fortawesome/fontawesome-svg-core/import.macro";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import AvatarChampion from "components/common/AvatarChampion";
+import TeamComp from "components/common/TeamComp";
 
 function ItemBuilder() {
   const { compsData } = useContext(DataContext);
@@ -65,48 +59,7 @@ function ItemBuilder() {
             <div className="team-comps-wrapper">
               <div className="team-comps">
                 {compsData.map((team) => {
-                  return (
-                    <div key={team.name} className="team-comps-item">
-                      <div className="team-comps-item-line-1">
-                        <div className="item-line-1-name">
-                          <div className="item-line-1-name-tier">
-                            <button>{team.tier}</button>
-                          </div>
-                          <div className="item-line-1-name-info">
-                            <div className="info-name">
-                              {team.name}
-                            </div>
-                            <div className="info-tier">
-                              <button>{capitalize(team.type)}</button>
-                            </div>
-                          </div>
-                        </div>
-                        <div className="item-line-1-member">
-                          {team.members.map((member) => {
-                            return (
-                              <div key={member.name} className="member">
-                                <AvatarChampion
-                                  items_equip={member.items}
-                                  className="member-image"
-                                  width="45px"
-                                  heigth="45px"
-                                  champion_name={member.name}
-                                />
-                                <span className="member-name">{member.name}</span>
-                              </div>
-                            );
-                          })}
-                        </div>
-                        <div className="item-line-1-btn">
-                          <FontAwesomeIcon
-                            className="open-icon"
-                            size="xs"
-                            icon={solid("chevron-down")}
-                          />
-                        </div>
-                      </div>
-                    </div>
-                  );
+                  return <TeamComp status={team.status} key={team.name} team_detail={team} />;
                 })}
               </div>
             </div>
@@ -142,77 +95,6 @@ const TeamCompsMainContent = styled.div`
     .teamcomps-title-tier {
       display: flex;
       align-items: center;
-    }
-  }
-  .team-comps-item {
-    margin-bottom: 10px;
-    border: 1px solid #17313a;
-    .team-comps-item-line-1 {
-      cursor: pointer;
-      display: grid;
-      grid-template-columns: 30% 67% 3%;
-      .item-line-1-name {
-        display: flex;
-        align-items: center;
-        padding: 10px 10px 10px 20px;
-        .item-line-1-name-tier {
-          display: flex;
-          align-items: center;
-          margin-right: 15px;
-          button {
-            text-transform: uppercase;
-            border: none;
-            border-radius: 4px;
-            background-color: #ff7f7f;
-            width: 25px;
-            height: 25px;
-            color: #0d202b;
-            font-weight: 600;
-          }
-        }
-        .item-line-1-name-info {
-          .info-name {
-          }
-          .info-tier {
-            margin-top: 2px;
-            button {
-              padding: 2px 4px;
-              border: none;
-              background-color: #123040;
-              color: #88a0a7;
-              border-radius: 4px;
-              width: max-content;
-              font-size: 12px;
-            }
-          }
-        }
-      }
-      .item-line-1-member {
-        padding: 10px 0;
-        display: flex;
-        .member {
-          padding: 5px;
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-          justify-content: center;
-          .member-image {
-          }
-          .member-name {
-            margin-top: 3px;
-            color: #88a0a7;
-            font-size: 11px;
-          }
-        }
-      }
-      .item-line-1-btn {
-        display: flex;
-        align-items: center;
-        .open-icon {
-          cursor: pointer;
-          color: #88a0a7;
-        }
-      }
     }
   }
 `;
