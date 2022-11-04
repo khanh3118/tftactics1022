@@ -22,10 +22,10 @@ const BONUS_LEVEL_COLOR = {
 export default function TeamComp(props) {
   const { championsData, synergysData, itemsData } = useContext(DataContext);
   const [expand, setExpand] = useState(false);
-  
-  const allItem = props.team_detail.members.reduce((all,cur) => {
+
+  const allItem = props.team_detail.members.reduce((all, cur) => {
     return all.concat(cur.items);
-  },[])
+  }, []);
   function hanleClickComp() {
     setExpand(!expand);
   }
@@ -40,6 +40,7 @@ export default function TeamComp(props) {
         ...championDetail,
       };
     });
+    // get array of unique synergys
     let uniqueSys = [
       ...new Set(
         all.reduce((total, current) => {
@@ -49,9 +50,11 @@ export default function TeamComp(props) {
         }, [])
       ),
     ];
+    // members data
     data = uniqueSys.map((item) => {
-      let count = 0;
-      let lvls = [];
+      let count = 0; // count synergy
+      let lvls = []; // level bonus array
+      // level bonus from synergy description
       synergysData
         .find((s) => s.synergy_name.toLowerCase() === item)
         .synergy_description_level.split("/")
@@ -62,6 +65,7 @@ export default function TeamComp(props) {
             lvls.push(i.split("$")[0].split("\n")[1]);
           }
         });
+      // count synergy
       all.forEach((a) => {
         if (
           a.champion_class.includes(item) ||
@@ -75,6 +79,7 @@ export default function TeamComp(props) {
         }
       });
       let bonus_level = 0;
+      // get bonus level
       lvls.forEach((lvl) => {
         if (count >= lvl) {
           bonus_level += 1;
@@ -97,7 +102,7 @@ export default function TeamComp(props) {
       if (allItem.includes(recipes[i].item_name)) {
         subItemName = recipes[i].item_name;
         break;
-      };
+      }
     }
     return subItemName;
   }

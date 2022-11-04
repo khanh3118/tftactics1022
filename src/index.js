@@ -22,6 +22,8 @@ import PrivateRoute from "components/auth/PrivateRoute";
 import { DataProvider } from "contexts/DataContext";
 import TeamComps from "views/TeamComps/TeamComps";
 import TeamCompsManager from "views/Manager/TeamCompsManager";
+import TeamBuilder from "views/TeamBuilder/TeamBuilder";
+
 
 const router = createBrowserRouter([
   {
@@ -59,6 +61,10 @@ const router = createBrowserRouter([
     path: "/",
     element: <RootLayout />,
     children: [
+      {
+        path: "teambuilder",
+        element: <TeamBuilder />
+      },
       {
         path: "database",
         element: <DatabaseLayout />,

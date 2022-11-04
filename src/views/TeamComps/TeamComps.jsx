@@ -9,7 +9,7 @@ import Status from "components/common/Status";
 import TeamComp from "components/common/TeamComp";
 
 function ItemBuilder() {
-  const { compsData } = useContext(DataContext);
+  const { teamcompsData, compsData } = useContext(DataContext);
   return (
     <TeamCompsWrapper id="item-builder">
       <MainLayout
@@ -58,7 +58,7 @@ function ItemBuilder() {
             </div>
             <div className="team-comps-wrapper">
               <div className="team-comps">
-                {compsData.map((team) => {
+                {teamcompsData.map((team) => {
                   return <TeamComp status={team.status} key={team.name} team_detail={team} />;
                 })}
               </div>

@@ -83,5 +83,8 @@ const SelectDefault = styled.div`
     .dropdown-item.selected {
       background-color: #227aad;
     }
+    #defaul-button {
+      width: 100%;
+    }
   }
 `;

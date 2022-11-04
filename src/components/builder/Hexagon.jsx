@@ -1,0 +1,167 @@
+import styled from "styled-components";
+import { Fragment, useContext } from "react";
+import { DataContext } from "contexts/DataContext";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { solid } from "@fortawesome/fontawesome-svg-core/import.macro";
+import { useState } from "react";
+
+const borderColor = {
+  1: "#213042",
+  2: "#156831",
+  3: "#12407c",
+  4: "#893088",
+  5: "#b89d27",
+  6: "#12407c",
+  7: "#893088",
+  8: "#b89d27",
+};
+
+export default function Hexagon({ className, data, hanle_change_level }) {
+  const { championsData, itemsData } = useContext(DataContext);
+  const [levelVisible, setLevelsVisible] = useState(false);
+
+  function getItemImage(item_name) {
+    return itemsData.find((i) => i.item_name === item_name)?.item_image;
+  }
+  function addActive(is_max_level) {
+    if (is_max_level) return "active";
+    return "";
+  }
+  return (
+    <HexagonWrapper
+      backgroud_image={
+        championsData.find((c) => c.champion_name === data.name)
+          ?.champion_img_link
+      }
+      border_color={borderColor[data?.cost]}
+      className={className}
+      onMouseOver={() => setLevelsVisible(true)}
+      onMouseOut={() => setLevelsVisible(false)}
+    >
+      <div className="character-items">
+        {data.items !== undefined &&
+          data.items.map((item) => {
+            return (
+              <img
+                key={item}
+                className="character-item"
+                src={getItemImage(item)}
+                alt=""
+              />
+            );
+          })}
+      </div>
+      {data?.max_level !== undefined && (
+        <div
+          onClick={() => hanle_change_level(data.position, data.max_level)}
+          className="character-levels"
+        >
+          {(levelVisible || data.max_level) && (
+            <Fragment>
+              <FontAwesomeIcon
+                className={addActive(data.max_level)}
+                size="sm"
+                icon={solid("star")}
+              />
+              <FontAwesomeIcon
+                className={addActive(data.max_level)}
+                size="sm"
+                icon={solid("star")}
+              />
+              <FontAwesomeIcon
+                className={addActive(data.max_level)}
+                size="sm"
+                icon={solid("star")}
+              />
+            </Fragment>
+          )}
+        </div>
+      )}
+      <div className="hexTop"></div>
+      <div className="hexBottom"></div>
+    </HexagonWrapper>
+  );
+}
+
+const HexagonWrapper = styled.div`
+  display: inline-block;
+  text-align: left;
+  position: relative;
+  width: 72px;
+  height: 42px;
+  margin: 20px 5px;
+  background-color: #102531;
+  background-size: auto 80px;
+  background-position: 50%;
+  border-left: 3px solid #17313a;
+  border-right: 3px solid #17313a;
+  background-image: url(${({ backgroud_image }) => backgroud_image});
+  border-right-color: ${({ border_color }) => border_color};
+  border-left-color: ${({ border_color }) => border_color};
+  cursor: pointer;
+  .hexTop,
+  .hexBottom {
+    position: absolute;
+    z-index: 1;
+    overflow: hidden;
+    transform: scaleY(0.5774) rotate(-45deg);
+    background: inherit;
+    width: 50px;
+    height: 50px;
+    left: 8px;
+    &::after {
+      content: "";
+      position: absolute;
+      transform-origin: 0 0;
+      background: inherit;
+      width: 64.5px;
+      height: 41px;
+      transform: rotate(45deg) scaleY(1.7) translateY(-20.5px);
+    }
+  }
+  .hexTop {
+    top: -25px;
+    border-top: 4px solid #17313a;
+    border-right: 4px solid #17313a;
+    border-top-color: ${({ border_color }) => border_color};
+    border-right-color: ${({ border_color }) => border_color};
+    &::after {
+      background-position: top;
+    }
+  }
+  .hexBottom {
+    bottom: -25px;
+    border-bottom: 4px solid #17313a;
+    border-left: 4px solid #17313a;
+    border-bottom-color: ${({ border_color }) => border_color};
+    border-left-color: ${({ border_color }) => border_color};
+    &::after {
+      content: "";
+      display: block;
+      padding-bottom: 90%;
+      background-position: bottom;
+    }
+  }
+  .character-items,
+  .character-levels {
+    position: absolute;
+    display: flex;
+    z-index: 9999;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+  .character-items {
+    bottom: -20px;
+    justify-content: center;
+    .character-item {
+      width: 22px;
+      height: 22px;
+    }
+  }
+  .character-levels {
+    top: -15px;
+    .active {
+      color: orange;
+    }
+  }
+`;

@@ -46,9 +46,9 @@ function HeaderNavigation() {
             </Link>
           </li>
           <li>
-            <Link to="/" className="header-item">
+            <NavLink to="teambuilder" className="header-item">
               Team Builder
-            </Link>
+            </NavLink>
           </li>
         </ul>
       </div>

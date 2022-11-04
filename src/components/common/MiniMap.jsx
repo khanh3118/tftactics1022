@@ -4,7 +4,7 @@ import HexagonAvatarChampion from "components/common/HexagonAvatarChampion";
 export default function MiniMap(props) {
   const positionAmount = 28;
   function getChampionName(position) {
-    return props.members.find(m => m.position === position)?.name;
+    return props.members.find(m => Number(m.position) === position)?.name;
   }
   function createElements(n) {
     var elements = [];

@@ -88,7 +88,6 @@ export const DataProvider = ({ children }) => {
       setSynergyData(data[1]);
       setItemsData(data[2]);
       setTeamcompsData(data[3]);
-      console.log(data[3]);
     } catch (error) {
       throw new Error(error);
     }
