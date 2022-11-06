@@ -2,24 +2,9 @@ import styled from "styled-components";
 import { useContext, useState } from "react";
 import { DataContext } from "contexts/DataContext";
 import LoadingCycle from "components/common/LoadingCycle";
+import { CHARACTER_BORDERS, BORDER_IMAGES } from "config/color";
 
-let borders = {
-  1: "#213042",
-  2: "#156831",
-  3: "#12407c",
-  4: "#893088",
-  5: "#b89d27",
-  6: "#12407c",
-  7: "#fff",
-  8: "#fff",
-};
-let borders_image = {
-  6: "linear-gradient(to bottom right,#12407c 0,#fff 25%,#12407c 50%,#fff 75%,#12407c);",
-  7: "linear-gradient(to bottom right,#893088 0,#fff 25%,#893088 50%,#fff 75%,#893088);",
-  8: "linear-gradient(to bottom right,#b89d27 0,#fff 25%,#b89d27 50%,#fff 75%,#b89d27);",
-};
-
-function SynergyIcon(props) {
+function SynergyInfo(props) {
   const { championsData, synergysData } = useContext(DataContext);
   const [loadDone, setLoadDone] = useState(false);
   const [hiddenPopup, setHiddenPopup] = useState(true);
@@ -36,7 +21,7 @@ function SynergyIcon(props) {
   );
 
   return (
-    <SynergyIconDefault
+    <SynergyInfoDefault
       width={props.width}
       height={props.height}
       loadDone={loadDone}
@@ -106,8 +91,8 @@ function SynergyIcon(props) {
                           setLoadDone(true);
                         }
                       }}
-                      border_color={borders[item.champion_cost]}
-                      border_image={borders_image[item.champion_cost]}
+                      border_color={CHARACTER_BORDERS[item.champion_cost]}
+                      border_image={BORDER_IMAGES[item.champion_cost]}
                       src={item.champion_img_link}
                       alt=""
                     />
@@ -118,13 +103,13 @@ function SynergyIcon(props) {
           </div>
         )}
       </div>
-    </SynergyIconDefault>
+    </SynergyInfoDefault>
   );
 }
 
-export default SynergyIcon;
+export default SynergyInfo;
 
-const SynergyIconDefault = styled.div`
+const SynergyInfoDefault = styled.div`
   .wrapper {
     display: flex;
     align-items: center;

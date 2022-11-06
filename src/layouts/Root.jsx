@@ -1,6 +1,6 @@
-import Header from "components/layouts/Header";
-import HeaderNavigation from "components/layouts/HeaderNavigation";
-import Content from "components/layouts/Content";
+import Header from "layouts/Header";
+import TopNavigation from "layouts/TopNavigation";
+import Content from "layouts/Content";
 import { Outlet } from "react-router-dom";
 import styled from "styled-components";
 import { useContext } from "react";
@@ -10,7 +10,7 @@ function RootLayout() {
   return (
     <RootLayoutDefault id="root-layout">
       <Header />
-      <HeaderNavigation />
+      <TopNavigation />
       <Content>{isLoading || <Outlet />}</Content>
       <div className="footer"></div>
     </RootLayoutDefault>

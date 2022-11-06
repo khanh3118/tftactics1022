@@ -4,17 +4,7 @@ import { DataContext } from "contexts/DataContext";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { solid } from "@fortawesome/fontawesome-svg-core/import.macro";
 import { useState } from "react";
-
-const borderColor = {
-  1: "#213042",
-  2: "#156831",
-  3: "#12407c",
-  4: "#893088",
-  5: "#b89d27",
-  6: "#12407c",
-  7: "#893088",
-  8: "#b89d27",
-};
+import { HEXAGON_BUILDER_BORDER_COLORS } from "config/color"
 
 export default function Hexagon({ className, data, hanle_change_level }) {
   const { championsData, itemsData } = useContext(DataContext);
@@ -33,7 +23,7 @@ export default function Hexagon({ className, data, hanle_change_level }) {
         championsData.find((c) => c.champion_name === data.name)
           ?.champion_img_link
       }
-      border_color={borderColor[data?.cost]}
+      border_color={HEXAGON_BUILDER_BORDER_COLORS[data?.cost]}
       className={className}
       onMouseOver={() => setLevelsVisible(true)}
       onMouseOut={() => setLevelsVisible(false)}

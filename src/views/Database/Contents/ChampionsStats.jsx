@@ -6,7 +6,7 @@ import { useContext, useState } from "react";
 import { DataContext } from "contexts/DataContext";
 import { useOutletContext, NavLink } from "react-router-dom";
 
-const AvatarChampion = lazy(() => import("components/common/AvatarChampion"));
+const CharacterInfo = lazy(() => import("components/info/CharacterInfo"));
 
 function ChampionsStats() {
   const searchText = useOutletContext();
@@ -216,7 +216,7 @@ function ChampionsStats() {
                   <div>
                     <NavLink to="/" className="item-name-img">
                       <Suspense>
-                        <AvatarChampion
+                        <CharacterInfo
                           champion_name={item.champion_name}
                           width="40px"
                           height="40px"

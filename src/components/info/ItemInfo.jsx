@@ -3,7 +3,7 @@ import { DataContext } from "contexts/DataContext";
 import { useContext, useState } from "react";
 import LoadingCycle from "components/common/LoadingCycle";
 
-export default function AvatarItem(props) {
+export default function ItemInfo(props) {
   const { itemsData } = useContext(DataContext);
   const [hiddenPopup, setHiddenPopup] = useState(true);
   const [loadDone, setLoadDone] = useState(false);
@@ -17,7 +17,7 @@ export default function AvatarItem(props) {
       .item_image;
   }
   return (
-    <AvatarItemDefault
+    <ItemInfoDefault
       onMouseEnter={() => setHiddenPopup(false)}
       onClick={props.hanleClick}
       className={props.className}
@@ -109,11 +109,11 @@ export default function AvatarItem(props) {
           </div>
         )}
       </Wrapper>
-    </AvatarItemDefault>
+    </ItemInfoDefault>
   );
 }
 
-const AvatarItemDefault = styled.div`
+const ItemInfoDefault = styled.div`
   position: relative;
   &:hover {
     .avatar-item-popup {

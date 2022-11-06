@@ -1,23 +1,16 @@
 import styled from "styled-components";
 import TierStatus from "components/common/TierStatus";
-import AvatarChampion from "components/common/AvatarChampion";
+import CharacterInfo from "components/info/CharacterInfo";
 import { capitalize } from "utils/filter";
 import { solid } from "@fortawesome/fontawesome-svg-core/import.macro";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Status from "components/common/Status";
 import React, { useState, useContext } from "react";
 import { DataContext } from "contexts/DataContext";
-import SynergyIcon from "components/common/SynergyIcon";
-import AvatarItem from "components/common/AvatarItem";
+import SynergyInfo from "components/info/SynergyInfo";
+import ItemInfo from "components/info/ItemInfo";
 import MiniMap from "components/common/MiniMap";
-
-const BONUS_LEVEL_COLOR = {
-  1: "#a0715e",
-  2: "#7c8f92",
-  3: "#bd9a38",
-  4: "#ad1457",
-  5: "#ad1457",
-};
+import { BONUS_LEVEL_COLOR } from "config/color";
 
 export default function TeamComp(props) {
   const { championsData, synergysData, itemsData } = useContext(DataContext);
@@ -135,7 +128,7 @@ export default function TeamComp(props) {
             {props.team_detail.members.map((member) => {
               return (
                 <div key={member.name} className="member">
-                  <AvatarChampion
+                  <CharacterInfo
                     items_equip={member.items}
                     className="member-image"
                     width="45px"
@@ -165,7 +158,7 @@ export default function TeamComp(props) {
                 {props.team_detail.early_comp.map((item) => {
                   return (
                     <div key={item} className="early-member">
-                      <AvatarChampion
+                      <CharacterInfo
                         width="35px"
                         height="35px"
                         champion_name={item}
@@ -183,11 +176,11 @@ export default function TeamComp(props) {
                 {data.map((item) => {
                   return (
                     item.bonus_level >= 1 && (
-                      <SynergyIconWrapper
+                      <SynergyInfoWrapper
                         key={item.name}
                         bonus_level_color={BONUS_LEVEL_COLOR[item.bonus_level]}
                       >
-                        <SynergyIcon
+                        <SynergyInfo
                           width="20px"
                           height="20px"
                           count={item.count}
@@ -195,7 +188,7 @@ export default function TeamComp(props) {
                           synergy_name={item.name}
                           bonus_level={item.bonus_level}
                         />
-                      </SynergyIconWrapper>
+                      </SynergyInfoWrapper>
                     )
                   );
                 })}
@@ -210,13 +203,13 @@ export default function TeamComp(props) {
                   return (
                     <React.Fragment key={itemName}>
                       <div className="carousel-item-wrapper">
-                        <AvatarItem
+                        <ItemInfo
                           className="carousel-item"
                           width="32px"
                           height="32px"
                           item_name={itemName}
                         />
-                        <AvatarItem
+                        <ItemInfo
                           className="carousel-sub-item"
                           width="18px"
                           height="18px"
@@ -249,7 +242,7 @@ export default function TeamComp(props) {
                       <div className="line-3-item-options-item-from">
                         {option.replace_from.map((i) => {
                           return i !== "lvlup" ? (
-                            <AvatarChampion
+                            <CharacterInfo
                               key={i}
                               className="options-avatar-champion"
                               height="35px"
@@ -271,7 +264,7 @@ export default function TeamComp(props) {
                         {option.replace_to.map((i) => {
                           return (
                             i !== "lvlup" && (
-                              <AvatarChampion
+                              <CharacterInfo
                                 key={i}
                                 className="options-avatar-champion"
                                 height="35px"
@@ -302,7 +295,7 @@ export default function TeamComp(props) {
   );
 }
 
-const SynergyIconWrapper = styled.div`
+const SynergyInfoWrapper = styled.div`
   margin-right: 5px;
   margin-bottom: 10px;
   height: min-content;

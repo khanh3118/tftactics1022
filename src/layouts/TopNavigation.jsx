@@ -1,9 +1,9 @@
 import { NavLink, Link } from "react-router-dom";
 import styled from "styled-components";
 
-function HeaderNavigation() {
+function TopNavigation() {
   return (
-    <HeaderNavigationDefault id="header-navigation">
+    <TopNavigationDefault id="header-navigation">
       <div className="wrapper">
         <ul>
           <li>
@@ -52,13 +52,13 @@ function HeaderNavigation() {
           </li>
         </ul>
       </div>
-    </HeaderNavigationDefault>
+    </TopNavigationDefault>
   );
 }
 
-export default HeaderNavigation;
+export default TopNavigation;
 
-const HeaderNavigationDefault = styled.div`
+const TopNavigationDefault = styled.div`
   height: 50px;
   background-color: #102531;
   border-bottom: 1px solid #17313a;

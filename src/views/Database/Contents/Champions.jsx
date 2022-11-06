@@ -5,8 +5,8 @@ import { useContext, useState, useEffect, lazy, Suspense } from "react";
 import { DataContext } from "contexts/DataContext";
 import { useOutletContext } from "react-router-dom";
 
-const AvatarChampion = lazy(() => import("components/common/AvatarChampion"));
-const SynergyIcon = lazy(() => import("components/common/SynergyIcon"));
+const CharacterInfo = lazy(() => import("components/info/CharacterInfo"));
+const SynergyInfo = lazy(() => import("components/info/SynergyInfo"));
 
 function Champions() {
   const { championsData } = useContext(DataContext);
@@ -104,7 +104,7 @@ function Champions() {
                   <div className="item-name-img">
                     <div className="item-name-img-wrapper">
                       <Suspense>
-                        <AvatarChampion
+                        <CharacterInfo
                           champion_name={item.champion_name}
                           width="40px"
                           height="40px"
@@ -119,7 +119,7 @@ function Champions() {
                       <div className="item-origin">
                         {item.champion_origin.map((originName) => {
                           return (
-                            <SynergyIcon
+                            <SynergyInfo
                               width="22px"
                               height="22px"
                               synergy_name={originName}
@@ -137,7 +137,7 @@ function Champions() {
                       <Suspense>
                         {item.champion_class.map((className) => {
                           return (
-                            <SynergyIcon
+                            <SynergyInfo
                               width="22px"
                               height="22px"
                               synergy_name={className}

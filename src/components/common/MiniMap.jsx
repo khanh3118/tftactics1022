@@ -1,18 +1,18 @@
 import styled from "styled-components";
-import HexagonAvatarChampion from "components/common/HexagonAvatarChampion";
+import HexagonMinimap from "components/common/HexagonMinimap";
 
 export default function MiniMap(props) {
   const positionAmount = 28;
   function getChampionName(position) {
-    return props.members.find(m => Number(m.position) === position)?.name;
+    return props.members.find((m) => Number(m.position) === position)?.name;
   }
   function createElements(n) {
     var elements = [];
     for (let i = 0; i < n; i++) {
       elements.push(
-        <HexagonAvatarChampion
+        <HexagonMinimap
           key={i}
-          champion_name={getChampionName(i+1)}
+          champion_name={getChampionName(i + 1)}
           className={i + 1 === 8 || i + 1 === 22 ? "wrap" : ""}
           width="40px"
           height="40px"

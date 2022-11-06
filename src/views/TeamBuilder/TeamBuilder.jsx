@@ -1,10 +1,9 @@
 import styled from "styled-components";
 import SelectDropdown from "components/common/SelectDropdown";
-import Hexagon from "components/builder/Hexagon";
+import HexagonTeamBuilder from "components/common/HexagonTeamBuilder";
 import { useContext, useState, useEffect } from "react";
 import { DataContext } from "contexts/DataContext";
-import SynergyIcon from "components/common/SynergyIcon";
-import PartialTraitsItem from "components/builder/PartialTraitsItem";
+import PartialTraitsItem from "components/common/PartialTraitsItem";
 
 export default function TeamBuilder(pros) {
   const { championsData, synergysData } = useContext(DataContext);
@@ -53,6 +52,7 @@ export default function TeamBuilder(pros) {
     },
   ]);
   function getPartialTraits() {
+    // merge member list and championdata
     let all = members.map((member) => {
       let championDetail = championsData.find(
         (c) => c.champion_name === member.name
@@ -76,6 +76,7 @@ export default function TeamBuilder(pros) {
         }, [])
       ),
     ];
+    // add synergy from item
     allItem.forEach((item) => {
       switch (item) {
         case "Lagoon Emblem":
@@ -103,7 +104,7 @@ export default function TeamBuilder(pros) {
           break;
       }
     });
-    // members data
+    // array of object synergy detail data
     let data = [];
     data = uniqueSys.map((item) => {
       let count = 0; // count synergy
@@ -160,8 +161,8 @@ export default function TeamBuilder(pros) {
             break;
         }
       });
-      let bonus_level = 0;
       // get bonus level
+      let bonus_level = 0;
       lvls.forEach((lvl) => {
         if (count >= lvl) {
           bonus_level += 1;
@@ -177,7 +178,7 @@ export default function TeamBuilder(pros) {
     setPartialTraits([...getPartialTraits()]);
   }, [members]);
 
-  function slotDetail(position) {
+  function getHexagonData(position) {
     let result = members.find((member) => Number(member.position) === position);
     result = {
       ...result,
@@ -197,9 +198,9 @@ export default function TeamBuilder(pros) {
     var elements = [];
     for (let i = 0; i < n; i++) {
       elements.push(
-        <Hexagon
+        <HexagonTeamBuilder
           hanle_change_level={hanleChangeLevel}
-          data={slotDetail(i + 1)}
+          data={getHexagonData(i + 1)}
           key={i + 1}
           className="team-builder-1-drag-item"
         />

@@ -1,29 +1,14 @@
 import styled from "styled-components";
-import SynergyIcon from "./SynergyIcon";
+import SynergyInfo from "./SynergyInfo";
 import { solid } from "@fortawesome/fontawesome-svg-core/import.macro";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useContext, useState } from "react";
 import { DataContext } from "contexts/DataContext";
 import LoadingCycle from "components/common/LoadingCycle";
-import AvatarItem from "components/common/AvatarItem";
+import ItemInfo from "components/info/ItemInfo";
+import { CHARACTER_BORDERS, BORDER_IMAGES } from "config/color";
 
-let borders = {
-  1: "#213042",
-  2: "#156831",
-  3: "#12407c",
-  4: "#893088",
-  5: "#b89d27",
-  6: "#12407c",
-  7: "#fff",
-  8: "#fff",
-};
-let borders_image = {
-  6: "linear-gradient(to bottom right,#12407c 0,#fff 25%,#12407c 50%,#fff 75%,#12407c);",
-  7: "linear-gradient(to bottom right,#893088 0,#fff 25%,#893088 50%,#fff 75%,#893088);",
-  8: "linear-gradient(to bottom right,#b89d27 0,#fff 25%,#b89d27 50%,#fff 75%,#b89d27);",
-};
-
-function AvatarChampion(props) {
+function CharacterInfo(props) {
   const [hiddenPopup, setHiddenPopup] = useState(true);
   const [loadDone, setLoadDone] = useState(false);
   const { championsData, synergysData, itemsData } = useContext(DataContext);
@@ -43,10 +28,10 @@ function AvatarChampion(props) {
   );
   return (
     championDetail && (
-      <AvatarChampionDefault
+      <CharacterInfoDefault
         loadDone={loadDone}
-        border_color={borders[championDetail.champion_cost]}
-        border_image={borders_image[championDetail.champion_cost]}
+        border_color={CHARACTER_BORDERS[championDetail.champion_cost]}
+        border_image={BORDER_IMAGES[championDetail.champion_cost]}
         className={props.className}
         width={props.width}
         height={props.height}
@@ -56,7 +41,7 @@ function AvatarChampion(props) {
           <div className="item">
             {props.items_equip.map((itemName) => {
               return (
-                <AvatarItem
+                <ItemInfo
                   className="item-avatar"
                   key={itemName}
                   width="18px"
@@ -84,7 +69,7 @@ function AvatarChampion(props) {
                   {synergys &&
                     synergys.map((item) => {
                       return (
-                        <SynergyIcon
+                        <SynergyInfo
                           width="20px"
                           height="20px"
                           className="popup-synergy-item"
@@ -125,14 +110,14 @@ function AvatarChampion(props) {
             </div>
           )}
         </div>
-      </AvatarChampionDefault>
+      </CharacterInfoDefault>
     )
   );
 }
 
-export default AvatarChampion;
+export default CharacterInfo;
 
-const AvatarChampionDefault = styled.div`
+const CharacterInfoDefault = styled.div`
   position: relative;
   .item {
     position: absolute;

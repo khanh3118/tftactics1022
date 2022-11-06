@@ -1,13 +1,6 @@
 import styled from "styled-components";
-import SynergyIcon from "components/common/SynergyIcon";
-
-const BONUS_LEVEL_COLOR = {
-  1: "#a0715e",
-  2: "#7c8f92",
-  3: "#bd9a38",
-  4: "#ad1457",
-  5: "#ad1457",
-};
+import SynergyInfo from "components/info/SynergyInfo";
+import { BONUS_LEVEL_COLOR } from "config/color"
 
 export default function PartialTraitsItem({
   width,
@@ -19,8 +12,8 @@ export default function PartialTraitsItem({
 }) {
   return (
     <PartialTraitsItemWrapper>
-      <SynergyIconWrapper bonus_level_color={BONUS_LEVEL_COLOR[bonus_level]}>
-        <SynergyIcon
+      <SynergyInfoWrapper bonus_level_color={BONUS_LEVEL_COLOR[bonus_level]}>
+        <SynergyInfo
           width={width}
           height={height}
           count={count}
@@ -28,7 +21,7 @@ export default function PartialTraitsItem({
           synergy_name={synergy_name}
           bonus_level={bonus_level}
         />
-      </SynergyIconWrapper>
+      </SynergyInfoWrapper>
       <div className="trait-info">
         <div className="trait-info-name"></div>
         <div className="trait-info-level"></div>
@@ -39,7 +32,7 @@ export default function PartialTraitsItem({
 
 const PartialTraitsItemWrapper = styled.div``;
 
-const SynergyIconWrapper = styled.div`
+const SynergyInfoWrapper = styled.div`
   margin-right: 5px;
   margin-bottom: 10px;
   height: min-content;

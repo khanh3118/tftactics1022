@@ -5,7 +5,7 @@ import SearchOrigin from "components/common/SearchOrigin";
 import { DataContext } from "contexts/DataContext";
 import { useContext } from "react";
 import { useState } from "react";
-import AvatarItem from "components/common/AvatarItem";
+import ItemInfo from "components/info/ItemInfo";
 import { useEffect } from "react";
 import { capitalize } from "utils/filter";
 
@@ -93,7 +93,7 @@ function ItemBuilder() {
               <div className="list-items">
                 {baseItems.map((item) => {
                   return (
-                    <AvatarItem
+                    <ItemInfo
                       hanleClick={() => hanleBaseItem(item.item_name)}
                       key={item.item_name}
                       className="base-item-avatar"
@@ -112,7 +112,7 @@ function ItemBuilder() {
               <div className="list-items">
                 {combinedItems.map((item) => {
                   return (
-                    <AvatarItem
+                    <ItemInfo
                       hanleClick={() => hanleCombinedItem(item.item_name)}
                       key={item.item_name}
                       className="base-item-avatar"
@@ -159,13 +159,13 @@ function ItemBuilder() {
                       className="main-content-table-item"
                     >
                       <div className="main-content-table-item-recipe">
-                        <AvatarItem
+                        <ItemInfo
                           className="main-content-table-item-recipe-img"
                           width="35px"
                           height="35px"
                           item_name={capitalize(item.recipe_1)}
                         />
-                        <AvatarItem
+                        <ItemInfo
                           className="main-content-table-item-recipe-img"
                           width="35px"
                           height="35px"
@@ -173,7 +173,7 @@ function ItemBuilder() {
                         />
                       </div>
                       <div className="main-content-table-item-info">
-                        <AvatarItem
+                        <ItemInfo
                           className="main-content-table-item-info-img"
                           width="35px"
                           height="35px"
@@ -211,7 +211,9 @@ function ItemBuilder() {
         }
       />
     </ItemBuilderDefault>
-  ) : "";
+  ) : (
+    ""
+  );
 }
 
 export default ItemBuilder;

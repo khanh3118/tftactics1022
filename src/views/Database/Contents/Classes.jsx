@@ -3,8 +3,8 @@ import { useContext, useEffect, useState, lazy, Suspense } from "react";
 import { useOutletContext } from "react-router-dom";
 import { DataContext } from "contexts/DataContext";
 
-const AvatarChampion = lazy(() => import("components/common/AvatarChampion"));
-const SynergyIcon = lazy(() => import("components/common/SynergyIcon"));
+const CharacterInfo = lazy(() => import("components/info/CharacterInfo"));
+const SynergyInfo = lazy(() => import("components/info/SynergyInfo"));
 
 function Classes() {
   const { championsData, synergysData } = useContext(DataContext);
@@ -43,7 +43,7 @@ function Classes() {
                   <div key={item.synergy_image} className="table-item">
                     <div className="item-origin">
                       <Suspense>
-                        <SynergyIcon
+                        <SynergyInfo
                           width="22px"
                           height="22px"
                           synergy_name={item.synergy_name}
@@ -81,7 +81,7 @@ function Classes() {
                             )
                             .map((a) => {
                               return (
-                                <AvatarChampion
+                                <CharacterInfo
                                   key={a.champion_name}
                                   champion_name={a.champion_name}
                                   width="30px"

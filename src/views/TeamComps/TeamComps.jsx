@@ -6,7 +6,7 @@ import { DataContext } from "contexts/DataContext";
 import { useContext } from "react";
 import Button from "components/common/Button";
 import Status from "components/common/Status";
-import TeamComp from "components/common/TeamComp";
+import CompInfo from "components/info/CompInfo";
 
 function ItemBuilder() {
   const { teamcompsData, compsData } = useContext(DataContext);
@@ -59,7 +59,13 @@ function ItemBuilder() {
             <div className="team-comps-wrapper">
               <div className="team-comps">
                 {teamcompsData.map((team) => {
-                  return <TeamComp status={team.status} key={team.name} team_detail={team} />;
+                  return (
+                    <CompInfo
+                      status={team.status}
+                      key={team.name}
+                      team_detail={team}
+                    />
+                  );
                 })}
               </div>
             </div>
