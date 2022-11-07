@@ -35,6 +35,7 @@ export default function Hexagon({
       onMouseOut={() => setLevelsVisible(false)}
       onDragOver={(e) => e.preventDefault()}
       onDrop={(e) => hanle_on_drop(e, position, data.cost ? false : true)}
+      onDragStart={(e) => e.dataTransfer.setData("drag_from_position", position)}
       draggable={true}
     >
       <div className="character-items">

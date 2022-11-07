@@ -163,11 +163,11 @@ export default function TeamBuilder(pros) {
         });
       // count synergy from champion
       let championUnique = [];
-      all.forEach(c => {
-        if (!championUnique.find(i => i?.champion_name === c.champion_name)) {
+      all.forEach((c) => {
+        if (!championUnique.find((i) => i?.champion_name === c.champion_name)) {
           championUnique.push(c);
         }
-      })
+      });
       championUnique.forEach((a) => {
         if (
           a.champion_class.includes(item) ||
@@ -299,6 +299,23 @@ export default function TeamBuilder(pros) {
           if (a.items.length < 3) {
             a.items.push(item_name);
           }
+          return [...pre];
+        });
+      }
+    }
+    if (e.dataTransfer.getData("drag_from_position")) {
+      let old_position = Number(e.dataTransfer.getData("drag_from_position"));
+      if (is_empty) {
+        setMembers((pre) => {
+          pre.find((m) => m.position === old_position).position = position;
+          return [...pre];
+        });
+      } else {
+        setMembers((pre) => {
+          const newIndex = pre.findIndex((e) => e.position === position);
+          const oldIndex = pre.findIndex((e) => e.position === old_position);
+          pre[newIndex].position = old_position;
+          pre[oldIndex].position = position;
           return [...pre];
         });
       }
