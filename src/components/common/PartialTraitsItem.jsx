@@ -1,6 +1,10 @@
 import styled from "styled-components";
 import SynergyInfo from "components/info/SynergyInfo";
-import { BONUS_LEVEL_COLOR } from "config/color"
+import { BONUS_LEVEL_COLOR } from "config/color";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { solid } from "@fortawesome/fontawesome-svg-core/import.macro";
+import { capitalize } from "utils/filter";
+import { Fragment } from "react";
 
 export default function PartialTraitsItem({
   width,
@@ -9,6 +13,7 @@ export default function PartialTraitsItem({
   hide_name,
   synergy_name,
   bonus_level,
+  lvls,
 }) {
   return (
     <PartialTraitsItemWrapper>
@@ -23,29 +28,78 @@ export default function PartialTraitsItem({
         />
       </SynergyInfoWrapper>
       <div className="trait-info">
-        <div className="trait-info-name"></div>
-        <div className="trait-info-level"></div>
+        <div className="trait-info-name">{capitalize(synergy_name)}</div>
+        <div className="trait-info-level">
+          {bonus_level > 0 ? (
+            lvls.map((item, index) => {
+              return (
+                <span className="traits-bonus" key={item}>
+                  <Fragment>
+                    <span className={count >= item ? "active" : ""}>
+                      {item}
+                    </span>
+                    {index < lvls.length - 1 && (
+                      <FontAwesomeIcon
+                        size="sm"
+                        className={count > item ? "active" : ""}
+                        icon={solid("angle-right")}
+                      />
+                    )}
+                  </Fragment>
+                </span>
+              );
+            })
+          ) : (
+            <Fragment>
+              <span className="non-active">
+                {count}/{lvls[0]}
+              </span>
+            </Fragment>
+          )}
+        </div>
       </div>
     </PartialTraitsItemWrapper>
   );
 }
 
-const PartialTraitsItemWrapper = styled.div``;
+const PartialTraitsItemWrapper = styled.div`
+  display: flex;
+  align-items: center;
+  background-color: red;
+  margin-bottom: 15px;
+  border: 1px solid #17313a;
+  font-size: 14px;
+  background: #102531;
+  padding-left: 10px;
+  .trait-info-level {
+    display: flex;
+    align-items: center;
+    .traits-bonus,
+    .non-active {
+      color: #88a0a7;
+      .active {
+        color: white;
+      }
+    }
+    svg {
+      vertical-align: middle;
+      margin: 0 5px;
+    }
+  }
+`;
 
 const SynergyInfoWrapper = styled.div`
-  margin-right: 5px;
-  margin-bottom: 10px;
   height: min-content;
   display: flex;
   width: max-content;
   align-items: center;
   justify-content: center;
-  background-color: ${(props) => props.bonus_level_color};
+  background-color: ${(props) => props.bonus_level_color || "#123040"};
   border-bottom-right-radius: 4px;
   border-top-right-radius: 4px;
   padding: 0 5px 0 4px;
   position: relative;
-  margin-bottom: 25px;
+  margin-right: 10px;
   &::before {
     content: "";
     position: absolute;
@@ -55,7 +109,8 @@ const SynergyInfoWrapper = styled.div`
     border-right: 14px solid transparent;
     z-index: 1;
     bottom: 100%;
-    border-bottom: 6.93px solid ${(props) => props.bonus_level_color};
+    border-bottom: 6.93px solid
+      ${(props) => props.bonus_level_color || "#123040"};
   }
   &::after {
     content: "";
@@ -66,6 +121,7 @@ const SynergyInfoWrapper = styled.div`
     border-right: 14px solid transparent;
     z-index: 1;
     top: 100%;
-    border-top: 6.93px solid ${(props) => props.bonus_level_color};
+    border-top: 6.93px solid
+      ${(props) => props.bonus_level_color || "#123040"};
   }
 `;

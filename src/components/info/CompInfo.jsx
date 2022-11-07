@@ -5,12 +5,13 @@ import { capitalize } from "utils/filter";
 import { solid } from "@fortawesome/fontawesome-svg-core/import.macro";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Status from "components/common/Status";
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, lazy, Suspense } from "react";
 import { DataContext } from "contexts/DataContext";
-import SynergyInfo from "components/info/SynergyInfo";
-import ItemInfo from "components/info/ItemInfo";
-import MiniMap from "components/common/MiniMap";
 import { BONUS_LEVEL_COLOR } from "config/color";
+
+const SynergyInfo = lazy(() => import("components/info/SynergyInfo"));
+const ItemInfo = lazy(() => import("components/info/ItemInfo"));
+const MiniMap = lazy(() => import("components/common/MiniMap"));
 
 export default function TeamComp(props) {
   const { championsData, synergysData, itemsData } = useContext(DataContext);
@@ -180,14 +181,16 @@ export default function TeamComp(props) {
                         key={item.name}
                         bonus_level_color={BONUS_LEVEL_COLOR[item.bonus_level]}
                       >
-                        <SynergyInfo
-                          width="20px"
-                          height="20px"
-                          count={item.count}
-                          hide_name={true}
-                          synergy_name={item.name}
-                          bonus_level={item.bonus_level}
-                        />
+                        <Suspense>
+                          <SynergyInfo
+                            width="20px"
+                            height="20px"
+                            count={item.count}
+                            hide_name={true}
+                            synergy_name={item.name}
+                            bonus_level={item.bonus_level}
+                          />
+                        </Suspense>
                       </SynergyInfoWrapper>
                     )
                   );
@@ -203,18 +206,20 @@ export default function TeamComp(props) {
                   return (
                     <React.Fragment key={itemName}>
                       <div className="carousel-item-wrapper">
-                        <ItemInfo
-                          className="carousel-item"
-                          width="32px"
-                          height="32px"
-                          item_name={itemName}
-                        />
-                        <ItemInfo
-                          className="carousel-sub-item"
-                          width="18px"
-                          height="18px"
-                          item_name={getSubItem(itemName)}
-                        />
+                        <Suspense>
+                          <ItemInfo
+                            className="carousel-item"
+                            width="32px"
+                            height="32px"
+                            item_name={itemName}
+                          />
+                          <ItemInfo
+                            className="carousel-sub-item"
+                            width="18px"
+                            height="18px"
+                            item_name={getSubItem(itemName)}
+                          />
+                        </Suspense>
                       </div>
                       {index < props.team_detail.carousel.length - 1 && (
                         <FontAwesomeIcon
@@ -285,7 +290,9 @@ export default function TeamComp(props) {
                 <span>Positioning</span>
               </div>
               <div className="line-3-item-title">
-                <MiniMap members={props.team_detail.members} />
+                <Suspense>
+                  <MiniMap members={props.team_detail.members} />
+                </Suspense>
               </div>
             </div>
           </div>

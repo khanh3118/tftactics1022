@@ -5,7 +5,7 @@ import reportWebVitals from "./reportWebVitals";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import RootLayout from "./layouts/Root";
 import DatabaseLayout from "./views/Database/DatabaseLayout";
-import ItemBuilder from "./views/ItemBuilder/ItemBuilder";
+import ItemBuilder from "./views/ItemBuilder";
 import Champions from "./views/Database/Contents/Champions";
 import ChampionsStats from "./views/Database/Contents/ChampionsStats";
 import Origins from "./views/Database/Contents/Origins";
@@ -20,10 +20,9 @@ import SignUp from "components/auth/SignUp";
 import { AuthProvider } from "contexts/AuthContext";
 import PrivateRoute from "components/auth/PrivateRoute";
 import { DataProvider } from "contexts/DataContext";
-import TeamComps from "views/TeamComps/TeamComps";
+import TeamComps from "views/TeamComps";
 import TeamCompsManager from "views/Manager/TeamCompsManager";
-import TeamBuilder from "views/TeamBuilder/TeamBuilder";
-
+import TeamBuilder from "views/TeamBuilder";
 
 const router = createBrowserRouter([
   {
@@ -63,7 +62,7 @@ const router = createBrowserRouter([
     children: [
       {
         path: "teambuilder",
-        element: <TeamBuilder />
+        element: <TeamBuilder />,
       },
       {
         path: "database",

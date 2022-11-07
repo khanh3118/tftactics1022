@@ -26,6 +26,11 @@ function TopNavigation() {
             </NavLink>
           </li>
           <li>
+            <NavLink to="teambuilder" className="header-item">
+              Team Builder
+            </NavLink>
+          </li>
+          <li>
             <Link to="/manager/teamcomps" className="header-item">
               Manager
             </Link>
@@ -44,11 +49,6 @@ function TopNavigation() {
             <Link to="/" className="header-item">
               Tier Lists
             </Link>
-          </li>
-          <li>
-            <NavLink to="teambuilder" className="header-item">
-              Team Builder
-            </NavLink>
           </li>
         </ul>
       </div>

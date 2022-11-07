@@ -57,7 +57,9 @@ function CharacterInfo(props) {
             className="avatar-champion"
             src={championDetail.champion_img_link}
             alt={championDetail.champion_name}
-          />
+            draggable={true}
+            onDragStart={(e) => e.dataTransfer.setData("champion_name", championDetail.champion_name)}
+            />
           {hiddenPopup || (
             <div className="popup">
               <div className="popup-info">

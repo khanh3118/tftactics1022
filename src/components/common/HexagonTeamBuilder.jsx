@@ -4,9 +4,15 @@ import { DataContext } from "contexts/DataContext";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { solid } from "@fortawesome/fontawesome-svg-core/import.macro";
 import { useState } from "react";
-import { HEXAGON_BUILDER_BORDER_COLORS } from "config/color"
+import { HEXAGON_BUILDER_BORDER_COLORS } from "config/color";
 
-export default function Hexagon({ className, data, hanle_change_level }) {
+export default function Hexagon({
+  className,
+  data,
+  hanle_change_level,
+  hanle_on_drop,
+  position,
+}) {
   const { championsData, itemsData } = useContext(DataContext);
   const [levelVisible, setLevelsVisible] = useState(false);
 
@@ -27,6 +33,9 @@ export default function Hexagon({ className, data, hanle_change_level }) {
       className={className}
       onMouseOver={() => setLevelsVisible(true)}
       onMouseOut={() => setLevelsVisible(false)}
+      onDragOver={(e) => e.preventDefault()}
+      onDrop={(e) => hanle_on_drop(e, position, data.cost ? false : true)}
+      draggable={true}
     >
       <div className="character-items">
         {data.items !== undefined &&
@@ -136,7 +145,7 @@ const HexagonWrapper = styled.div`
   .character-levels {
     position: absolute;
     display: flex;
-    z-index: 9999;
+    z-index: 999;
     left: 50%;
     transform: translateX(-50%);
   }

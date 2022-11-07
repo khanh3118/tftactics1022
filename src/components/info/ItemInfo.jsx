@@ -23,7 +23,18 @@ export default function ItemInfo(props) {
       className={props.className}
     >
       <Wrapper loadDone={loadDone} width={props.width} height={props.height}>
-        <img className="avatar-item-img" src={itemDetail.item_image} alt="" />
+        <img
+          draggable={true}
+          onDragStart={(e) =>
+            e.dataTransfer.setData(
+              "item_name",
+              itemDetail.item_name
+            )
+          }
+          className="avatar-item-img"
+          src={itemDetail.item_image}
+          alt=""
+        />
         {hiddenPopup || (
           <div className="avatar-item-popup">
             <div className="popup-info">
