@@ -32,8 +32,9 @@ export default function PartialTraitsItem({
         <div className="trait-info-level">
           {bonus_level > 0 ? (
             lvls.map((item, index) => {
+              console.log(lvls)
               return (
-                <span className="traits-bonus" key={item}>
+                <span className="traits-bonus">
                   <Fragment>
                     <span className={count >= item ? "active" : ""}>
                       {item}
@@ -41,7 +42,7 @@ export default function PartialTraitsItem({
                     {index < lvls.length - 1 && (
                       <FontAwesomeIcon
                         size="sm"
-                        className={count > item ? "active" : ""}
+                        className={count > Number(lvls[index]) ? "active" : ""}
                         icon={solid("angle-right")}
                       />
                     )}
@@ -74,8 +75,10 @@ const PartialTraitsItemWrapper = styled.div`
   .trait-info-level {
     display: flex;
     align-items: center;
+    flex-wrap: wrap;
     .traits-bonus,
     .non-active {
+      width: max-content;
       color: #88a0a7;
       .active {
         color: white;

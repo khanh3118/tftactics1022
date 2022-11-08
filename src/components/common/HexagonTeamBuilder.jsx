@@ -23,6 +23,14 @@ export default function Hexagon({
     if (is_max_level) return "active";
     return "";
   }
+  function onDragStartItem(e, item_index) {
+    e.stopPropagation();
+    e.dataTransfer.setData("drag_item_index", item_index);
+    e.dataTransfer.setData("drag_item_position", position);
+  }
+  function onDragStartCharacter(e) {
+    e.dataTransfer.setData("drag_from_position", position);
+  }
   return (
     <HexagonWrapper
       backgroud_image={
@@ -35,18 +43,20 @@ export default function Hexagon({
       onMouseOut={() => setLevelsVisible(false)}
       onDragOver={(e) => e.preventDefault()}
       onDrop={(e) => hanle_on_drop(e, position, data.cost ? false : true)}
-      onDragStart={(e) => e.dataTransfer.setData("drag_from_position", position)}
-      draggable={true}
+      onDragStart={(e) => onDragStartCharacter(e)}
+      draggable={data.cost && true}
     >
       <div className="character-items">
         {data.items !== undefined &&
-          data.items.map((item) => {
+          data.items.map((item,index) => {
             return (
               <img
                 key={item}
                 className="character-item"
                 src={getItemImage(item)}
-                alt=""
+                draggable={true}
+                alt="hehe"
+                onDragStart={(e) => onDragStartItem(e, index)}
               />
             );
           })}

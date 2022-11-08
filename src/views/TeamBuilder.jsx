@@ -17,51 +17,63 @@ const PartialTraitsItem = lazy(() =>
 const CharacterInfo = lazy(() => import("components/info/CharacterInfo"));
 
 export default function TeamBuilder(pros) {
-  const { championsData, synergysData, itemsData } = useContext(DataContext);
-  const [members, setMembers] = useState([
-    {
-      name: "Aphelios",
-      position: 28,
-      max_level: false,
-      items: [],
-    },
-    {
-      name: "Qiyana",
-      position: 18,
-      max_level: false,
-      items: [],
-    },
-    {
-      name: "Rell",
-      position: 5,
-      max_level: false,
-      items: [],
-    },
-    {
-      name: "Diana",
-      position: 25,
-      max_level: false,
-      items: [],
-    },
-    {
-      name: "Rengar",
-      position: 27,
-      max_level: true,
-      items: ["Mage Emblem", "Infinity Edge", "Runaan's Hurricane"],
-    },
-    {
-      name: "Nilah",
-      position: 26,
-      max_level: false,
-      items: [],
-    },
-    {
-      name: "Swain",
-      position: 12,
-      max_level: false,
-      items: ["Archangel's Staff", "Morellonomicon"],
-    },
-  ]);
+  const { championsData, synergysData, itemsData, teamcompsData } =
+    useContext(DataContext);
+  const [characterData, setCharacterData] = useState(
+    championsData.sort((a, b) => a.champion_name.localeCompare(b.champion_name))
+  );
+  const [showPartialTraits, setShowPartialTraits] = useState(true);
+  const [characterFilter, setCharacterFilter] = useState({
+    text: "",
+    type: "abc",
+  });
+  function searchCharacter(searchText) {
+    setCharacterFilter((pre) => {
+      return {
+        ...pre,
+        text: searchText,
+      };
+    });
+  }
+  const [unfilterCharacter, setUnfilterCharacter] = useState(
+    championsData.sort((a, b) => a.champion_name.localeCompare(b.champion_name))
+  );
+  useEffect(() => {
+    setCharacterData((pre) => {
+      let data = championsData.filter((c) => {
+        return (
+          c.champion_name.toLowerCase().includes(characterFilter.text) ||
+          c.champion_origin.includes(characterFilter.text) ||
+          c.champion_class.includes(characterFilter.text) ||
+          c.champion_cost === characterFilter.text
+        );
+      });
+      if (characterFilter.type === "abc") {
+        return data.sort((a, b) =>
+          a.champion_name.localeCompare(b.champion_name)
+        );
+      }
+      if (characterFilter.type === "cost") {
+        return data.sort(
+          (a, b) => Number(a.champion_cost) - Number(b.champion_cost)
+        );
+      }
+    });
+    setUnfilterCharacter(() => {
+      if (characterFilter.type === "abc") {
+        return championsData.sort((a, b) =>
+          a.champion_name.localeCompare(b.champion_name)
+        );
+      }
+      if (characterFilter.type === "cost") {
+        return championsData.sort(
+          (a, b) => Number(a.champion_cost) - Number(b.champion_cost)
+        );
+      }
+    });
+  }, [characterFilter]);
+
+  const [members, setMembers] = useState(teamcompsData[0].members);
   function setAllFnc() {
     return members.map((member) => {
       let championDetail = championsData.find(
@@ -73,6 +85,7 @@ export default function TeamBuilder(pros) {
       };
     });
   }
+  const [errorMessage, setErrorMessage] = useState("");
   const [all, setAll] = useState(setAllFnc());
   useEffect(() => {
     setAll([...setAllFnc()]);
@@ -246,15 +259,22 @@ export default function TeamBuilder(pros) {
       return [...pre];
     });
   }
+  useEffect(() => {
+    if (errorMessage !== "") {
+      setTimeout(() => {
+        setErrorMessage("");
+      }, 3000);
+    }
+  }, [errorMessage]);
+
   function createElementsFromNumber(n) {
     var elements = [];
     for (let i = 0; i < n; i++) {
       elements.push(
-        <Suspense>
+        <Suspense key={i}>
           <HexagonTeamBuilder
             hanle_change_level={hanleChangeLevel}
             data={getHexagonData(i + 1)}
-            key={i + 1}
             position={i + 1}
             className="team-builder-drag-item"
             hanle_on_drop={ondrop}
@@ -263,9 +283,6 @@ export default function TeamBuilder(pros) {
       );
     }
     return elements;
-  }
-  function searchCharacter(a) {
-    console.log(a);
   }
   function ondrop(e, position, is_empty) {
     if (e.dataTransfer.getData("champion_name")) {
@@ -281,9 +298,8 @@ export default function TeamBuilder(pros) {
           return [...pre];
         });
       } else {
-        console.log("first");
         setMembers((pre) => {
-          let r = pre.find((m) => m.position === position);
+          let r = pre.find((m) => Number(m.position) === position);
           r.name = champion_name;
           r.items = [];
           r.max_level = false;
@@ -295,9 +311,16 @@ export default function TeamBuilder(pros) {
       let item_name = e.dataTransfer.getData("item_name");
       if (is_empty === false) {
         setMembers((pre) => {
-          let a = pre.find((m) => m.position === position);
+          let a = pre.find((m) => Number(m.position) === position);
           if (a.items.length < 3) {
-            a.items.push(item_name);
+            let is_unique = itemsData.find(
+              (i) => i.item_name === item_name
+            ).is_unique_item;
+            if (is_unique === "false") {
+              a.items.push(item_name);
+            }
+          } else {
+            setErrorMessage("A champion can only have 3 items equipped.");
           }
           return [...pre];
         });
@@ -307,19 +330,53 @@ export default function TeamBuilder(pros) {
       let old_position = Number(e.dataTransfer.getData("drag_from_position"));
       if (is_empty) {
         setMembers((pre) => {
-          pre.find((m) => m.position === old_position).position = position;
+          pre.find((m) => Number(m.position) === old_position).position =
+            position;
           return [...pre];
         });
       } else {
         setMembers((pre) => {
-          const newIndex = pre.findIndex((e) => e.position === position);
-          const oldIndex = pre.findIndex((e) => e.position === old_position);
+          const newIndex = pre.findIndex(
+            (e) => Number(e.position) === position
+          );
+          const oldIndex = pre.findIndex(
+            (e) => Number(e.position) === old_position
+          );
           pre[newIndex].position = old_position;
           pre[oldIndex].position = position;
           return [...pre];
         });
       }
     }
+  }
+  function hanleOnDropTableChampions(e) {
+    let position = Number(e.dataTransfer.getData("drag_from_position"));
+    if (position) {
+      setMembers((pre) => {
+        pre.splice(
+          pre.findIndex((i) => Number(i.position) === position),
+          1
+        );
+        return [...pre];
+      });
+    }
+  }
+  function hanleOnDropTableItems(e) {
+    let item_index = e.dataTransfer.getData("drag_item_index");
+    let item_position = Number(e.dataTransfer.getData("drag_item_position"));
+    if (item_index && item_position) {
+      setMembers((pre) => {
+        pre
+          .find((p) => Number(p.position) === item_position)
+          .items.splice(item_index, 1);
+        return [...pre];
+      });
+    }
+  }
+  function getCharacterClass(champion_name) {
+    let result = characterData.find((c) => c.champion_name === champion_name);
+    if (result) return "team-builder-drag-champion-wrapper";
+    return "team-builder-drag-champion-wrapper hidden";
   }
   return (
     <TeamBuilderWrapper>
@@ -336,10 +393,16 @@ export default function TeamBuilder(pros) {
           </div>
         </div>
         <div className="team-builder-title-filter">
-          <div className="team-builder-title-filter-partial-traits">
+          <div
+            onClick={() => setShowPartialTraits((pre) => !pre)}
+            className="team-builder-title-filter-partial-traits"
+          >
             <span>Show Partial Traits</span>
           </div>
-          <div className="team-builder-title-filter-clear-team">
+          <div
+            onClick={() => setMembers([])}
+            className="team-builder-title-filter-clear-team"
+          >
             <button>
               <span>Clear Team</span>
             </button>
@@ -357,16 +420,18 @@ export default function TeamBuilder(pros) {
             <Suspense>
               {partialTraits.map((item) => {
                 return (
-                  <PartialTraitsItem
-                    lvls={item.lvls}
-                    width="20px"
-                    height="20px"
-                    count={item.count}
-                    hide_name={true}
-                    synergy_name={item.name}
-                    bonus_level={item.bonus_level}
-                    key={item.name}
-                  />
+                  (item.bonus_level > 0 || showPartialTraits) && (
+                    <PartialTraitsItem
+                      key={item.name}
+                      lvls={item.lvls}
+                      width="20px"
+                      height="20px"
+                      count={item.count}
+                      hide_name={true}
+                      synergy_name={item.name}
+                      bonus_level={item.bonus_level}
+                    />
+                  )
                 );
               })}
             </Suspense>
@@ -425,15 +490,40 @@ export default function TeamBuilder(pros) {
                 })}
               </div>
             </div>
+            {errorMessage && <div className="error">{errorMessage}</div>}
             <div className="team-builder-drag-line-2">
               <div className="team-builder-drag-champions">
                 <SearchCard
                   filter={
                     <Fragment>
-                      <div className="filter active">
+                      <div
+                        onClick={() =>
+                          setCharacterFilter({
+                            ...characterFilter,
+                            type: "abc",
+                          })
+                        }
+                        className={
+                          characterFilter.type === "abc"
+                            ? "filter active"
+                            : "filter"
+                        }
+                      >
                         <span>A-Z</span>
                       </div>
-                      <div className="filter">
+                      <div
+                        onClick={() =>
+                          setCharacterFilter({
+                            ...characterFilter,
+                            type: "cost",
+                          })
+                        }
+                        className={
+                          characterFilter.type === "cost"
+                            ? "filter active"
+                            : "filter"
+                        }
+                      >
                         <span>
                           <FontAwesomeIcon
                             className="coin"
@@ -444,13 +534,14 @@ export default function TeamBuilder(pros) {
                     </Fragment>
                   }
                   hanle_search={searchCharacter}
+                  hanle_on_drop={hanleOnDropTableChampions}
                   placeholder="Search by name, trait, or cost..."
                 >
-                  {championsData.map((c) => {
+                  {unfilterCharacter.map((c) => {
                     return (
                       <div
                         key={c.champion_name}
-                        className="team-builder-drag-champion-wrapper"
+                        className={getCharacterClass(c.champion_name)}
                       >
                         <Suspense>
                           <CharacterInfo
@@ -465,7 +556,10 @@ export default function TeamBuilder(pros) {
                 </SearchCard>
               </div>
               <div className="team-builder-drag-items">
-                <SearchCard placeholder="Search by name...">
+                <SearchCard
+                  placeholder="Search by name..."
+                  hanle_on_drop={hanleOnDropTableItems}
+                >
                   {itemsData.map((i, index) => {
                     return (
                       <div
@@ -494,6 +588,15 @@ const TeamBuilderWrapper = styled.div`
   color: white;
   min-height: 100vh;
   padding-bottom: 50px;
+  .error {
+    text-align: center;
+    margin-left: 20px;
+    margin-bottom: 20px;
+    border-radius: 5px;
+    padding: 5px 10px;
+    color: #e23f3f;
+    background: rgba(226, 63, 63, 0.25);
+  }
   .team-builder-title {
     display: flex;
     justify-content: space-between;
@@ -555,6 +658,7 @@ const TeamBuilderWrapper = styled.div`
             flex-wrap: wrap;
             align-items: center;
             justify-content: center;
+            margin-bottom: 50px;
           }
           .team-builder-drag-recipe {
             flex-grow: 1;
@@ -588,9 +692,12 @@ const TeamBuilderWrapper = styled.div`
             padding-left: 20px;
             display: flex;
             flex-wrap: wrap;
-            margin-right: 20px;
+            padding-right: 20px;
             .team-builder-drag-champion-wrapper {
               padding: 5px 10px;
+            }
+            .hidden {
+              opacity: 0.15;
             }
             .search-filter {
               color: #88a0a7;

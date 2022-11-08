@@ -3,14 +3,14 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { solid } from "@fortawesome/fontawesome-svg-core/import.macro";
 import { useState } from "react";
 
-export default function SearchCard({children, placeholder,hanle_search,filter}) {
+export default function SearchCard({children, placeholder,hanle_search,filter,hanle_on_drop}) {
   const [searchText, setSearchText] = useState("");
   function hanleChange(inputText) {
     setSearchText(inputText);
-    hanle_search(inputText);
+    hanle_search(inputText.trim().toLowerCase());
   }
   return (
-    <SearchCardWrapper>
+    <SearchCardWrapper onDrop={hanle_on_drop} onDragOver={(e) => e.preventDefault()}>
       <div className="search">
         <div className="search-default">
         <FontAwesomeIcon className="search-icon" icon={solid("magnifying-glass")} />
@@ -30,6 +30,7 @@ const SearchCardWrapper = styled.div`
   color: hsla(0,0%,100%,.9);
   font-size: 14px;
   background-color: #102531;
+  width: 100%;
   .search {
     min-height: 35px;
     padding-left: 10px;
