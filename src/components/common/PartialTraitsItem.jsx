@@ -42,7 +42,7 @@ export default function PartialTraitsItem({
                     {index < lvls.length - 1 && (
                       <FontAwesomeIcon
                         size="sm"
-                        className={count > Number(lvls[index]) ? "active" : ""}
+                        className={count >= Number(lvls[index + 1]) ? "active" : ""}
                         icon={solid("angle-right")}
                       />
                     )}

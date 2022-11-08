@@ -31,6 +31,11 @@ function TopNavigation() {
             </NavLink>
           </li>
           <li>
+            <NavLink to="/champions" className="header-item">
+              Champions
+            </NavLink>
+          </li>
+          <li>
             <Link to="/manager/teamcomps" className="header-item">
               Manager
             </Link>
@@ -38,11 +43,6 @@ function TopNavigation() {
           <li>
             <Link to="/" className="header-item">
               Meta Report
-            </Link>
-          </li>
-          <li>
-            <Link to="/" className="header-item">
-              Champions
             </Link>
           </li>
           <li>

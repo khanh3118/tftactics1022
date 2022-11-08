@@ -9,7 +9,7 @@ import Status from "components/common/Status";
 import CompInfo from "components/info/CompInfo";
 
 function ItemBuilder() {
-  const { teamcompsData, compsData } = useContext(DataContext);
+  const { teamcompsData } = useContext(DataContext);
   return (
     <TeamCompsWrapper id="item-builder">
       <MainLayout

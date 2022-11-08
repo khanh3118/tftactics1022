@@ -23,6 +23,7 @@ import { DataProvider } from "contexts/DataContext";
 import TeamComps from "views/TeamComps";
 import TeamCompsManager from "views/Manager/TeamCompsManager";
 import TeamBuilder from "views/TeamBuilder";
+import ChampionsView from "views/Champions";
 
 const router = createBrowserRouter([
   {
@@ -102,6 +103,10 @@ const router = createBrowserRouter([
       {
         path: "teamcomps",
         element: <TeamComps />,
+      },
+      {
+        path: "champions",
+        element: <ChampionsView />,
       },
     ],
   },

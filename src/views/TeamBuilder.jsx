@@ -132,27 +132,28 @@ export default function TeamBuilder(pros) {
   function getPartialTraits() {
     // add synergy from item
     allItem.forEach((item) => {
+      console.log(uniqueSys);
       switch (item) {
         case "Lagoon Emblem":
-          !uniqueSys.includes("Lagoon") && uniqueSys.push("Lagoon");
+          !uniqueSys.includes("lagoon") && uniqueSys.push("lagoon");
           break;
         case "Dragonmancer Emblem":
-          !uniqueSys.includes("Dragonmancer") && uniqueSys.push("Dragonmancer");
+          !uniqueSys.includes("dragonmancer") && uniqueSys.push("dragonmancer");
           break;
         case "Mage Emblem":
-          !uniqueSys.includes("Mage") && uniqueSys.push("Mage");
+          !uniqueSys.includes("mage") && uniqueSys.push("mage");
           break;
         case "Shimmerscale Emblem":
-          !uniqueSys.includes("Shimmerscale") && uniqueSys.push("Shimmerscale");
+          !uniqueSys.includes("shimmerscale") && uniqueSys.push("shimmerscale");
           break;
         case "Swiftshot Emblem":
-          !uniqueSys.includes("Swiftshot") && uniqueSys.push("Swiftshot");
+          !uniqueSys.includes("swiftshot") && uniqueSys.push("swiftshot");
           break;
         case "Cavalier Emblem":
-          !uniqueSys.includes("Cavalier") && uniqueSys.push("Cavalier");
+          !uniqueSys.includes("cavalier") && uniqueSys.push("cavalier");
           break;
         case "Mirage Emblem":
-          !uniqueSys.includes("Mirage") && uniqueSys.push("Mirage");
+          !uniqueSys.includes("mirage") && uniqueSys.push("mirage");
           break;
         default:
           break;
@@ -197,25 +198,25 @@ export default function TeamBuilder(pros) {
       allItem.forEach((i) => {
         switch (i) {
           case "Lagoon Emblem":
-            if (item === "Lagoon") count = count + 1;
+            if (item === "lagoon") count = count + 1;
             break;
           case "Dragonmancer Emblem":
-            if (item === "Dragonmancer") count = count + 1;
+            if (item === "dragonmancer") count = count + 1;
             break;
           case "Mage Emblem":
-            if (item === "Mage") count = count + 1;
+            if (item === "mage") count = count + 1;
             break;
           case "Shimmerscale Emblem":
-            if (item === "Shimmerscale") count = count + 1;
+            if (item === "shimmerscale") count = count + 1;
             break;
           case "Swiftshot Emblem":
-            if (item === "Swiftshot") count = count + 1;
+            if (item === "swiftshot") count = count + 1;
             break;
           case "Cavalier Emblem":
-            if (item === "Cavalier") count = count + 1;
+            if (item === "cavalier") count = count + 1;
             break;
           case "Mirage Emblem":
-            if (item === "Mirage") count = count + 1;
+            if (item === "mirage") count = count + 1;
             break;
           default:
             break;
@@ -263,7 +264,7 @@ export default function TeamBuilder(pros) {
     if (errorMessage !== "") {
       setTimeout(() => {
         setErrorMessage("");
-      }, 3000);
+      }, 5000);
     }
   }, [errorMessage]);
 
@@ -318,6 +319,12 @@ export default function TeamBuilder(pros) {
             ).is_unique_item;
             if (is_unique === "false") {
               a.items.push(item_name);
+            } else {
+              if (a.items.includes(item_name)) {
+                setErrorMessage("Only one of these items can be equipped.");
+              } else {
+                a.items.push(item_name);
+              }
             }
           } else {
             setErrorMessage("A champion can only have 3 items equipped.");
@@ -616,10 +623,13 @@ const TeamBuilderWrapper = styled.div`
       align-items: center;
       .team-builder-title-filter-partial-traits {
         margin-right: 10px;
+        cursor: pointer;
       }
       .team-builder-title-filter-clear-team,
       .team-builder-title-filter-share {
         button {
+          transition: all 0.3s;
+          cursor: pointer;
           min-height: 35px;
           padding: 0 20px;
           font-size: 14px;
@@ -630,6 +640,9 @@ const TeamBuilderWrapper = styled.div`
         button {
           border: 1px solid #17313a;
           background: transparent;
+          &:hover {
+            border-color: #d47559;
+          }
         }
       }
       .team-builder-title-filter-share {
@@ -697,7 +710,9 @@ const TeamBuilderWrapper = styled.div`
               padding: 5px 10px;
             }
             .hidden {
-              opacity: 0.15;
+              .avatar-champion {
+                opacity: 0.15;
+              }
             }
             .search-filter {
               color: #88a0a7;
