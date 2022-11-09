@@ -65,7 +65,7 @@ export default function TeamComp(props) {
           a.champion_class.includes(item) ||
           a.champion_origin.includes(item)
         ) {
-          if (a.is_dragon === "true" && item !== "dragon") {
+          if (a.is_dragon === "true" && item !== "dragon" && item !== "mystic" && item !== "shapeshifter") {
             count += 3;
           } else {
             count += 1;
@@ -174,7 +174,7 @@ export default function TeamComp(props) {
                 <span>Traits</span>
               </div>
               <div className="team-comps-item-line-2-synergy-icon-wrapper">
-                {data.map((item) => {
+                {data.sort((a,b) => b.bonus_level - a.bonus_level || b.count - a.count).map((item) => {
                   return (
                     item.bonus_level >= 1 && (
                       <SynergyInfoWrapper
