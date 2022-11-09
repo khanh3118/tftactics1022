@@ -586,7 +586,7 @@ export default function TeamBuilder(pros) {
                   placeholder="Search by name..."
                   hanle_on_drop={hanleOnDropTableItems}
                 >
-                  {itemsData.map((i, index) => {
+                  {itemsData.filter(i => i.is_combined === "true").map((i, index) => {
                     return (
                       <div
                         key={i.item_name + index}

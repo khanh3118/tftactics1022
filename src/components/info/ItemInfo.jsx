@@ -97,7 +97,7 @@ export default function ItemInfo(props) {
                         (item) =>
                           item.recipe_1 ===
                             itemDetail.item_name.toLowerCase() ||
-                          item.recipe_1 === itemDetail.item_name.toLowerCase()
+                          item.recipe_2 === itemDetail.item_name.toLowerCase()
                       )
                       .map((item, index, arr) => {
                         return (
