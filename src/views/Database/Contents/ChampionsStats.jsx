@@ -99,22 +99,32 @@ function ChampionsStats() {
     a.forEach((item) => {
       item.className = "table-header-item";
     });
-    if (decreased) {
-      e.target.className = "table-header-item increase";
-      setDecreased(false);
-      setFilterOptions({
-        ...filterOptions,
-        type: "increase",
-        name: e.target.innerText,
-      });
-    } else {
-      e.target.className = "table-header-item decrease";
-      setDecreased(true);
-      setFilterOptions({
-        ...filterOptions,
-        type: "decrease",
-        name: e.target.innerText,
-      });
+    e.target.className = "table-header-item increase";
+    setDecreased(false);
+    setFilterOptions({
+      ...filterOptions,
+      type: "increase",
+      name: e.target.innerText,
+    });
+    if (filterOptions.name === e.target.innerText) {
+      setDecreased((pre) => !pre);
+      if (decreased) {
+        e.target.className = "table-header-item increase";
+        setDecreased(false);
+        setFilterOptions({
+          ...filterOptions,
+          type: "increase",
+          name: e.target.innerText,
+        });
+      } else {
+        e.target.className = "table-header-item decrease";
+        setDecreased(true);
+        setFilterOptions({
+          ...filterOptions,
+          type: "decrease",
+          name: e.target.innerText,
+        });
+      }
     }
   }
 
@@ -135,6 +145,7 @@ function ChampionsStats() {
     });
     a[1].classList = "table-header-item decrease";
     setType("offense");
+    setDecreased(true);
     setFilterOptions({
       ...filterOptions,
       type: "decrease",
@@ -148,6 +159,7 @@ function ChampionsStats() {
     });
     a[1].classList = "table-header-item decrease";
     setType("defense");
+    setDecreased(true);
     setFilterOptions({
       ...filterOptions,
       type: "decrease",

@@ -8,22 +8,83 @@ import CharacterInfo from "components/info/CharacterInfo";
 import SelectSide from "components/common/SelectSide";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { solid } from "@fortawesome/fontawesome-svg-core/import.macro";
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 
 export default function Champions() {
   const { championsData, synergysData } = useContext(DataContext);
   const [filter, setFilter] = useState({
     search_text: "",
     costs: [],
-    traits: [],
+    classes: [],
+    origins: [],
   });
-  function addAndRemoveTrait(traitName) {
+  const [filteredData, setFilteredData] = useState(championsData);
+
+  function hanleSeach(searchText) {
     setFilter((pre) => {
-      if (pre.traits.includes(traitName)) {
-        let position = pre.traits.indexOf(traitName);
-        pre.traits.splice(position, 1);
+      return {
+        ...pre,
+        search_text: searchText,
+      };
+    });
+  }
+
+  useEffect(() => {
+    setFilteredData([
+      ...championsData
+        .filter((f) => {
+          if (
+            f.champion_name
+              .toLowerCase()
+              .includes(filter.search_text.toLowerCase().trim())
+          )
+            return true;
+          if (f.champion_class.find((l) => l.includes(filter.search_text)))
+            return true;
+          if (f.champion_origin.find((l) => l.includes(filter.search_text)))
+            return true;
+          return false;
+        })
+        .filter(
+          (c) =>
+            filter.costs.length === 0 ||
+            filter.costs.includes(Number(c.champion_cost))
+        )
+        .filter((i) => {
+          let result = false;
+          filter.classes.forEach((e) => {
+            if (i.champion_class.includes(e.toLowerCase())) result = true;
+          });
+          return filter.classes.length === 0 || result;
+        })
+        .filter((i) => {
+          let result = false;
+          filter.origins.forEach((e) => {
+            if (i.champion_origin.includes(e.toLowerCase())) result = true;
+          });
+          return filter.origins.length === 0 || result;
+        }),
+    ]);
+  }, [filter]);
+
+  function addAndRemoveOrigin(originName) {
+    setFilter((pre) => {
+      if (pre.origins.includes(originName)) {
+        let position = pre.origins.indexOf(originName);
+        pre.origins.splice(position, 1);
       } else {
-        pre.traits.push(traitName);
+        pre.origins.push(originName);
+      }
+      return { ...pre };
+    });
+  }
+  function addAndRemoveClass(className) {
+    setFilter((pre) => {
+      if (pre.classes.includes(className)) {
+        let position = pre.classes.indexOf(className);
+        pre.classes.splice(position, 1);
+      } else {
+        pre.classes.push(className);
       }
       return { ...pre };
     });
@@ -58,9 +119,35 @@ export default function Champions() {
     return elements;
   }
 
-  useEffect(() => {
-    console.log(filter);
-  }, [filter]);
+  function resetFilter() {
+    setFilter({
+      search_text: "",
+      costs: [],
+      classes: [],
+      origins: [],
+    });
+  }
+
+  function removeCostFilter(cost) {
+    setFilter((pre) => {
+      pre.costs.splice(pre.costs.indexOf(cost), 1);
+      return { ...pre };
+    });
+  }
+
+  function removeOriginFilter(originName) {
+    setFilter((pre) => {
+      pre.origins.splice(pre.origins.indexOf(originName), 1);
+      return { ...pre };
+    });
+  }
+
+  function removeClassFilter(className) {
+    setFilter((pre) => {
+      pre.classes.splice(pre.classes.indexOf(className), 1);
+      return { ...pre };
+    });
+  }
 
   return (
     <ChampionsWrapper>
@@ -69,7 +156,7 @@ export default function Champions() {
           <ChampionsSideContent>
             <div className="champions-side-title">
               <span className="title-name">Filter</span>
-              <button>Reset</button>
+              <button onClick={() => resetFilter()}>Reset</button>
             </div>
             <SelectSide count={8} name="Cost">
               {createElementsFromNumber(8)}
@@ -83,10 +170,10 @@ export default function Champions() {
                 .map((i) => {
                   return (
                     <li
-                      onClick={() => addAndRemoveTrait(i.synergy_name)}
+                      onClick={() => addAndRemoveOrigin(i.synergy_name)}
                       key={i.synergy_name}
                       className={
-                        filter.traits.includes(i.synergy_name) ? "active" : ""
+                        filter.origins.includes(i.synergy_name) ? "active" : ""
                       }
                     >
                       <img
@@ -111,10 +198,10 @@ export default function Champions() {
                 .map((i) => {
                   return (
                     <li
-                      onClick={() => addAndRemoveTrait(i.synergy_name)}
+                      onClick={() => addAndRemoveClass(i.synergy_name)}
                       key={i.synergy_name}
                       className={
-                        filter.traits.includes(i.synergy_name) ? "active" : ""
+                        filter.classes.includes(i.synergy_name) ? "active" : ""
                       }
                     >
                       <img
@@ -146,14 +233,53 @@ export default function Champions() {
               <SearchOrigin
                 placeholder="Search by name, origin, or class..."
                 className="search"
+                hanleSearch={hanleSeach}
               />
             </div>
           </Title>
         }
         mainContent={
           <ChampionsMainContent>
+            <div className="champions-filter">
+              {filter.costs.map((c) => {
+                return (
+                  <div
+                    onClick={() => removeCostFilter(c)}
+                    key={c}
+                    className="champions-filter-item"
+                  >
+                    <span>{c}</span>
+                    <FontAwesomeIcon className="coin" icon={solid("xmark")} />
+                  </div>
+                );
+              })}
+              {filter.origins.map((o) => {
+                return (
+                  <div
+                    onClick={() => removeOriginFilter(o)}
+                    key={o}
+                    className="champions-filter-item"
+                  >
+                    <span>{o}</span>
+                    <FontAwesomeIcon className="coin" icon={solid("xmark")} />
+                  </div>
+                );
+              })}
+              {filter.classes.map((f) => {
+                return (
+                  <div
+                    onClick={() => removeClassFilter(f)}
+                    key={f}
+                    className="champions-filter-item"
+                  >
+                    <span>{f}</span>
+                    <FontAwesomeIcon className="coin" icon={solid("xmark")} />
+                  </div>
+                );
+              })}
+            </div>
             <div className="champions-wrapper">
-              {championsData.map((c) => {
+              {filteredData.map((c) => {
                 return (
                   <div key={c.champion_name} className="champions-item">
                     <CharacterInfo
@@ -182,6 +308,27 @@ const ChampionsWrapper = styled.div`
 
 const ChampionsMainContent = styled.div`
   padding-top: 20px;
+  .champions-filter {
+    display: grid;
+    grid-template-columns: repeat(4, 25%);
+    .champions-filter-item {
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background-color: #d47559;
+      padding: 6px 13px;
+      border-radius: 4px;
+      margin: 0 5px 10px;
+      &:hover {
+        background-color: #de9782;
+      }
+      span {
+      }
+      svg {
+      }
+    }
+  }
   .champions-wrapper {
     display: grid;
     grid-template-columns: repeat(8, 12.5%);
@@ -242,6 +389,7 @@ const ChampionsSideContent = styled.div`
       font-weight: 600;
     }
     button {
+      cursor: pointer;
       background-color: transparent;
       border: 1px solid #17313a;
       padding: 5px 20px;

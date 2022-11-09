@@ -132,7 +132,6 @@ export default function TeamBuilder(pros) {
   function getPartialTraits() {
     // add synergy from item
     allItem.forEach((item) => {
-      console.log(uniqueSys);
       switch (item) {
         case "Lagoon Emblem":
           !uniqueSys.includes("lagoon") && uniqueSys.push("lagoon");
@@ -441,6 +440,15 @@ export default function TeamBuilder(pros) {
                   )
                 );
               })}
+              {partialTraits.length === 0 && (
+                <div className="team-builder-synergy-empty">
+                  <FontAwesomeIcon
+                    size="lg"
+                    icon={solid("circle-exclamation")}
+                  />
+                  <span>No active synergies</span>
+                </div>
+              )}
             </Suspense>
           </div>
           <div className="team-builder-drag">
@@ -449,19 +457,30 @@ export default function TeamBuilder(pros) {
                 {createElementsFromNumber(28)}
               </div>
               <div className="team-builder-drag-recipe">
-                <div className="team-builder-drag-recipe-item">
-                  {allRecipes.map((a, index) => {
-                    return (
-                      <ItemInfo
-                        key={a + index}
-                        className="team-builder-drag-recipe-item-a"
-                        width="27px"
-                        height="27px"
-                        item_name={a}
-                      />
-                    );
-                  })}
-                </div>
+                {allRecipes.length === 0 && (
+                  <div className="team-builder-drag-recipe-empty">
+                    <FontAwesomeIcon
+                      size="lg"
+                      icon={solid("circle-exclamation")}
+                    />
+                    <span>No equipped items</span>
+                  </div>
+                )}
+                {allRecipes.length > 0 && (
+                  <div className="team-builder-drag-recipe-item">
+                    {allRecipes.map((a, index) => {
+                      return (
+                        <ItemInfo
+                          key={a + index}
+                          className="team-builder-drag-recipe-item-a"
+                          width="27px"
+                          height="27px"
+                          item_name={a}
+                        />
+                      );
+                    })}
+                  </div>
+                )}
                 {allItem.map((i, index) => {
                   return (
                     <div
@@ -656,6 +675,24 @@ const TeamBuilderWrapper = styled.div`
   }
   .team-builder-wrapper {
     padding-top: 30px;
+    .team-builder-synergy-empty,
+    .team-builder-drag-recipe-empty {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background: #102531;
+      border: 1px solid #17313a;
+      padding: 20px;
+      span {
+        color: #88a0a7;
+        font-size: 15px;
+      }
+      svg {
+        color: #88a0a7;
+        margin-bottom: 10px;
+      }
+    }
     .team-builder {
       display: grid;
       grid-template-columns: 200px auto;

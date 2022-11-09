@@ -32,9 +32,8 @@ export default function PartialTraitsItem({
         <div className="trait-info-level">
           {bonus_level > 0 ? (
             lvls.map((item, index) => {
-              console.log(lvls)
               return (
-                <span className="traits-bonus">
+                <span key={item} className="traits-bonus">
                   <Fragment>
                     <span className={count >= item ? "active" : ""}>
                       {item}

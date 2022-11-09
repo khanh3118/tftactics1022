@@ -8,8 +8,10 @@ import { useState } from "react";
 import ItemInfo from "components/info/ItemInfo";
 import { useEffect } from "react";
 import { capitalize } from "utils/filter";
+import { useLocation } from "react-router-dom";
 
 function ItemBuilder() {
+  const { state } = useLocation();
   const { itemsData } = useContext(DataContext);
   const [searctText, setSearctText] = useState("");
   const [baseItems, setBaseItems] = useState([
@@ -18,17 +20,20 @@ function ItemBuilder() {
   const [combinedItems, setCombinedItems] = useState([
     ...itemsData.filter((item) => item.is_combined === "true"),
   ]);
-  const [itemDetailName, setItemDetailName] = useState("B.F. Sword");
-  const [itemDetail, setItemDetail] = useState(
-    itemsData.find((item) => item.item_name === "B.F. Sword")
+  const [itemDetailName, setItemDetailName] = useState(
+    state?.item_name || "B.F. Sword"
   );
-  const [isBase, setIsBase] = useState(true);
+  const [itemDetail, setItemDetail] = useState(
+    itemsData.find((item) => item.item_name === itemDetailName)
+  );
+  const [isBase, setIsBase] = useState(state?.item_name ? false : true);
   const [itemRecipes, setItemRecipes] = useState(
-    itemsData.filter(
-      (item) =>
+    itemsData.filter((item) => {
+      return (
         item.recipe_1 === itemDetailName.toLowerCase() ||
         item.recipe_2 === itemDetailName.toLowerCase()
-    )
+      );
+    })
   );
   useEffect(() => {
     if (isBase) {

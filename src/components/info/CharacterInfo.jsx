@@ -7,11 +7,13 @@ import { DataContext } from "contexts/DataContext";
 import LoadingCycle from "components/common/LoadingCycle";
 import ItemInfo from "components/info/ItemInfo";
 import { CHARACTER_BORDERS, BORDER_IMAGES } from "config/color";
+import { useNavigate } from "react-router-dom";
 
 function CharacterInfo(props) {
   const [hiddenPopup, setHiddenPopup] = useState(true);
   const [loadDone, setLoadDone] = useState(false);
   const { championsData, synergysData, itemsData } = useContext(DataContext);
+  const navigate = useNavigate();
 
   const championDetail = championsData.find(
     (item) => item.champion_name === props.champion_name
@@ -26,6 +28,10 @@ function CharacterInfo(props) {
   const itemsRecommend = itemsData.filter((item) =>
     championDetail.champion_items.includes(item.item_name)
   );
+  function hanleClickItemEquip(e, itemName) {
+    e.stopPropagation();
+    navigate('/itembuilder', { state: { item_name: itemName } });
+  } 
   return (
     championDetail && (
       <CharacterInfoDefault
@@ -42,6 +48,7 @@ function CharacterInfo(props) {
             {props.items_equip.map((itemName) => {
               return (
                 <ItemInfo
+                  hanleClick={(e) => hanleClickItemEquip(e, itemName)}
                   className="item-avatar"
                   key={itemName}
                   width="18px"
@@ -141,7 +148,7 @@ const CharacterInfoDefault = styled.div`
     }
     .avatar-champion {
       cursor: pointer;
-      transition: all 0.2s;
+      transition: border-color 0.2s;
       width: ${(props) => props.width} !important;
       height: ${(props) => props.height} !important;
       border: 1px solid;

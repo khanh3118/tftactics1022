@@ -11,7 +11,7 @@ function DatabaseLayout() {
   const navigate = useNavigate();
   useEffect(() => {
     if (window.location.pathname === "/database")
-      navigate("/database/champions");
+      navigate("/database/championstats");
   }, []);
   function hanleSearch(searchText) {
     setSearchText(searchText);
@@ -27,14 +27,14 @@ function DatabaseLayout() {
         sideContent={
           <div className="navigation-items">
             <ul>
-              <li className="active">
-                <NavLink to="/database/champions" className="header-item">
-                  Champions
-                </NavLink>
-              </li>
               <li>
                 <NavLink to="/database/championstats" className="header-item">
                   Champions Stats
+                </NavLink>
+              </li>
+              <li className="active">
+                <NavLink to="/database/champions" className="header-item">
+                  Champions
                 </NavLink>
               </li>
               <li>
