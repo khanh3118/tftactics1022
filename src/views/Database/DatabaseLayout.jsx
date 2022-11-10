@@ -3,7 +3,7 @@ import { Outlet, NavLink } from "react-router-dom";
 import SelectDropDown from "components/common/SelectDropdown";
 import SearchOrigin from "components/common/SearchOrigin";
 import styled from "styled-components";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Routes, Route } from "react-router-dom";
 import { useEffect, useState } from "react";
 
 function DatabaseLayout() {
@@ -53,7 +53,26 @@ function DatabaseLayout() {
         titleContent={
           <Title className="title">
             <div className="title-1">
-              <div className="name">TFT Champions Stats</div>
+              <Routes>
+                <Route
+                  path="champions"
+                  element={
+                    <div className="name">TFT Champions Synergy List</div>
+                  }
+                />
+                <Route
+                  path="championstats"
+                  element={<div className="name">TFT Champions Stats</div>}
+                />
+                <Route
+                  path="origins"
+                  element={<div className="name">TFT Origins List</div>}
+                />
+                <Route
+                  path="classes"
+                  element={<div className="name">TFT Classes List</div>}
+                />
+              </Routes>
               <SelectDropDown
                 dropDownItems={[{ text: "Set 7.5", isSelected: true }]}
                 placeholder="Set 7.5"
@@ -61,11 +80,56 @@ function DatabaseLayout() {
               />
             </div>
             <div className="title-2">
-              <SearchOrigin
-                placeholder="Search by name..."
-                className="search"
-                hanleSearch={hanleSearch}
-              />
+              <Routes>
+                <Route
+                  path="champions"
+                  element={
+                    <SearchOrigin
+                      minWidth="300px"
+                      reverse={true}
+                      placeholder="Search for a champion..."
+                      className="search"
+                      hanleSearch={hanleSearch}
+                    />
+                  }
+                />
+                <Route
+                  path="championstats"
+                  element={
+                    <SearchOrigin
+                      minWidth="300px"
+                      reverse={true}
+                      placeholder="Search for a champion.."
+                      className="search"
+                      hanleSearch={hanleSearch}
+                    />
+                  }
+                />
+                <Route
+                  path="origins"
+                  element={
+                    <SearchOrigin
+                      minWidth="300px"
+                      reverse={true}
+                      placeholder="Search for an origin..."
+                      className="search"
+                      hanleSearch={hanleSearch}
+                    />
+                  }
+                />
+                <Route
+                  path="classes"
+                  element={
+                    <SearchOrigin
+                      minWidth="300px"
+                      reverse={true}
+                      placeholder="Search for a class..."
+                      className="search"
+                      hanleSearch={hanleSearch}
+                    />
+                  }
+                />
+              </Routes>
             </div>
           </Title>
         }

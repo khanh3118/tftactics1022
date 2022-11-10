@@ -3,17 +3,294 @@ import styled from "styled-components";
 import SelectDropDown from "components/common/SelectDropdown";
 import SearchOrigin from "components/common/SearchOrigin";
 import { DataContext } from "contexts/DataContext";
-import { useContext } from "react";
+import { useContext, useState, useEffect } from "react";
 import Button from "components/common/Button";
 import Status from "components/common/Status";
 import CompInfo from "components/info/CompInfo";
+import SelectSide from "components/common/SelectSide";
 
 function ItemBuilder() {
-  const { teamcompsData } = useContext(DataContext);
+  const { championsData, synergysData, teamcompsData } =
+    useContext(DataContext);
+
+  const [includedTraits, setIncludedTraits] = useState(() => {
+    let result = teamcompsData.map((team_detail) => {
+      let all = team_detail.members.map((member) => {
+        let championDetail = championsData.find(
+          (c) => c.champion_name === member.name
+        );
+        return {
+          ...member,
+          ...championDetail,
+        };
+      });
+      // get array of unique synergys
+      let uniqueSys = [
+        ...new Set(
+          all.reduce((total, current) => {
+            return total
+              .concat(current.champion_origin)
+              .concat(current.champion_class);
+          }, [])
+        ),
+      ];
+
+      let traits = uniqueSys.map((item) => {
+        let count = 0; // count synergy
+        let lvls = []; // level bonus array
+        // level bonus from synergy description
+        synergysData
+          .find((s) => s.synergy_name.toLowerCase() === item)
+          .synergy_description_level.split("/")
+          .forEach((i, index) => {
+            if (index === 0) {
+              lvls.push(i.split("$")[0]);
+            } else {
+              lvls.push(i.split("$")[0].split("\n")[1]);
+            }
+          });
+        // count synergy
+        all.forEach((a) => {
+          if (
+            a.champion_class.includes(item) ||
+            a.champion_origin.includes(item)
+          ) {
+            if (
+              a.is_dragon === "true" &&
+              item !== "dragon" &&
+              item !== "mystic" &&
+              item !== "shapeshifter"
+            ) {
+              count += 3;
+            } else {
+              count += 1;
+            }
+          }
+        });
+        let bonus_level = 0;
+        // get bonus level
+        lvls.forEach((lvl) => {
+          if (count >= lvl) {
+            bonus_level += 1;
+          }
+        });
+        return { name: item, count, lvls, bonus_level };
+      });
+      return {
+        ...team_detail,
+        traits,
+      };
+    });
+    return result;
+  });
+
+  const [filteredData, setFilteredData] = useState(includedTraits);
+  const [uniqueType, setUniqueType] = useState(() => {
+    let result = [];
+    teamcompsData.forEach((t) => {
+      result.push(t.type);
+    });
+    return [...new Set(result)];
+  });
+
+  const [filter, setFilter] = useState({
+    search_text: "",
+    styles: [],
+    classes: [],
+    origins: [],
+  });
+
+  useEffect(() => {
+    setFilteredData([
+      ...includedTraits
+        .filter((f) => {
+          if (
+            f.name
+              .toLowerCase()
+              .includes(filter.search_text.trim().toLowerCase())
+          )
+            return true;
+          if (
+            f.members.find((m) =>
+              m.name
+                .toLowerCase()
+                .includes(filter.search_text.trim().toLowerCase())
+            )
+          )
+            return true;
+          if (
+            f.traits.find((t) =>
+              t.name.includes(filter.search_text.trim().toLowerCase())
+            )
+          )
+            return true;
+          return false;
+        })
+        .filter(
+          (t) => filter.styles.length === 0 || filter.styles.includes(t.type)
+        )
+        .filter((t) => {
+          let result = false;
+          filter.classes.forEach((e) => {
+            t.traits.forEach((s) => {
+              if (s.bonus_level > 0) {
+                filter.classes.forEach((i) => {
+                  if (i.toLowerCase() === s.name) result = true;
+                });
+              }
+            });
+          });
+          return filter.classes.length === 0 || result;
+        })
+        .filter((t) => {
+          let result = false;
+          filter.origins.forEach((e) => {
+            t.traits.forEach((s) => {
+              if (s.bonus_level > 0) {
+                filter.origins.forEach((i) => {
+                  if (i.toLowerCase() === s.name) result = true;
+                });
+              }
+            });
+          });
+          return filter.origins.length === 0 || result;
+        }),
+    ]);
+  }, [filter]);
+
+  function hanleSeach(searchText) {
+    setFilter((pre) => {
+      return {
+        ...pre,
+        search_text: searchText,
+      };
+    });
+  }
+
+  function addAndRemoveOrigin(originName) {
+    setFilter((pre) => {
+      if (pre.origins.includes(originName)) {
+        let position = pre.origins.indexOf(originName);
+        pre.origins.splice(position, 1);
+      } else {
+        pre.origins.push(originName);
+      }
+      return { ...pre };
+    });
+  }
+  function addAndRemoveClass(className) {
+    setFilter((pre) => {
+      if (pre.classes.includes(className)) {
+        let position = pre.classes.indexOf(className);
+        pre.classes.splice(position, 1);
+      } else {
+        pre.classes.push(className);
+      }
+      return { ...pre };
+    });
+  }
+
+  function addAndRemoveStyle(type) {
+    setFilter((pre) => {
+      if (pre.styles.includes(type)) {
+        let position = pre.styles.indexOf(type);
+        pre.styles.splice(position, 1);
+      } else {
+        pre.styles.push(type);
+      }
+      return { ...pre };
+    });
+  }
+
+  function resetFilter() {
+    setFilter({
+      search_text: "",
+      styles: [],
+      classes: [],
+      origins: [],
+    });
+  }
   return (
     <TeamCompsWrapper id="item-builder">
       <MainLayout
-        sideContent={<ItemBulderSideContent></ItemBulderSideContent>}
+        sideContent={
+          <ItemBulderSideContent>
+            <div className="champions-side-title">
+              <span className="title-name">Filter</span>
+              <button onClick={() => resetFilter()}>Reset</button>
+            </div>
+            <SelectSide name="Playstyle" count={uniqueType.count}>
+              {uniqueType.map((type) => {
+                return (
+                  <li
+                    onClick={() => addAndRemoveStyle(type)}
+                    key={type}
+                    className={filter.styles.includes(type) ? "active" : ""}
+                  >
+                    {type}
+                    <span className="check"></span>
+                  </li>
+                );
+              })}
+            </SelectSide>
+            <SelectSide
+              count={synergysData.filter((s) => s.type === "origin").length}
+              name="Origin"
+            >
+              {synergysData
+                .filter((s) => s.type === "origin")
+                .map((i) => {
+                  return (
+                    <li
+                      onClick={() => addAndRemoveOrigin(i.synergy_name)}
+                      key={i.synergy_name}
+                      className={
+                        filter.origins.includes(i.synergy_name) ? "active" : ""
+                      }
+                    >
+                      <img
+                        className="synergy-img"
+                        width={24}
+                        height={24}
+                        src={i.synergy_image}
+                        alt=""
+                      />
+                      {i.synergy_name}
+                      <span className="check"></span>
+                    </li>
+                  );
+                })}
+            </SelectSide>
+            <SelectSide
+              count={synergysData.filter((s) => s.type === "class").length}
+              name="Class"
+            >
+              {synergysData
+                .filter((s) => s.type === "class")
+                .map((i) => {
+                  return (
+                    <li
+                      onClick={() => addAndRemoveClass(i.synergy_name)}
+                      key={i.synergy_name}
+                      className={
+                        filter.classes.includes(i.synergy_name) ? "active" : ""
+                      }
+                    >
+                      <img
+                        className="synergy-img"
+                        width={24}
+                        height={24}
+                        src={i.synergy_image}
+                        alt=""
+                      />
+                      {i.synergy_name}
+                      <span className="check"></span>
+                    </li>
+                  );
+                })}
+            </SelectSide>
+          </ItemBulderSideContent>
+        }
         titleContent={
           <Title className="title">
             <div className="title-1">
@@ -26,8 +303,11 @@ function ItemBuilder() {
             </div>
             <div className="title-2">
               <SearchOrigin
+                reverse={true}
+                minWidth="300px"
                 placeholder="Search by team, champion or trait..."
                 className="search"
+                hanleSearch={hanleSeach}
               />
             </div>
           </Title>
@@ -58,7 +338,7 @@ function ItemBuilder() {
             </div>
             <div className="team-comps-wrapper">
               <div className="team-comps">
-                {teamcompsData.map((team) => {
+                {filteredData.map((team) => {
                   return (
                     <CompInfo
                       status={team.status}
@@ -138,6 +418,25 @@ const Title = styled.div`
 const ItemBulderSideContent = styled.div`
   color: white;
   font-size: 16px;
+  .champions-side-title {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-bottom: 20px;
+    border-bottom: 1px solid #17313a;
+    .title-name {
+      color: hsla(0, 0%, 100%, 0.9);
+      font-size: 21px;
+      font-weight: 600;
+    }
+    button {
+      cursor: pointer;
+      background-color: transparent;
+      border: 1px solid #17313a;
+      padding: 5px 20px;
+      border-radius: 3px;
+    }
+  }
   .sidecontent-search {
     margin-bottom: 20px;
   }

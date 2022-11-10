@@ -66,7 +66,7 @@ const router = createBrowserRouter([
         element: <TeamBuilder />,
       },
       {
-        path: "database",
+        path: "database/*",
         element: <DatabaseLayout />,
         children: [
           {

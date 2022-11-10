@@ -12,7 +12,13 @@ function SearchOrigin(props) {
     props.hanleSearch(e.target.value);
   }
   return (
-    <OriginSeachDefault isFocus={isFocus} id="origin-search" className={props.className}>
+    <OriginSeachDefault
+      reverse={props.reverse}
+      minWidth={props.minWidth}
+      isFocus={isFocus}
+      id="origin-search"
+      className={props.className}
+    >
       {props.leftContentPlaceholder ? (
         <div className="origin">
           <SelectDropdown
@@ -38,6 +44,13 @@ function SearchOrigin(props) {
             size="xs"
             icon={solid("magnifying-glass")}
           />
+          {props.reverse && (
+            <FontAwesomeIcon
+              onClick={() => setText("")}
+              className={text !== "" ? "close-icon active" : "close-icon"}
+              icon={solid("xmark")}
+            />
+          )}
         </div>
       </div>
     </OriginSeachDefault>
@@ -52,7 +65,9 @@ const OriginSeachDefault = styled.div`
   border: 1px solid #17313a;
   border-radius: 4px;
   transition: all 0.3s;
-  outline: ${props => props.isFocus ? "1px solid #d47559" : ""};
+  outline: ${(props) => (props.isFocus ? "1px solid #d47559" : "")};
+  min-width: ${(props) => props.minWidth};
+  overflow: hidden;
   .search-default {
     background-color: #102531;
     display: flex;
@@ -66,6 +81,8 @@ const OriginSeachDefault = styled.div`
       justify-content: space-between;
       flex-grow: 1;
       input {
+        order: ${(props) => props.reverse && 2};
+        margin-left: ${(props) => props.reverse && "15px"};
         background: none;
         border: none;
         outline: none;
@@ -73,8 +90,7 @@ const OriginSeachDefault = styled.div`
         width: 100%;
         &::placeholder {
           color: #88a0a7;
-          font-size: 13px;
-          font-weight: 600;
+          font-size: 14px;
         }
       }
       .search-icon {
@@ -84,6 +100,19 @@ const OriginSeachDefault = styled.div`
         &:hover {
           opacity: 1;
         }
+      }
+      .close-icon {
+        opacity: 0.5;
+        cursor: pointer;
+        transition: all 0.3s;
+        order: 3;
+        transform: translateX(3px) scale(0);
+        &:hover {
+          opacity: 1;
+        }
+      }
+      .close-icon.active {
+        transform: translateX(0) scale(1);
       }
     }
   }

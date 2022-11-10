@@ -14,7 +14,7 @@ const ItemInfo = lazy(() => import("components/info/ItemInfo"));
 const MiniMap = lazy(() => import("components/common/MiniMap"));
 
 export default function TeamComp(props) {
-  const { championsData, synergysData, itemsData } = useContext(DataContext);
+  const { itemsData } = useContext(DataContext);
   const [expand, setExpand] = useState(false);
 
   const allItem = props.team_detail.members.reduce((all, cur) => {
@@ -22,65 +22,6 @@ export default function TeamComp(props) {
   }, []);
   function hanleClickComp() {
     setExpand(!expand);
-  }
-  let data = [];
-  if (championsData.length !== 0) {
-    let all = props.team_detail.members.map((member) => {
-      let championDetail = championsData.find(
-        (c) => c.champion_name === member.name
-      );
-      return {
-        ...member,
-        ...championDetail,
-      };
-    });
-    // get array of unique synergys
-    let uniqueSys = [
-      ...new Set(
-        all.reduce((total, current) => {
-          return total
-            .concat(current.champion_origin)
-            .concat(current.champion_class);
-        }, [])
-      ),
-    ];
-    // members data
-    data = uniqueSys.map((item) => {
-      let count = 0; // count synergy
-      let lvls = []; // level bonus array
-      // level bonus from synergy description
-      synergysData
-        .find((s) => s.synergy_name.toLowerCase() === item)
-        .synergy_description_level.split("/")
-        .forEach((i, index) => {
-          if (index === 0) {
-            lvls.push(i.split("$")[0]);
-          } else {
-            lvls.push(i.split("$")[0].split("\n")[1]);
-          }
-        });
-      // count synergy
-      all.forEach((a) => {
-        if (
-          a.champion_class.includes(item) ||
-          a.champion_origin.includes(item)
-        ) {
-          if (a.is_dragon === "true" && item !== "dragon" && item !== "mystic" && item !== "shapeshifter") {
-            count += 3;
-          } else {
-            count += 1;
-          }
-        }
-      });
-      let bonus_level = 0;
-      // get bonus level
-      lvls.forEach((lvl) => {
-        if (count >= lvl) {
-          bonus_level += 1;
-        }
-      });
-      return { name: item, count, lvls, bonus_level };
-    });
   }
 
   function getSubItem(name) {
@@ -174,7 +115,7 @@ export default function TeamComp(props) {
                 <span>Traits</span>
               </div>
               <div className="team-comps-item-line-2-synergy-icon-wrapper">
-                {data.sort((a,b) => b.bonus_level - a.bonus_level || b.count - a.count).map((item) => {
+                {props.team_detail.traits.sort((a,b) => b.bonus_level - a.bonus_level || b.count - a.count).map((item) => {
                   return (
                     item.bonus_level >= 1 && (
                       <SynergyInfoWrapper
@@ -345,6 +286,7 @@ const TeamCompWrapper = styled.div`
     margin-bottom: 10px;
     border: 1px solid;
     border-color: ${(props) => (props.is_opened ? "#227aad" : "#17313a")};
+    background-color: #102531;
     .line-2-item-title,
     .line-3-item-title {
       margin-bottom: 5px;

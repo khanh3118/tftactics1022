@@ -231,6 +231,8 @@ export default function Champions() {
             </div>
             <div className="title-2">
               <SearchOrigin
+                minWidth="300px"
+                reverse={true}
                 placeholder="Search by name, origin, or class..."
                 className="search"
                 hanleSearch={hanleSeach}
@@ -369,7 +371,6 @@ const Title = styled.div`
   .title-2 {
     .search {
       border-radius: 0%;
-      width: 300px;
     }
   }
 `;
