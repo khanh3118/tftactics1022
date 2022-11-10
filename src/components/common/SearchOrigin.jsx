@@ -11,6 +11,11 @@ function SearchOrigin(props) {
     setText(e.target.value);
     props.hanleSearch(e.target.value);
   }
+
+  function hanleClear() {
+    setText("");
+    props.hanleSearch("");
+  }
   return (
     <OriginSeachDefault
       reverse={props.reverse}
@@ -46,7 +51,7 @@ function SearchOrigin(props) {
           />
           {props.reverse && (
             <FontAwesomeIcon
-              onClick={() => setText("")}
+              onClick={() => hanleClear()}
               className={text !== "" ? "close-icon active" : "close-icon"}
               icon={solid("xmark")}
             />

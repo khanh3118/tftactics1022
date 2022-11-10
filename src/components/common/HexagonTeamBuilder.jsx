@@ -29,10 +29,11 @@ export default function Hexagon({
     e.dataTransfer.setData("drag_item_position", position);
   }
   function onDragStartCharacter(e) {
-    e.dataTransfer.setData("drag_from_position", position);
+    if (data.cost) e.dataTransfer.setData("drag_from_position", position);
   }
   return (
     <HexagonWrapper
+      draggable={data.cost && true}
       backgroud_image={
         championsData.find((c) => c.champion_name === data.name)
           ?.champion_img_link
@@ -44,11 +45,10 @@ export default function Hexagon({
       onDragOver={(e) => e.preventDefault()}
       onDrop={(e) => hanle_on_drop(e, position, data.cost ? false : true)}
       onDragStart={(e) => onDragStartCharacter(e)}
-      draggable={data.cost && true}
     >
       <div className="character-items">
         {data.items !== undefined &&
-          data.items.map((item,index) => {
+          data.items.map((item, index) => {
             return (
               <img
                 key={item}

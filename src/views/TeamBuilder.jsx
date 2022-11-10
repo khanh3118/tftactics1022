@@ -17,8 +17,7 @@ const PartialTraitsItem = lazy(() =>
 const CharacterInfo = lazy(() => import("components/info/CharacterInfo"));
 
 export default function TeamBuilder(pros) {
-  const { championsData, synergysData, itemsData, teamcompsData } =
-    useContext(DataContext);
+  const { championsData, synergysData, itemsData } = useContext(DataContext);
   const [characterData, setCharacterData] = useState(
     championsData.sort((a, b) => a.champion_name.localeCompare(b.champion_name))
   );
@@ -73,9 +72,9 @@ export default function TeamBuilder(pros) {
     });
   }, [characterFilter]);
 
-  const [members, setMembers] = useState(teamcompsData[0].members);
+  const [members, setMembers] = useState([]);
   function setAllFnc() {
-    return members.map((member) => {
+    return members?.map((member) => {
       let championDetail = championsData.find(
         (c) => c.champion_name === member.name
       );
@@ -574,6 +573,7 @@ export default function TeamBuilder(pros) {
                             champion_name={c.champion_name}
                             width="42px"
                             height="42px"
+                            rightPopup={true}
                           />
                         </Suspense>
                       </div>
@@ -586,20 +586,22 @@ export default function TeamBuilder(pros) {
                   placeholder="Search by name..."
                   hanle_on_drop={hanleOnDropTableItems}
                 >
-                  {itemsData.filter(i => i.is_combined === "true").map((i, index) => {
-                    return (
-                      <div
-                        key={i.item_name + index}
-                        className="team-builder-drag-item-wrapper"
-                      >
-                        <ItemInfo
-                          width="30px"
-                          height="30px"
-                          item_name={i.item_name}
-                        />
-                      </div>
-                    );
-                  })}
+                  {itemsData
+                    .filter((i) => i.is_combined === "true")
+                    .map((i, index) => {
+                      return (
+                        <div
+                          key={i.item_name + index}
+                          className="team-builder-drag-item-wrapper"
+                        >
+                          <ItemInfo
+                            width="30px"
+                            height="30px"
+                            item_name={i.item_name}
+                          />
+                        </div>
+                      );
+                    })}
                 </SearchCard>
               </div>
             </div>

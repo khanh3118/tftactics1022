@@ -38,7 +38,7 @@ function SynergyInfo(props) {
           <span className="synergy-name">{synergyDetail.synergy_name}</span>
         )}
         {props.count && <span className="synergy-count">{props.count}</span>}
-        {hiddenPopup || (
+        {hiddenPopup || props.hidePopUpOnHover || (
           <div className="popup">
             <div className="popup-info">
               <div className="popup-info-title">

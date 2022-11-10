@@ -30,8 +30,8 @@ function CharacterInfo(props) {
   );
   function hanleClickItemEquip(e, itemName) {
     e.stopPropagation();
-    navigate('/itembuilder', { state: { item_name: itemName } });
-  } 
+    navigate("/itembuilder", { state: { item_name: itemName } });
+  }
   return (
     championDetail && (
       <CharacterInfoDefault
@@ -42,6 +42,7 @@ function CharacterInfo(props) {
         width={props.width}
         height={props.height}
         onMouseEnter={() => setHiddenPopup(false)}
+        rightPopup={props.rightPopup}
       >
         {props.items_equip !== undefined && props.items_equip.length > 0 && (
           <div className="item">
@@ -65,8 +66,13 @@ function CharacterInfo(props) {
             src={championDetail.champion_img_link}
             alt={championDetail.champion_name}
             draggable={true}
-            onDragStart={(e) => e.dataTransfer.setData("champion_name", championDetail.champion_name)}
-            />
+            onDragStart={(e) =>
+              e.dataTransfer.setData(
+                "champion_name",
+                championDetail.champion_name
+              )
+            }
+          />
           {hiddenPopup || (
             <div className="popup">
               <div className="popup-info">
@@ -84,6 +90,7 @@ function CharacterInfo(props) {
                           className="popup-synergy-item"
                           key={item.synergy_name}
                           synergy_name={item.synergy_name}
+                          hidePopUpOnHover={true}
                         />
                       );
                     })}
@@ -168,9 +175,18 @@ const CharacterInfoDefault = styled.div`
       z-index: 1000;
       display: none;
       position: absolute;
-      bottom: calc(100% + 6px);
-      transform: translateX(-50%)
-        translateX(${(props) => Number(props.width.split("px")[0]) / 2 + "px"});
+      ${(props) =>
+        props.rightPopup
+          ? `
+        left: 100%;
+        top: 50%;
+        transform: translateY(-50%) translateX(18px);
+      `
+          : `
+        bottom: calc(100% + 6px);
+        transform: translateX(-50%)
+        translateX(${Number(props.width.split("px")[0]) / 2 + "px"});
+      `}
       background-color: #102531;
       border: 1px solid #17313a;
       .popup-info {

@@ -219,7 +219,7 @@ function ItemBuilder() {
               <span className="title-name">Filter</span>
               <button onClick={() => resetFilter()}>Reset</button>
             </div>
-            <SelectSide name="Playstyle" count={uniqueType.count}>
+            <SelectSide name="Playstyle" count={uniqueType.length}>
               {uniqueType.map((type) => {
                 return (
                   <li
