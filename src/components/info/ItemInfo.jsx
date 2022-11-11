@@ -34,7 +34,7 @@ export default function ItemInfo(props) {
         height={props.height}
       >
         <img
-          draggable={true}
+          draggable={props.draggable}
           onDragStart={(e) => hanleStartDragImg(e)}
           className="avatar-item-img"
           src={itemDetail.item_image}

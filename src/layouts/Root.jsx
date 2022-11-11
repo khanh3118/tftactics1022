@@ -3,15 +3,22 @@ import TopNavigation from "layouts/TopNavigation";
 import Content from "layouts/Content";
 import { Outlet } from "react-router-dom";
 import styled from "styled-components";
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import { DataContext } from "contexts/DataContext";
 import Footer from "layouts/Footer";
+import { useNavigate } from "react-router-dom";
+
 function RootLayout() {
   const { isLoading } = useContext(DataContext);
+  const navigate = useNavigate();
+  useEffect(() => {
+    if (window.location.pathname === "/")
+      navigate("/teamcomps");
+  }, []);
   return (
     <RootLayoutDefault id="root-layout">
       <div className="my-content">
-        A simple version clone of Tftactics site --- Just for fun :)) ---
+        A simple version clone of Tftactics site use ReactJs ---
         Origin site here:{" "}
         <a href="https://tftactics.gg/" target="_blank" rel="noreferrer">
           https://tftactics.gg
@@ -38,7 +45,7 @@ const RootLayoutDefault = styled.div`
     padding: 3px 0;
     a {
       text-decoration: none;
-      color: black;
+      color: #12407c;
     }
   }
 `;

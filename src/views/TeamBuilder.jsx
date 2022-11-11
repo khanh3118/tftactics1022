@@ -7,6 +7,9 @@ import { solid } from "@fortawesome/fontawesome-svg-core/import.macro";
 import ItemInfo from "components/info/ItemInfo";
 import { lazy } from "react";
 import SearchCard from "components/common/SearchCard";
+import Switch from "components/common/Switch";
+import TeamBuilderServices from "services/teambuilder";
+import { useLoaderData } from "react-router-dom";
 
 const HexagonTeamBuilder = lazy(() =>
   import("components/common/HexagonTeamBuilder")
@@ -16,7 +19,13 @@ const PartialTraitsItem = lazy(() =>
 );
 const CharacterInfo = lazy(() => import("components/info/CharacterInfo"));
 
-export default function TeamBuilder(pros) {
+export async function loader({ params }) {
+  return TeamBuilderServices.getTeamById(params.teamId);
+}
+
+export default function TeamBuilder(props) {
+  const [shared, setShared] = useState(false);
+  const teamData = useLoaderData();
   const { championsData, synergysData, itemsData } = useContext(DataContext);
   const [characterData, setCharacterData] = useState(
     championsData.sort((a, b) => a.champion_name.localeCompare(b.champion_name))
@@ -54,12 +63,14 @@ export default function TeamBuilder(pros) {
   useEffect(() => {
     setCharacterData((pre) => {
       let data = championsData.filter((c) => {
-        return (
-          c.champion_name.toLowerCase().includes(characterFilter.text) ||
-          c.champion_origin.includes(characterFilter.text) ||
-          c.champion_class.includes(characterFilter.text) ||
-          c.champion_cost === characterFilter.text
-        );
+        if (c.champion_name.toLowerCase().includes(characterFilter.text))
+          return true;
+        if (c.champion_origin.find((o) => o.includes(characterFilter.text)))
+          return true;
+        if (c.champion_class.find((c) => c.includes(characterFilter.text)))
+          return true;
+        if (c.champion_cost === characterFilter.text) return true;
+        return false;
       });
       if (characterFilter.type === "abc") {
         return data.sort((a, b) =>
@@ -86,7 +97,7 @@ export default function TeamBuilder(pros) {
     });
   }, [characterFilter]);
 
-  const [members, setMembers] = useState([]);
+  const [members, setMembers] = useState(teamData || []);
   function setAllFnc() {
     return members?.map((member) => {
       let championDetail = championsData.find(
@@ -102,6 +113,7 @@ export default function TeamBuilder(pros) {
   const [all, setAll] = useState(setAllFnc());
   useEffect(() => {
     setAll([...setAllFnc()]);
+    setShared(false);
   }, [members]);
 
   function setAllItemFnc() {
@@ -402,6 +414,14 @@ export default function TeamBuilder(pros) {
     if (result) return "team-builder-drag-item-wrapper";
     return "team-builder-drag-item-wrapper hidden";
   }
+  async function hanleShare() {
+    if (!shared) {
+      let id = await TeamBuilderServices.saveTeam(members);
+      navigator.clipboard.writeText(`${window.location.origin}/teambuilder/${id}`);
+      setShared(true);
+    }
+  }
+
   return (
     <TeamBuilderWrapper>
       <div className="team-builder-title">
@@ -422,6 +442,7 @@ export default function TeamBuilder(pros) {
             className="team-builder-title-filter-partial-traits"
           >
             <span>Show Partial Traits</span>
+            <Switch active={showPartialTraits} />
           </div>
           <div
             onClick={() => setMembers([])}
@@ -432,8 +453,12 @@ export default function TeamBuilder(pros) {
             </button>
           </div>
           <div className="team-builder-title-filter-share">
-            <button>
-              <span>SHARE</span>
+            <button onClick={() => hanleShare()}>
+              {shared ? (
+                <span>LINK COPIED!</span>
+              ) : (
+                <span>SHARE</span>
+              )}
             </button>
           </div>
         </div>
@@ -489,6 +514,7 @@ export default function TeamBuilder(pros) {
                     {allRecipes.map((a, index) => {
                       return (
                         <ItemInfo
+                          draggable={false}
                           key={a + index}
                           className="team-builder-drag-recipe-item-a"
                           width="27px"
@@ -506,13 +532,19 @@ export default function TeamBuilder(pros) {
                       className="team-builder-drag-recipe-item"
                     >
                       <span>
-                        <ItemInfo width="30px" height="30px" item_name={i} />
+                        <ItemInfo
+                          draggable={false}
+                          width="30px"
+                          height="30px"
+                          item_name={i}
+                        />
                       </span>
                       <span>
                         <FontAwesomeIcon icon={solid("equals")} />
                       </span>
                       <span>
                         <ItemInfo
+                          draggable={false}
                           width="24px"
                           height="24px"
                           item_name={
@@ -524,6 +556,7 @@ export default function TeamBuilder(pros) {
                         <ItemInfo
                           width="24px"
                           height="24px"
+                          draggable={false}
                           item_name={
                             itemsData.find((d) => d.item_name === i).recipe_2
                           }
@@ -615,6 +648,7 @@ export default function TeamBuilder(pros) {
                           className={getItemClass(i.item_name)}
                         >
                           <ItemInfo
+                            draggable={true}
                             rightPopup={true}
                             width="30px"
                             height="30px"
@@ -665,7 +699,9 @@ const TeamBuilderWrapper = styled.div`
       align-items: center;
       .team-builder-title-filter-partial-traits {
         margin-right: 10px;
+        display: flex;
         cursor: pointer;
+        align-items: center;
       }
       .team-builder-title-filter-clear-team,
       .team-builder-title-filter-share {

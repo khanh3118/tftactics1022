@@ -15,6 +15,9 @@ const BONUS_LEVEL_COLOR = {
   3: "#bd9a38",
   4: "#ad1457",
   5: "#ad1457",
+  6: "#ad1457",
+  7: "#ad1457",
+  8: "#ad1457",
 };
 
 const BORDER_IMAGES = {
