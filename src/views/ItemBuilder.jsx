@@ -64,6 +64,10 @@ function ItemBuilder() {
   function hanleSearch(a) {
     setSearctText(a);
   }
+  function getItemClass(itemName) {
+    if (itemName === itemDetailName) return "base-item-avatar active";
+    return "base-item-avatar";
+  }
   useEffect(() => {
     setBaseItems([
       ...itemsData.filter(
@@ -90,24 +94,27 @@ function ItemBuilder() {
               placeholder="Search for an item..."
               className="sidecontent-search"
               hanleSearch={hanleSearch}
+              reverse={true}
             />
             <BaseItem>
               <div className="base-item-title">
                 <span>Base Items</span>
               </div>
               <div className="list-items">
-                {baseItems.map((item) => {
-                  return (
-                    <ItemInfo
-                      hanleClick={() => hanleBaseItem(item.item_name)}
-                      key={item.item_name}
-                      className="base-item-avatar"
-                      width="40px"
-                      height="40px"
-                      item_name={item.item_name}
-                    />
-                  );
-                })}
+                {baseItems
+                  .sort((a, b) => a.item_name.localeCompare(b.item_name))
+                  .map((item) => {
+                    return (
+                      <ItemInfo
+                        hanleClick={() => hanleBaseItem(item.item_name)}
+                        key={item.item_name}
+                        className={getItemClass(item.item_name)}
+                        width="40px"
+                        height="40px"
+                        item_name={item.item_name}
+                      />
+                    );
+                  })}
               </div>
             </BaseItem>
             <BaseItem>
@@ -115,18 +122,20 @@ function ItemBuilder() {
                 <span>Combined Items</span>
               </div>
               <div className="list-items">
-                {combinedItems.map((item) => {
-                  return (
-                    <ItemInfo
-                      hanleClick={() => hanleCombinedItem(item.item_name)}
-                      key={item.item_name}
-                      className="base-item-avatar"
-                      width="40px"
-                      height="40px"
-                      item_name={item.item_name}
-                    />
-                  );
-                })}
+                {combinedItems
+                  .sort((a, b) => a.item_name.localeCompare(b.item_name))
+                  .map((item) => {
+                    return (
+                      <ItemInfo
+                        hanleClick={() => hanleCombinedItem(item.item_name)}
+                        key={item.item_name}
+                        className={getItemClass(item.item_name)}
+                        width="40px"
+                        height="40px"
+                        item_name={item.item_name}
+                      />
+                    );
+                  })}
               </div>
             </BaseItem>
           </ItemBulderSideContent>
@@ -304,6 +313,15 @@ const BaseItem = styled.div`
     flex-wrap: wrap;
     .base-item-avatar {
       padding: 7.5px 5px;
+      .avatar-item-img {
+        opacity: 0.5;
+      }
+    }
+    .base-item-avatar.active {
+      .avatar-item-img {
+        opacity: 1;
+        border: 1px solid #d47559;
+      }
     }
   }
 `;

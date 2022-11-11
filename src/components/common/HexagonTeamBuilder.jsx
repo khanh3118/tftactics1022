@@ -5,6 +5,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { solid } from "@fortawesome/fontawesome-svg-core/import.macro";
 import { useState } from "react";
 import { HEXAGON_BUILDER_BORDER_COLORS } from "config/color";
+import { clearSelected } from "utils/helper";
 
 export default function Hexagon({
   className,
@@ -24,11 +25,13 @@ export default function Hexagon({
     return "";
   }
   function onDragStartItem(e, item_index) {
+    clearSelected();
     e.stopPropagation();
     e.dataTransfer.setData("drag_item_index", item_index);
     e.dataTransfer.setData("drag_item_position", position);
   }
   function onDragStartCharacter(e) {
+    clearSelected();
     if (data.cost) e.dataTransfer.setData("drag_from_position", position);
   }
   return (

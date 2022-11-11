@@ -10,11 +10,7 @@ export default function SelectSide({ children, name, count }) {
     <SelectSideWrapper isExpand={isExpand} count={count}>
       <div className="title" onClick={() => setIsExpand((pre) => !pre)}>
         <span>{name}</span>
-        {isExpand ? (
-          <FontAwesomeIcon icon={solid("angle-up")} />
-        ) : (
-          <FontAwesomeIcon icon={solid("angle-down")} />
-        )}
+        <FontAwesomeIcon icon={solid("angle-down")} />
       </div>
       <ul>{children}</ul>
     </SelectSideWrapper>
@@ -42,6 +38,10 @@ const SelectSideWrapper = styled.div`
       font-size: 16px;
       color: #88a0a7;
       line-height: 100%;
+    }
+    svg {
+      transition: all 0.3s;
+      transform: ${({isExpand}) => isExpand && "rotate(-180deg)"};
     }
     &::after {
       transition: all 0.1s;

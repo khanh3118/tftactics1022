@@ -26,6 +26,7 @@ export default function TeamBuilder(pros) {
     text: "",
     type: "abc",
   });
+  const [itemfilter, setItemfilter] = useState("");
   function searchCharacter(searchText) {
     setCharacterFilter((pre) => {
       return {
@@ -34,9 +35,22 @@ export default function TeamBuilder(pros) {
       };
     });
   }
+  function searchItem(searchText) {
+    setItemfilter(searchText);
+  }
   const [unfilterCharacter, setUnfilterCharacter] = useState(
     championsData.sort((a, b) => a.champion_name.localeCompare(b.champion_name))
   );
+  const [fitleredItems, setFitleredItems] = useState(itemsData);
+  useEffect(() => {
+    setFitleredItems((pre) => {
+      let data = itemsData.filter((i) =>
+        i.item_name.toLowerCase().includes(itemfilter)
+      );
+      return data;
+    });
+  }, [itemfilter]);
+
   useEffect(() => {
     setCharacterData((pre) => {
       let data = championsData.filter((c) => {
@@ -383,6 +397,11 @@ export default function TeamBuilder(pros) {
     if (result) return "team-builder-drag-champion-wrapper";
     return "team-builder-drag-champion-wrapper hidden";
   }
+  function getItemClass(item_name) {
+    let result = fitleredItems.find((i) => i.item_name === item_name);
+    if (result) return "team-builder-drag-item-wrapper";
+    return "team-builder-drag-item-wrapper hidden";
+  }
   return (
     <TeamBuilderWrapper>
       <div className="team-builder-title">
@@ -585,6 +604,7 @@ export default function TeamBuilder(pros) {
                 <SearchCard
                   placeholder="Search by name..."
                   hanle_on_drop={hanleOnDropTableItems}
+                  hanle_search={searchItem}
                 >
                   {itemsData
                     .filter((i) => i.is_combined === "true")
@@ -592,9 +612,10 @@ export default function TeamBuilder(pros) {
                       return (
                         <div
                           key={i.item_name + index}
-                          className="team-builder-drag-item-wrapper"
+                          className={getItemClass(i.item_name)}
                         >
                           <ItemInfo
+                            rightPopup={true}
                             width="30px"
                             height="30px"
                             item_name={i.item_name}
@@ -779,6 +800,9 @@ const TeamBuilderWrapper = styled.div`
               justify-content: center;
               width: 16.66%;
               padding: 5px;
+            }
+            .team-builder-drag-item-wrapper.hidden {
+              opacity: 0.15;
             }
           }
         }

@@ -2,6 +2,7 @@ import styled from "styled-components";
 import { DataContext } from "contexts/DataContext";
 import { useContext, useState } from "react";
 import LoadingCycle from "components/common/LoadingCycle";
+import { clearSelected } from "utils/helper";
 
 export default function ItemInfo(props) {
   const { itemsData } = useContext(DataContext);
@@ -16,21 +17,25 @@ export default function ItemInfo(props) {
     return itemsData.find((item) => item.item_name.toLowerCase() === name)
       .item_image;
   }
+  function hanleStartDragImg(e) {
+    clearSelected();
+    e.dataTransfer.setData("item_name", itemDetail.item_name)
+  }
   return (
     <ItemInfoDefault
       onMouseEnter={() => setHiddenPopup(false)}
       onClick={props.hanleClick}
       className={props.className}
     >
-      <Wrapper loadDone={loadDone} width={props.width} height={props.height}>
+      <Wrapper
+        rightPopup={props.rightPopup}
+        loadDone={loadDone}
+        width={props.width}
+        height={props.height}
+      >
         <img
           draggable={true}
-          onDragStart={(e) =>
-            e.dataTransfer.setData(
-              "item_name",
-              itemDetail.item_name
-            )
-          }
+          onDragStart={(e) => hanleStartDragImg(e)}
           className="avatar-item-img"
           src={itemDetail.item_image}
           alt=""
@@ -150,12 +155,22 @@ const Wrapper = styled.div`
   }
   .avatar-item-popup {
     z-index: 1000;
-    min-width: 500px;
+    width: max-content;
+    max-width: 500px;
     display: none;
     position: absolute;
-    bottom: calc(100% + 6px);
-    transform: translateX(-50%)
-      translateX(${(props) => Number(props.width.split("px")[0]) / 2 + "px"});
+    ${(props) =>
+      props.rightPopup
+        ? `
+      left: 100%;
+      top: 50%;
+      transform: translateY(-50%) translateX(18px);
+    `
+        : `
+      bottom: calc(100% + 6px);
+      transform: translateX(-50%)
+      translateX(${props.width.split("px")[0] / 2 + "px"});
+    `}
     background-color: #102531;
     border: 1px solid #17313a;
     .popup-info {

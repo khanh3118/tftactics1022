@@ -8,6 +8,7 @@ import LoadingCycle from "components/common/LoadingCycle";
 import ItemInfo from "components/info/ItemInfo";
 import { CHARACTER_BORDERS, BORDER_IMAGES } from "config/color";
 import { useNavigate } from "react-router-dom";
+import { clearSelected } from "utils/helper";
 
 function CharacterInfo(props) {
   const [hiddenPopup, setHiddenPopup] = useState(true);
@@ -32,6 +33,10 @@ function CharacterInfo(props) {
     e.stopPropagation();
     navigate("/itembuilder", { state: { item_name: itemName } });
   }
+  function hanleOnDragStart(e) {
+    clearSelected();
+    e.dataTransfer.setData("champion_name", championDetail.champion_name);
+  }
   return (
     championDetail && (
       <CharacterInfoDefault
@@ -43,6 +48,7 @@ function CharacterInfo(props) {
         height={props.height}
         onMouseEnter={() => setHiddenPopup(false)}
         rightPopup={props.rightPopup}
+        max_level={props.max_level}
       >
         {props.items_equip !== undefined && props.items_equip.length > 0 && (
           <div className="item">
@@ -66,12 +72,7 @@ function CharacterInfo(props) {
             src={championDetail.champion_img_link}
             alt={championDetail.champion_name}
             draggable={true}
-            onDragStart={(e) =>
-              e.dataTransfer.setData(
-                "champion_name",
-                championDetail.champion_name
-              )
-            }
+            onDragStart={(e) => hanleOnDragStart(e)}
           />
           {hiddenPopup || (
             <div className="popup">
@@ -135,6 +136,25 @@ export default CharacterInfo;
 
 const CharacterInfoDefault = styled.div`
   position: relative;
+  ${(props) =>
+    props.max_level &&
+    `
+    &::before {
+    content: "★★★";
+    color: #e4c157;
+    position: absolute;
+    top: -12px;
+    left: 50%;
+    font-size: 14px;
+    transform: translateX(-50%);
+    z-index: 10;
+    width: 100%;
+    text-align: center;
+    text-shadow: 0 3px 3px #000;
+    letter-spacing: -3px;
+    margin-left: -1px;
+  }
+  `}
   .item {
     position: absolute;
     display: flex;

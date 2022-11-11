@@ -71,6 +71,7 @@ export default function TeamComp(props) {
               return (
                 <div key={member.name} className="member">
                   <CharacterInfo
+                    max_level={member.max_level}
                     items_equip={member.items}
                     className="member-image"
                     width="45px"
@@ -115,27 +116,33 @@ export default function TeamComp(props) {
                 <span>Traits</span>
               </div>
               <div className="team-comps-item-line-2-synergy-icon-wrapper">
-                {props.team_detail.traits.sort((a,b) => b.bonus_level - a.bonus_level || b.count - a.count).map((item) => {
-                  return (
-                    item.bonus_level >= 1 && (
-                      <SynergyInfoWrapper
-                        key={item.name}
-                        bonus_level_color={BONUS_LEVEL_COLOR[item.bonus_level]}
-                      >
-                        <Suspense>
-                          <SynergyInfo
-                            width="20px"
-                            height="20px"
-                            count={item.count}
-                            hide_name={true}
-                            synergy_name={item.name}
-                            bonus_level={item.bonus_level}
-                          />
-                        </Suspense>
-                      </SynergyInfoWrapper>
-                    )
-                  );
-                })}
+                {props.team_detail.traits
+                  .sort(
+                    (a, b) => b.bonus_level - a.bonus_level || b.count - a.count
+                  )
+                  .map((item) => {
+                    return (
+                      item.bonus_level >= 1 && (
+                        <SynergyInfoWrapper
+                          key={item.name}
+                          bonus_level_color={
+                            BONUS_LEVEL_COLOR[item.bonus_level]
+                          }
+                        >
+                          <Suspense>
+                            <SynergyInfo
+                              width="20px"
+                              height="20px"
+                              count={item.count}
+                              hide_name={true}
+                              synergy_name={item.name}
+                              bonus_level={item.bonus_level}
+                            />
+                          </Suspense>
+                        </SynergyInfoWrapper>
+                      )
+                    );
+                  })}
               </div>
             </div>
             <div className="team-comps-item-line-2-item">
