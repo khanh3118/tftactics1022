@@ -12,6 +12,12 @@ export default function TierStatus(props) {
     b: {
       color: "#ffdf7f",
     },
+    c: {
+      color: "#ffff7f",
+    },
+    d: {
+      color: "#bfff7f",
+    },
   };
   return (
     <React.Fragment>

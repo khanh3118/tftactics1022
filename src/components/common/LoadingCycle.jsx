@@ -1,8 +1,8 @@
 import styled from "styled-components";
 
-export default function LoadingCycle() {
+export default function LoadingCycle(props) {
   return (
-    <LoadindCycleWrapper>
+    <LoadindCycleWrapper className={props.className}>
       <div></div>
       <div></div>
       <div></div>

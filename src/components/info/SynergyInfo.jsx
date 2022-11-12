@@ -62,7 +62,10 @@ function SynergyInfo(props) {
                         <li key={index}>
                           <span
                             className={
-                              index + 1 === props.bonus_level ? "active" : ""
+                              index + 1 === props.bonus_level ||
+                              (index === 0) & (props.bonus_level === 3) & (props.count === 1 || props.count === 3)
+                                ? "active"
+                                : ""
                             }
                           >
                             {a[0]}

@@ -15,11 +15,11 @@ export default function ItemInfo(props) {
 
   function getItemRecipeImg(name) {
     return itemsData.find((item) => item.item_name.toLowerCase() === name)
-      .item_image;
+      ?.item_image;
   }
   function hanleStartDragImg(e) {
     clearSelected();
-    e.dataTransfer.setData("item_name", itemDetail.item_name)
+    e.dataTransfer.setData("item_name", itemDetail?.item_name)
   }
   return (
     <ItemInfoDefault
@@ -37,28 +37,28 @@ export default function ItemInfo(props) {
           draggable={props.draggable}
           onDragStart={(e) => hanleStartDragImg(e)}
           className="avatar-item-img"
-          src={itemDetail.item_image}
+          src={itemDetail?.item_image}
           alt=""
         />
-        {hiddenPopup || (
+        {hiddenPopup || !itemDetail || (
           <div className="avatar-item-popup">
             <div className="popup-info">
               <div className="popup-info-avatar">
                 <img
                   width="42px"
                   height="42px"
-                  src={itemDetail.item_image}
+                  src={itemDetail?.item_image}
                   alt=""
                 />
               </div>
               <div className="popup-info-title">
                 <div className="popup-info-title-name">
-                  <span>{itemDetail.item_name}</span>
+                  <span>{itemDetail?.item_name}</span>
                 </div>
                 <div className="popup-info-title-stats">
-                  {Object.keys(itemDetail.item_stats).map((item) => {
+                  {itemDetail && Object.keys(itemDetail?.item_stats).map((item) => {
                     return (
-                      <span key={item}>{itemDetail.item_stats[item]}</span>
+                      <span key={item}>{itemDetail?.item_stats[item]}</span>
                     );
                   })}
                 </div>
@@ -67,13 +67,13 @@ export default function ItemInfo(props) {
             <div className="popup-info-description">
               {itemDetail.item_description}
               {itemDetail.is_unique_item === "true" &&
-                itemDetail.item_name !== "Thief's Gloves" && (
+                itemDetail?.item_name !== "Thief's Gloves" && (
                   <p className="special-item">[Unique - only 1 per champion]</p>
                 )}
               {itemDetail.is_aura_item === "true" && (
                 <p className="special-item">[Aura item]</p>
               )}
-              {itemDetail.item_name === "Thief's Gloves" && (
+              {itemDetail?.item_name === "Thief's Gloves" && (
                 <p className="special-item">[Consumes 3 item slots.]</p>
               )}
             </div>
@@ -101,14 +101,14 @@ export default function ItemInfo(props) {
                       .filter(
                         (item) =>
                           item.recipe_1 ===
-                            itemDetail.item_name.toLowerCase() ||
-                          item.recipe_2 === itemDetail.item_name.toLowerCase()
+                            itemDetail?.item_name.toLowerCase() ||
+                          item.recipe_2 === itemDetail?.item_name.toLowerCase()
                       )
                       .map((item, index, arr) => {
                         return (
                           <img
                             key={item.item_name}
-                            src={item.item_image}
+                            src={item?.item_image}
                             alt={item.item_name}
                             onLoad={() => {
                               if (index === arr.length - 1) {

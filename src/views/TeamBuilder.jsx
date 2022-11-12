@@ -1,19 +1,24 @@
 import styled from "styled-components";
-import SelectDropdown from "components/common/SelectDropdown";
-import { useContext, useState, useEffect, Fragment, Suspense } from "react";
-import { DataContext } from "contexts/DataContext";
+import {
+  useContext,
+  useState,
+  useEffect,
+  Fragment,
+  Suspense,
+  lazy,
+} from "react";
+import { useLoaderData } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { solid } from "@fortawesome/fontawesome-svg-core/import.macro";
+import SelectDropdown from "components/common/SelectDropdown";
 import ItemInfo from "components/info/ItemInfo";
-import { lazy } from "react";
 import SearchCard from "components/common/SearchCard";
 import Switch from "components/common/Switch";
+import HexagonTeamBuilder from "components/common/HexagonTeamBuilder";
+import { DataContext } from "contexts/DataContext";
 import TeamBuilderServices from "services/teambuilder";
-import { useLoaderData } from "react-router-dom";
+import { getTraitsBonus } from "utils/filter";
 
-const HexagonTeamBuilder = lazy(() =>
-  import("components/common/HexagonTeamBuilder")
-);
 const PartialTraitsItem = lazy(() =>
   import("components/common/PartialTraitsItem")
 );
@@ -23,43 +28,39 @@ export async function loader({ params }) {
   return TeamBuilderServices.getTeamById(params.teamId);
 }
 
-export default function TeamBuilder(props) {
-  const [shared, setShared] = useState(false);
+export default function TeamBuilder() {
+  // get team data from share link
   const teamData = useLoaderData();
+
+  // data from context
   const { championsData, synergysData, itemsData } = useContext(DataContext);
-  const [characterData, setCharacterData] = useState(
-    championsData.sort((a, b) => a.champion_name.localeCompare(b.champion_name))
-  );
+
+  // hanle share
+  const [shared, setShared] = useState(false);
+  async function hanleShare() {
+    if (!shared) {
+      let id = await TeamBuilderServices.saveTeam(members);
+      navigator.clipboard.writeText(
+        `${window.location.origin}/teambuilder/${id}`
+      );
+      setShared(true);
+    }
+  }
+
+  // hanle show partial traits
   const [showPartialTraits, setShowPartialTraits] = useState(true);
+
+  // hanle search and filter character
   const [characterFilter, setCharacterFilter] = useState({
     text: "",
     type: "abc",
   });
-  const [itemfilter, setItemfilter] = useState("");
-  function searchCharacter(searchText) {
-    setCharacterFilter((pre) => {
-      return {
-        ...pre,
-        text: searchText,
-      };
-    });
-  }
-  function searchItem(searchText) {
-    setItemfilter(searchText);
-  }
+  const [characterData, setCharacterData] = useState(
+    championsData.sort((a, b) => a.champion_name.localeCompare(b.champion_name))
+  );
   const [unfilterCharacter, setUnfilterCharacter] = useState(
     championsData.sort((a, b) => a.champion_name.localeCompare(b.champion_name))
   );
-  const [fitleredItems, setFitleredItems] = useState(itemsData);
-  useEffect(() => {
-    setFitleredItems((pre) => {
-      let data = itemsData.filter((i) =>
-        i.item_name.toLowerCase().includes(itemfilter)
-      );
-      return data;
-    });
-  }, [itemfilter]);
-
   useEffect(() => {
     setCharacterData((pre) => {
       let data = championsData.filter((c) => {
@@ -97,8 +98,44 @@ export default function TeamBuilder(props) {
     });
   }, [characterFilter]);
 
+  // hanle search items
+  const [itemfilter, setItemfilter] = useState("");
+  function searchCharacter(searchText) {
+    setCharacterFilter((pre) => {
+      return {
+        ...pre,
+        text: searchText,
+      };
+    });
+  }
+  function searchItem(searchText) {
+    setItemfilter(searchText);
+  }
+  const [fitleredItems, setFitleredItems] = useState(itemsData);
+  useEffect(() => {
+    setFitleredItems((pre) => {
+      let data = itemsData.filter((i) =>
+        i.item_name.toLowerCase().includes(itemfilter)
+      );
+      return data;
+    });
+  }, [itemfilter]);
+
+  // hanle error message
+  const [errorMessage, setErrorMessage] = useState("");
+  useEffect(() => {
+    if (errorMessage !== "") {
+      setTimeout(() => {
+        setErrorMessage("");
+      }, 5000);
+    }
+  }, [errorMessage]);
+
+  // team members
   const [members, setMembers] = useState(teamData || []);
-  function setAllFnc() {
+
+  // merge member and championsData
+  function getNewMembers() {
     return members?.map((member) => {
       let championDetail = championsData.find(
         (c) => c.champion_name === member.name
@@ -109,38 +146,40 @@ export default function TeamBuilder(props) {
       };
     });
   }
-  const [errorMessage, setErrorMessage] = useState("");
-  const [all, setAll] = useState(setAllFnc());
+  const [newMembers, setNewMembers] = useState(getNewMembers());
   useEffect(() => {
-    setAll([...setAllFnc()]);
+    setNewMembers([...getNewMembers()]);
     setShared(false);
   }, [members]);
 
-  function setAllItemFnc() {
-    return all.reduce((total, current) => {
+  /// all items
+  function getAllItem() {
+    return newMembers.reduce((total, current) => {
       return total.concat(current.items);
     }, []);
   }
-  const [allItem, setAllItem] = useState(setAllItemFnc());
+  const [allItem, setAllItem] = useState(getAllItem());
   useEffect(() => {
-    setAllItem([...setAllItemFnc()]);
-  }, [all]);
+    setAllItem([...getAllItem()]);
+  }, [newMembers]);
 
-  function setAllRecipesFnc() {
+  /// all item recipes
+  function getAllItemRecipe() {
     return allItem.reduce((all, curr) => {
       let a = itemsData.find((i) => i.item_name === curr);
       return all.concat(a.recipe_1).concat(a.recipe_2);
     }, []);
   }
-  const [allRecipes, setAllRecipes] = useState(setAllRecipesFnc());
+  const [allRecipe, setAllRecipe] = useState(getAllItemRecipe());
   useEffect(() => {
-    setAllRecipes([...setAllRecipesFnc()]);
+    setAllRecipe([...getAllItemRecipe()]);
   }, [allItem]);
 
-  function setUniqueSysFnc() {
+  // unique traits
+  function getUniqueTraits() {
     return [
       ...new Set(
-        all.reduce((total, current) => {
+        newMembers.reduce((total, current) => {
           return total
             .concat(current.champion_origin)
             .concat(current.champion_class);
@@ -148,113 +187,17 @@ export default function TeamBuilder(props) {
       ),
     ];
   }
-  const [uniqueSys, setUniqueSys] = useState(setUniqueSysFnc());
-
+  const [uniqueTraits, setUniqueTraits] = useState(getUniqueTraits());
   useEffect(() => {
-    setUniqueSys([...setUniqueSysFnc()]);
-  }, [all]);
+    setUniqueTraits([...getUniqueTraits()]);
+  }, [newMembers]);
 
-  function getPartialTraits() {
-    // add synergy from item
-    allItem.forEach((item) => {
-      switch (item) {
-        case "Lagoon Emblem":
-          !uniqueSys.includes("lagoon") && uniqueSys.push("lagoon");
-          break;
-        case "Dragonmancer Emblem":
-          !uniqueSys.includes("dragonmancer") && uniqueSys.push("dragonmancer");
-          break;
-        case "Mage Emblem":
-          !uniqueSys.includes("mage") && uniqueSys.push("mage");
-          break;
-        case "Shimmerscale Emblem":
-          !uniqueSys.includes("shimmerscale") && uniqueSys.push("shimmerscale");
-          break;
-        case "Swiftshot Emblem":
-          !uniqueSys.includes("swiftshot") && uniqueSys.push("swiftshot");
-          break;
-        case "Cavalier Emblem":
-          !uniqueSys.includes("cavalier") && uniqueSys.push("cavalier");
-          break;
-        case "Mirage Emblem":
-          !uniqueSys.includes("mirage") && uniqueSys.push("mirage");
-          break;
-        default:
-          break;
-      }
-    });
-    // array of object synergy detail data
-    let data = [];
-    data = uniqueSys.map((item) => {
-      let count = 0; // count synergy
-      let lvls = []; // level bonus array
-      // level bonus from synergy description
-      synergysData
-        .find((s) => s.synergy_name.toLowerCase() === item.toLowerCase())
-        ?.synergy_description_level.split("/")
-        .forEach((i, index) => {
-          if (index === 0) {
-            lvls.push(i.split("$")[0]);
-          } else {
-            lvls.push(i.split("$")[0].split("\n")[1]);
-          }
-        });
-      // count synergy from champion
-      let championUnique = [];
-      all.forEach((c) => {
-        if (!championUnique.find((i) => i?.champion_name === c.champion_name)) {
-          championUnique.push(c);
-        }
-      });
-      championUnique.forEach((a) => {
-        if (
-          a.champion_class.includes(item) ||
-          a.champion_origin.includes(item)
-        ) {
-          if (a.is_dragon === "true" && item !== "dragon") {
-            count += 3;
-          } else {
-            count += 1;
-          }
-        }
-      });
-      // count synergy from item
-      allItem.forEach((i) => {
-        switch (i) {
-          case "Lagoon Emblem":
-            if (item === "lagoon") count = count + 1;
-            break;
-          case "Dragonmancer Emblem":
-            if (item === "dragonmancer") count = count + 1;
-            break;
-          case "Mage Emblem":
-            if (item === "mage") count = count + 1;
-            break;
-          case "Shimmerscale Emblem":
-            if (item === "shimmerscale") count = count + 1;
-            break;
-          case "Swiftshot Emblem":
-            if (item === "swiftshot") count = count + 1;
-            break;
-          case "Cavalier Emblem":
-            if (item === "cavalier") count = count + 1;
-            break;
-          case "Mirage Emblem":
-            if (item === "mirage") count = count + 1;
-            break;
-          default:
-            break;
-        }
-      });
-      // get bonus level
-      let bonus_level = 0;
-      lvls.forEach((lvl) => {
-        if (count >= lvl) {
-          bonus_level += 1;
-        }
-      });
-      return { name: item, count, lvls, bonus_level };
-    });
+  // hanle traits bonus
+  function getTraits() {
+    // add trait from item
+    let data = getTraitsBonus(allItem, uniqueTraits, synergysData, newMembers);
+
+    //sort data by bonus level --> count trait --> trait name
     return data.sort(
       (a, b) =>
         b.bonus_level - a.bonus_level ||
@@ -262,12 +205,12 @@ export default function TeamBuilder(props) {
         a.name.localeCompare(b.name)
     );
   }
-  const [partialTraits, setPartialTraits] = useState(getPartialTraits());
-
+  const [traits, setTraits] = useState(getTraits());
   useEffect(() => {
-    setPartialTraits([...getPartialTraits()]);
-  }, [allItem, uniqueSys, all]);
+    setTraits([...getTraits()]);
+  }, [allItem, uniqueTraits, newMembers]);
 
+  // prepare data for each slot in board
   function getHexagonData(position) {
     let result = members.find((member) => Number(member.position) === position);
     result = {
@@ -277,6 +220,8 @@ export default function TeamBuilder(props) {
     };
     return result;
   }
+
+  // hanle change level member
   function hanleChangeLevel(position, is_max_level) {
     setMembers((pre) => {
       pre.find((member) => member.position === position).max_level =
@@ -284,32 +229,26 @@ export default function TeamBuilder(props) {
       return [...pre];
     });
   }
-  useEffect(() => {
-    if (errorMessage !== "") {
-      setTimeout(() => {
-        setErrorMessage("");
-      }, 5000);
-    }
-  }, [errorMessage]);
 
   function createElementsFromNumber(n) {
     var elements = [];
     for (let i = 0; i < n; i++) {
       elements.push(
-        <Suspense key={i}>
-          <HexagonTeamBuilder
-            hanle_change_level={hanleChangeLevel}
-            data={getHexagonData(i + 1)}
-            position={i + 1}
-            className="team-builder-drag-item"
-            hanle_on_drop={ondrop}
-          />
-        </Suspense>
+        <HexagonTeamBuilder
+          key={i}
+          hanle_change_level={hanleChangeLevel}
+          data={getHexagonData(i + 1)}
+          position={i + 1}
+          className="team-builder-drag-item"
+          hanle_on_drop={ondrop}
+        />
       );
     }
     return elements;
   }
+  // hanle ondrop in slot
   function ondrop(e, position, is_empty) {
+    // drag from characters table
     if (e.dataTransfer.getData("champion_name")) {
       let champion_name = e.dataTransfer.getData("champion_name");
       if (is_empty) {
@@ -332,6 +271,7 @@ export default function TeamBuilder(props) {
         });
       }
     }
+    // drag from items table
     if (e.dataTransfer.getData("item_name")) {
       let item_name = e.dataTransfer.getData("item_name");
       if (is_empty === false) {
@@ -357,15 +297,18 @@ export default function TeamBuilder(props) {
         });
       }
     }
+    // drag from slot
     if (e.dataTransfer.getData("drag_from_position")) {
       let old_position = Number(e.dataTransfer.getData("drag_from_position"));
       if (is_empty) {
+        // move character
         setMembers((pre) => {
           pre.find((m) => Number(m.position) === old_position).position =
             position;
           return [...pre];
         });
       } else {
+        // swap position
         setMembers((pre) => {
           const newIndex = pre.findIndex(
             (e) => Number(e.position) === position
@@ -414,13 +357,6 @@ export default function TeamBuilder(props) {
     if (result) return "team-builder-drag-item-wrapper";
     return "team-builder-drag-item-wrapper hidden";
   }
-  async function hanleShare() {
-    if (!shared) {
-      let id = await TeamBuilderServices.saveTeam(members);
-      navigator.clipboard.writeText(`${window.location.origin}/teambuilder/${id}`);
-      setShared(true);
-    }
-  }
 
   return (
     <TeamBuilderWrapper>
@@ -454,11 +390,7 @@ export default function TeamBuilder(props) {
           </div>
           <div className="team-builder-title-filter-share">
             <button onClick={() => hanleShare()}>
-              {shared ? (
-                <span>LINK COPIED!</span>
-              ) : (
-                <span>SHARE</span>
-              )}
+              {shared ? <span>LINK COPIED!</span> : <span>SHARE</span>}
             </button>
           </div>
         </div>
@@ -467,7 +399,7 @@ export default function TeamBuilder(props) {
         <div className="team-builder">
           <div className="team-builder-synergy">
             <Suspense>
-              {partialTraits.map((item) => {
+              {traits.map((item) => {
                 return (
                   (item.bonus_level > 0 || showPartialTraits) && (
                     <PartialTraitsItem
@@ -483,7 +415,7 @@ export default function TeamBuilder(props) {
                   )
                 );
               })}
-              {partialTraits.length === 0 && (
+              {traits.length === 0 && (
                 <div className="team-builder-synergy-empty">
                   <FontAwesomeIcon
                     size="lg"
@@ -500,7 +432,7 @@ export default function TeamBuilder(props) {
                 {createElementsFromNumber(28)}
               </div>
               <div className="team-builder-drag-recipe">
-                {allRecipes.length === 0 && (
+                {allRecipe.length === 0 && (
                   <div className="team-builder-drag-recipe-empty">
                     <FontAwesomeIcon
                       size="lg"
@@ -509,9 +441,9 @@ export default function TeamBuilder(props) {
                     <span>No equipped items</span>
                   </div>
                 )}
-                {allRecipes.length > 0 && (
+                {allRecipe.length > 0 && (
                   <div className="team-builder-drag-recipe-item">
-                    {allRecipes.map((a, index) => {
+                    {allRecipe.map((a, index) => {
                       return (
                         <ItemInfo
                           draggable={false}

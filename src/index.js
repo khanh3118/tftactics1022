@@ -22,8 +22,10 @@ import PrivateRoute from "components/auth/PrivateRoute";
 import { DataProvider } from "contexts/DataContext";
 import TeamComps from "views/TeamComps";
 import TeamCompsManager from "views/Manager/TeamCompsManager";
-import TeamBuilder, {loader as teamLoader} from "views/TeamBuilder";
+import TeamBuilder, { loader as teamLoader } from "views/TeamBuilder";
 import ChampionsView from "views/Champions";
+import MetaReport from "views/MetaReport";
+import { MetaReportProvider } from "contexts/MetaReportContext";
 
 const router = createBrowserRouter([
   {
@@ -64,6 +66,14 @@ const router = createBrowserRouter([
       {
         path: "teambuilder",
         element: <TeamBuilder />,
+      },
+      {
+        path: "/metareport",
+        element: (
+          <MetaReportProvider>
+            <MetaReport />
+          </MetaReportProvider>
+        ),
       },
       {
         path: "teambuilder/:teamId",

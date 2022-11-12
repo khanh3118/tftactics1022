@@ -7,7 +7,6 @@ async function saveTeam(team) {
     const docRef = await addDoc(collection(db, "teambuilders"), {
       members: team
     });
-    console.log("Document written with ID: ", docRef.id);
     id = docRef.id
   } catch (error) {
     throw new Error(error);
@@ -20,11 +19,10 @@ async function getTeamById(id) {
   try {
     const docSnap  = await getDoc(doc(db, "teambuilders", id));
     data = docSnap.data().members;
-    console.log("Document data:", docSnap.data());
   } catch (error) {
     throw new Error(error);
   }
-  return data
+  return data;
 }
 
 

@@ -8,8 +8,9 @@ import Button from "components/common/Button";
 import Status from "components/common/Status";
 import CompInfo from "components/info/CompInfo";
 import SelectSide from "components/common/SelectSide";
+import { getTraitsBonus } from "utils/filter";
 
-function ItemBuilder() {
+function TeamComps() {
   const { championsData, synergysData, teamcompsData } =
     useContext(DataContext);
 
@@ -35,47 +36,12 @@ function ItemBuilder() {
         ),
       ];
 
-      let traits = uniqueSys.map((item) => {
-        let count = 0; // count synergy
-        let lvls = []; // level bonus array
-        // level bonus from synergy description
-        synergysData
-          .find((s) => s.synergy_name.toLowerCase() === item)
-          .synergy_description_level.split("/")
-          .forEach((i, index) => {
-            if (index === 0) {
-              lvls.push(i.split("$")[0]);
-            } else {
-              lvls.push(i.split("$")[0].split("\n")[1]);
-            }
-          });
-        // count synergy
-        all.forEach((a) => {
-          if (
-            a.champion_class.includes(item) ||
-            a.champion_origin.includes(item)
-          ) {
-            if (
-              a.is_dragon === "true" &&
-              item !== "dragon" &&
-              item !== "mystic" &&
-              item !== "shapeshifter"
-            ) {
-              count += 3;
-            } else {
-              count += 1;
-            }
-          }
-        });
-        let bonus_level = 0;
-        // get bonus level
-        lvls.forEach((lvl) => {
-          if (count >= lvl) {
-            bonus_level += 1;
-          }
-        });
-        return { name: item, count, lvls, bonus_level };
-      });
+      let allItems = all.reduce((total, current) => {
+        return total.concat(current.items);
+      }, [])
+
+      let traits = getTraitsBonus(allItems, uniqueSys, synergysData, all);
+
       return {
         ...team_detail,
         traits,
@@ -356,7 +322,7 @@ function ItemBuilder() {
   );
 }
 
-export default ItemBuilder;
+export default TeamComps;
 
 const TeamCompsMainContent = styled.div`
   padding-top: 20px;

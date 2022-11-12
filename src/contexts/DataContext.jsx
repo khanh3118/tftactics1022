@@ -12,7 +12,7 @@ export const DataProvider = ({ children }) => {
   const [itemsData, setItemsData] = useState([]);
   const [teamcompsData, setTeamcompsData] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
-  async function fetData() {
+  async function fetchData() {
     let champions = championsService.getAllChampions();
     let synergys = synergysService.getAllSynergys();
     let items = itemServices.getAllItems();
@@ -29,7 +29,7 @@ export const DataProvider = ({ children }) => {
     setIsLoading(false);
   }
   useEffect(() => {
-    fetData();
+    fetchData();
   }, []);
 
   return (

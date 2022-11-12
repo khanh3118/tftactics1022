@@ -3,7 +3,7 @@
 @font-face { 
   font-family: 'sofia-pro';
   src: url('./fonts/sofia-pro.woff2') format('woff2');
-  }
+}
 
 body {
   margin: 0;
