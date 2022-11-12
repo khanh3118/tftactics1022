@@ -13,7 +13,6 @@ import { getTraitsBonus } from "utils/filter";
 function MetaReport() {
   const { championsData, synergysData } = useContext(DataContext);
   const { metaComps } = useContext(MetaReportContext);
-  console.log(metaComps);
   const [includedTraits, setIncludedTraits] = useState(() => {
     let result = metaComps.map((team_detail) => {
       let all = team_detail.members.map((member) => {
@@ -37,7 +36,7 @@ function MetaReport() {
       ];
 
       let allItems = all.reduce((total, current) => {
-        return total.concat(current.items);
+        return total.concat(current.member_items);
       }, []);
 
       let traits = getTraitsBonus(allItems, uniqueSys, synergysData, all);

@@ -2,7 +2,12 @@ export function capitalize(s) {
   return s[0].toUpperCase() + s.slice(1);
 }
 
-export function getTraitsBonus(allItem, uniqueTraits, synergysData, newMembers) {
+export function getTraitsBonus(
+  allItem,
+  uniqueTraits,
+  synergysData,
+  newMembers
+) {
   // add trait from item
   allItem.forEach((item) => {
     switch (item) {
@@ -70,7 +75,8 @@ export function getTraitsBonus(allItem, uniqueTraits, synergysData, newMembers) 
           item !== "shapeshifter" &&
           item !== "guardian" &&
           item !== "evoker" &&
-          item !== "mage"
+          item !== "mage" &&
+          item !== "bruiser"
         ) {
           count += 3;
         } else {
@@ -115,7 +121,13 @@ export function getTraitsBonus(allItem, uniqueTraits, synergysData, newMembers) 
         bonus_level += 1;
       }
     });
-    if (item === "bard" || item === "monolith") bonus_level = 3;
+    if (
+      item === "bard" ||
+      item === "monolith" ||
+      item === "prodigy" ||
+      item === "spell-thief"
+    )
+      bonus_level = 3;
     return { name: item, count, lvls, bonus_level };
   });
   return data;
