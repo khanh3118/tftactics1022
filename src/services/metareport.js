@@ -1,6 +1,6 @@
 async function getMetaComps() {
   let res = await fetch(
-    "https://tftactic-crawl-meta.herokuapp.com/metareport"
+    "http://13.212.204.133:8080/metareport"
   );
   let data = await res.json();
   return data[0].data;
