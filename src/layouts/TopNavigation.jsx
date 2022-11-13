@@ -41,8 +41,8 @@ function TopNavigation() {
             </NavLink>
           </li>
           <li>
-            <Link to="/manager/teamcomps" className="header-item">
-              Manager
+            <Link to="/" className="header-item">
+              Patch Notes
             </Link>
           </li>
           <li>

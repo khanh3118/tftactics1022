@@ -165,7 +165,7 @@ export default function TeamBuilder() {
 
   // allitem but not contain trait item can not craft
   function getAllItemCombined() {
-    return allItem.filter(a => {
+    return allItem.filter((a) => {
       let c = itemsData.find((i) => i.item_name === a);
       if (c.is_trait && c.is_combined === "false") return false;
       return true;
@@ -567,6 +567,7 @@ export default function TeamBuilder() {
                       >
                         <Suspense>
                           <CharacterInfo
+                            disableRedirect={true}
                             champion_name={c.champion_name}
                             width="42px"
                             height="42px"

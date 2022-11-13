@@ -37,6 +37,15 @@ function CharacterInfo(props) {
     clearSelected();
     e.dataTransfer.setData("champion_name", championDetail.champion_name);
   }
+  function hanleClickCharacterImg(e, championName) {
+    if (!props.disableRedirect) {
+      e.stopPropagation();
+      let name = championName.toLowerCase().split(" ").join("_");
+      navigate(`/champions/${name}`, {
+        state: { champion_name: championName },
+      });
+    }
+  }
   return (
     championDetail && (
       <CharacterInfoDefault
@@ -73,6 +82,9 @@ function CharacterInfo(props) {
             alt={championDetail.champion_name}
             draggable={true}
             onDragStart={(e) => hanleOnDragStart(e)}
+            onClick={(e) =>
+              hanleClickCharacterImg(e, championDetail.champion_name)
+            }
           />
           {hiddenPopup || (
             <div className="popup">

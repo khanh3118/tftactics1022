@@ -225,20 +225,18 @@ function ChampionsStats() {
             {sorted.map((item) => {
               return (
                 <div className="table-item" key={item.champion_name}>
-                  <div>
-                    <NavLink to="/" className="item-name-img">
-                      <Suspense>
-                        <CharacterInfo
-                          champion_name={item.champion_name}
-                          width="40px"
-                          height="40px"
-                          className="item-name-img-l"
-                        />
-                      </Suspense>
-                      <span className="item-name-image-span">
-                        {item.champion_name}
-                      </span>
-                    </NavLink>
+                  <div className="item-name-img">
+                    <Suspense>
+                      <CharacterInfo
+                        champion_name={item.champion_name}
+                        width="40px"
+                        height="40px"
+                        className="item-name-img-l"
+                      />
+                    </Suspense>
+                    <span className="item-name-image-span">
+                      {item.champion_name}
+                    </span>
                   </div>
                   <div className="item-stats">
                     {type === "offense" ? (

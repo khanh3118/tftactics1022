@@ -26,6 +26,7 @@ import TeamBuilder, { loader as teamLoader } from "views/TeamBuilder";
 import ChampionsView from "views/Champions";
 import MetaReport from "views/MetaReport";
 import { MetaReportProvider } from "contexts/MetaReportContext";
+import ChampionDetail from "views/ChampionDetail";
 
 const router = createBrowserRouter([
   {
@@ -122,6 +123,10 @@ const router = createBrowserRouter([
       {
         path: "champions",
         element: <ChampionsView />,
+      },
+      {
+        path: "champions/:name",
+        element: <ChampionDetail />,
       },
     ],
   },
