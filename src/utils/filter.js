@@ -125,7 +125,8 @@ export function getTraitsBonus(
       item === "bard" ||
       item === "monolith" ||
       item === "prodigy" ||
-      item === "spell-thief"
+      item === "spell-thief" ||
+      item === "starcaller"
     )
       bonus_level = 3;
     return { name: item, count, lvls, bonus_level };

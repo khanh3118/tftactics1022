@@ -19,7 +19,7 @@ export default function ItemInfo(props) {
   }
   function hanleStartDragImg(e) {
     clearSelected();
-    e.dataTransfer.setData("item_name", itemDetail?.item_name)
+    e.dataTransfer.setData("item_name", itemDetail?.item_name);
   }
   return (
     <ItemInfoDefault
@@ -28,7 +28,7 @@ export default function ItemInfo(props) {
       className={props.className}
     >
       <Wrapper
-        rightPopup={props.rightPopup}
+        popupPosition={props.popupPosition}
         loadDone={loadDone}
         width={props.width}
         height={props.height}
@@ -56,11 +56,12 @@ export default function ItemInfo(props) {
                   <span>{itemDetail?.item_name}</span>
                 </div>
                 <div className="popup-info-title-stats">
-                  {itemDetail && Object.keys(itemDetail?.item_stats).map((item) => {
-                    return (
-                      <span key={item}>{itemDetail?.item_stats[item]}</span>
-                    );
-                  })}
+                  {itemDetail &&
+                    Object.keys(itemDetail?.item_stats).map((item) => {
+                      return (
+                        <span key={item}>{itemDetail?.item_stats[item]}</span>
+                      );
+                    })}
                 </div>
               </div>
             </div>
@@ -159,18 +160,25 @@ const Wrapper = styled.div`
     max-width: 500px;
     display: none;
     position: absolute;
-    ${(props) =>
-      props.rightPopup
-        ? `
+    ${(props) => {
+      if (props.popupPosition === "right")
+        return `
       left: 100%;
       top: 50%;
       transform: translateY(-50%) translateX(18px);
-    `
-        : `
+    `;
+      if (props.popupPosition === "left")
+        return `
+      right: 210%;
+      top: 50%;
+      transform: translateY(-50%) translateX(18px);
+      `;
+      return `
       bottom: calc(100% + 6px);
       transform: translateX(-50%)
       translateX(${props.width.split("px")[0] / 2 + "px"});
-    `}
+    `;
+    }}
     background-color: #102531;
     border: 1px solid #17313a;
     .popup-info {

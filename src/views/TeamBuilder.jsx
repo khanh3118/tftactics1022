@@ -38,7 +38,7 @@ export default function TeamBuilder() {
   // hanle share
   const [shared, setShared] = useState(false);
   async function hanleShare() {
-    if (!shared) {
+    if (!shared && members.length > 0) {
       let id = await TeamBuilderServices.saveTeam(members);
       navigator.clipboard.writeText(
         `${window.location.origin}/teambuilder/${id}`
@@ -581,7 +581,7 @@ export default function TeamBuilder() {
                         >
                           <ItemInfo
                             draggable={true}
-                            rightPopup={true}
+                            popupPosition="left"
                             width="30px"
                             height="30px"
                             item_name={i.item_name}
