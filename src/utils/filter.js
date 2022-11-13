@@ -34,6 +34,45 @@ export function getTraitsBonus(
       case "Mirage Emblem":
         !uniqueTraits.includes("mirage") && uniqueTraits.push("mirage");
         break;
+      case "Darkflight Emblem":
+        !uniqueTraits.includes("darkflight") && uniqueTraits.push("darkflight");
+        break;
+      case "Assassin Emblem":
+        !uniqueTraits.includes("assassin") && uniqueTraits.push("assassin");
+        break;
+      case "Bruiser Emblem":
+        !uniqueTraits.includes("bruiser") && uniqueTraits.push("bruiser");
+        break;
+      case "Cannoneer Emblem":
+        !uniqueTraits.includes("cannoneer") && uniqueTraits.push("cannoneer");
+        break;
+      case "Evoker Emblem":
+        !uniqueTraits.includes("evoker") && uniqueTraits.push("evoker");
+        break;
+      case "Jade Emblem":
+        !uniqueTraits.includes("jade") && uniqueTraits.push("jade");
+        break;
+      case "Mystic Emblem":
+        !uniqueTraits.includes("mystic") && uniqueTraits.push("mystic");
+        break;
+      case "Scalescorn Emblem":
+        !uniqueTraits.includes("scalescorn") && uniqueTraits.push("scalescorn");
+        break;
+      case "Warrior Emblem":
+        !uniqueTraits.includes("warrior") && uniqueTraits.push("warrior");
+        break;
+      case "Whispers Emblem":
+        !uniqueTraits.includes("whispers") && uniqueTraits.push("whispers");
+        break;
+      case "Guild Emblem":
+        !uniqueTraits.includes("guild") && uniqueTraits.push("guild");
+        break;
+      case "Ragewing Emblem":
+        !uniqueTraits.includes("ragewing") && uniqueTraits.push("ragewing");
+        break;
+      case "Tempest Emblem":
+        !uniqueTraits.includes("tempest") && uniqueTraits.push("tempest");
+        break;
       default:
         break;
     }
@@ -108,6 +147,45 @@ export function getTraitsBonus(
           break;
         case "Mirage Emblem":
           if (item === "mirage") count = count + 1;
+          break;
+        case "Darkflight Emblem":
+          if (item === "darkflight") count = count + 1;
+          break;
+        case "Assassin Emblem":
+          if (item === "assassin") count = count + 1;
+          break;
+        case "Bruiser Emblem":
+          if (item === "bruiser") count = count + 1;
+          break;
+        case "Cannoneer Emblem":
+          if (item === "cannoneer") count = count + 1;
+          break;
+        case "Evoker Emblem":
+          if (item === "evoker") count = count + 1;
+          break;
+        case "Jade Emblem":
+          if (item === "jade") count = count + 1;
+          break;
+        case "Mystic Emblem":
+          if (item === "mystic") count = count + 1;
+          break;
+        case "Scalescorn Emblem":
+          if (item === "scalescorn") count = count + 1;
+          break;
+        case "Warrior Emblem":
+          if (item === "warrior") count = count + 1;
+          break;
+        case "Whispers Emblem":
+          if (item === "whispers") count = count + 1;
+          break;
+        case "Guild Emblem":
+          if (item === "guild") count = count + 1;
+          break;
+        case "Ragewing Emblem":
+          if (item === "ragewing") count = count + 1;
+          break;
+        case "Tempest Emblem":
+          if (item === "tempest") count = count + 1;
           break;
         default:
           break;

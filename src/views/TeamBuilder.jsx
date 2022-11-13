@@ -163,17 +163,30 @@ export default function TeamBuilder() {
     setAllItem([...getAllItem()]);
   }, [newMembers]);
 
+  // allitem but not contain trait item can not craft
+  function getAllItemCombined() {
+    return allItem.filter(a => {
+      let c = itemsData.find((i) => i.item_name === a);
+      if (c.is_trait && c.is_combined === "false") return false;
+      return true;
+    });
+  }
+  const [allItemCombined, setAllItemCombined] = useState(getAllItemCombined());
+  useEffect(() => {
+    setAllItemCombined([...getAllItemCombined()]);
+  }, [allItem]);
+
   /// all item recipes
-  function getAllItemRecipe() {
-    return allItem.reduce((all, curr) => {
+  function getAllRecipe() {
+    return allItemCombined.reduce((all, curr) => {
       let a = itemsData.find((i) => i.item_name === curr);
       return all.concat(a.recipe_1).concat(a.recipe_2);
     }, []);
   }
-  const [allRecipe, setAllRecipe] = useState(getAllItemRecipe());
+  const [allRecipe, setAllRecipe] = useState(getAllRecipe());
   useEffect(() => {
-    setAllRecipe([...getAllItemRecipe()]);
-  }, [allItem]);
+    setAllRecipe([...getAllRecipe()]);
+  }, [allItemCombined]);
 
   // unique traits
   function getUniqueTraits() {
@@ -457,7 +470,7 @@ export default function TeamBuilder() {
                     })}
                   </div>
                 )}
-                {allItem.map((i, index) => {
+                {allItemCombined.map((i, index) => {
                   return (
                     <div
                       key={i + index}
@@ -572,7 +585,12 @@ export default function TeamBuilder() {
                   hanle_search={searchItem}
                 >
                   {itemsData
-                    .filter((i) => i.is_combined === "true")
+                    .filter((i) => i.is_combined === "true" || i.is_trait)
+                    .sort(
+                      (a, b) =>
+                        (a.is_trait === b.is_trait ? 0 : a.is_trait ? -1 : 1) ||
+                        a.item_name.localeCompare(b.item_name)
+                    )
                     .map((i, index) => {
                       return (
                         <div

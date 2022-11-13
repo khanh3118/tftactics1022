@@ -15,7 +15,7 @@ function ItemBuilder() {
   const { itemsData } = useContext(DataContext);
   const [searctText, setSearctText] = useState("");
   const [baseItems, setBaseItems] = useState([
-    ...itemsData.filter((item) => item.is_combined === "false"),
+    ...itemsData.filter((item) => item.is_combined === "false" && !item.is_trait),
   ]);
   const [combinedItems, setCombinedItems] = useState([
     ...itemsData.filter((item) => item.is_combined === "true"),
@@ -73,6 +73,7 @@ function ItemBuilder() {
       ...itemsData.filter(
         (item) =>
           item.is_combined === "false" &&
+          !item.is_trait &&
           item.item_name.toLowerCase().includes(searctText)
       ),
     ]);
@@ -123,7 +124,11 @@ function ItemBuilder() {
               </div>
               <div className="list-items">
                 {combinedItems
-                  .sort((a, b) => a.item_name.localeCompare(b.item_name))
+                  .sort(
+                    (a, b) =>
+                      (a.is_trait === b.is_trait ? 0 : a.is_trait ? -1 : 1) ||
+                      a.item_name.localeCompare(b.item_name)
+                  )
                   .map((item) => {
                     return (
                       <ItemInfo

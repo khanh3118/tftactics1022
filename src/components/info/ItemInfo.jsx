@@ -7,10 +7,11 @@ import { clearSelected } from "utils/helper";
 export default function ItemInfo(props) {
   const { itemsData } = useContext(DataContext);
   const [hiddenPopup, setHiddenPopup] = useState(true);
+
   const [loadDone, setLoadDone] = useState(false);
 
   const itemDetail = itemsData.find(
-    (item) => item.item_name.toLowerCase() === props.item_name.toLowerCase()
+    (item) => item.item_name.toLowerCase() === props?.item_name?.toLowerCase()
   );
 
   function getItemRecipeImg(name) {
@@ -21,9 +22,15 @@ export default function ItemInfo(props) {
     clearSelected();
     e.dataTransfer.setData("item_name", itemDetail?.item_name);
   }
+  function onMouseEnter() {
+    setHiddenPopup(false);
+    setTimeout(() => {
+      setLoadDone(true);
+    }, 150);
+  }
   return (
     <ItemInfoDefault
-      onMouseEnter={() => setHiddenPopup(false)}
+      onMouseEnter={() => onMouseEnter()}
       onClick={props.hanleClick}
       className={props.className}
     >
@@ -81,48 +88,51 @@ export default function ItemInfo(props) {
             <div className="loading">
               <LoadingCycle />
             </div>
-            <div className="popup-items">
-              <span>
-                Recipes:
-                {itemDetail.is_combined === "true" && (
-                  <span>
-                    <img src={getItemRecipeImg(itemDetail.recipe_1)} alt="" />
-                    <img
-                      src={getItemRecipeImg(itemDetail.recipe_2)}
-                      alt=""
-                      onLoad={() => {
-                        setLoadDone(true);
-                      }}
-                    />
-                  </span>
-                )}
-                {itemDetail.is_combined === "false" && (
-                  <span>
-                    {itemsData
-                      .filter(
-                        (item) =>
-                          item.recipe_1 ===
-                            itemDetail?.item_name.toLowerCase() ||
-                          item.recipe_2 === itemDetail?.item_name.toLowerCase()
-                      )
-                      .map((item, index, arr) => {
-                        return (
-                          <img
-                            key={item.item_name}
-                            src={item?.item_image}
-                            alt={item.item_name}
-                            onLoad={() => {
-                              if (index === arr.length - 1) {
-                                setLoadDone(true);
-                              }
-                            }}
-                          />
-                        );
-                      })}
-                  </span>
-                )}
-              </span>
-            </div>
+            {(itemDetail.is_combined === "true" || !itemDetail?.is_trait) && (
+              <div className="popup-items">
+                <span>
+                  Recipes:
+                  {itemDetail.is_combined === "true" && (
+                    <span>
+                      <img src={getItemRecipeImg(itemDetail.recipe_1)} alt="" />
+                      <img
+                        src={getItemRecipeImg(itemDetail.recipe_2)}
+                        alt=""
+                        onLoad={() => {
+                          setLoadDone(true);
+                        }}
+                      />
+                    </span>
+                  )}
+                  {itemDetail.is_combined === "false" && (
+                    <span>
+                      {itemsData
+                        .filter(
+                          (item) =>
+                            item.recipe_1 ===
+                              itemDetail?.item_name.toLowerCase() ||
+                            item.recipe_2 ===
+                              itemDetail?.item_name.toLowerCase()
+                        )
+                        .map((item, index, arr) => {
+                          return (
+                            <img
+                              key={item.item_name}
+                              src={item?.item_image}
+                              alt={item.item_name}
+                              onLoad={() => {
+                                if (index === arr.length - 1) {
+                                  setLoadDone(true);
+                                }
+                              }}
+                            />
+                          );
+                        })}
+                    </span>
+                  )}
+                </span>
+              </div>
+            )}
           </div>
         )}
       </Wrapper>
@@ -189,6 +199,10 @@ const Wrapper = styled.div`
       }
       .popup-info-title {
         padding-left: 10px;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        justify-content: center;
         .popup-info-title-stats {
           span {
             margin-right: 10px;

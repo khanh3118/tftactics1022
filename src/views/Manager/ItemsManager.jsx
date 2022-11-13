@@ -30,7 +30,7 @@ const OPTIONS_STATS = [
   "crit",
   "armor",
   "magic",
-  "dodge"
+  "dodge",
 ];
 
 function SynergysManager() {
@@ -150,6 +150,20 @@ function SynergysManager() {
             ]}
             name="is_combined"
             label="Can be craft ?"
+          >
+            <Select>
+              <Select.Option value="true">true</Select.Option>
+              <Select.Option value="false">false</Select.Option>
+            </Select>
+          </Form.Item>
+          <Form.Item
+            rules={[
+              {
+                required: true,
+              },
+            ]}
+            name="is_trait"
+            label="trait item ?"
           >
             <Select>
               <Select.Option value="true">true</Select.Option>
