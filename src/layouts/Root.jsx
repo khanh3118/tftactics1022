@@ -18,7 +18,7 @@ function RootLayout() {
   return (
     <RootLayoutDefault id="root-layout">
       <div className="my-content">
-        A simple version clone of Tftactics site use ReactJs ---
+        A simple version clone of Tftactics site use ReactJs :)) ---
         Origin site here:{" "}
         <a href="https://tftactics.gg/" target="_blank" rel="noreferrer">
           https://tftactics.gg
