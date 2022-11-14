@@ -31,11 +31,15 @@ function ItemBuilder() {
     )
   );
   const [isBase, setIsBase] = useState(() => {
-    let i = itemsData.find(
-      (i) => i.item_name.toLowerCase() === state?.item_name.toLowerCase()
-    );
-    if (i.is_combined === "false") return true;
-    if (i.is_combined === "true") return false;
+    if (state?.item_name !== undefined) {
+      let i = itemsData.find(
+        (i) => i.item_name.toLowerCase() === state?.item_name.toLowerCase()
+      );
+      if (i.is_combined === "false") return true;
+      if (i.is_combined === "true") return false;
+    } else {
+      return true;
+    }
   });
   const [itemRecipes, setItemRecipes] = useState(
     itemsData.filter((item) => {
