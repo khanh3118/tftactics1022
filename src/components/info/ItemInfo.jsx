@@ -31,6 +31,7 @@ export default function ItemInfo(props) {
     }, 150);
   }
   function hanleOnClickItemImg(e, itemName) {
+    console.log(itemName)
     if (!props.disableRedirect) {
       e.stopPropagation();
       navigate("/itembuilder", { state: { item_name: itemName } });

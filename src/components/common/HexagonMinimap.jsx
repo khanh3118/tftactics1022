@@ -7,8 +7,10 @@ import { DataContext } from "contexts/DataContext";
 import LoadingCycle from "components/common/LoadingCycle";
 import ItemInfo from "components/info/ItemInfo";
 import { CHARACTER_BORDERS, BORDER_IMAGES } from "config/color";
+import { useNavigate } from "react-router-dom";
 
 function HexagonMinimap(props) {
+  const navigate = useNavigate();
   const [hiddenPopup, setHiddenPopup] = useState(true);
   const [loadDone, setLoadDone] = useState(false);
   const { championsData, synergysData, itemsData } = useContext(DataContext);
@@ -27,6 +29,14 @@ function HexagonMinimap(props) {
     itemsRecommend = itemsData.filter((item) =>
       championDetail.champion_items.includes(item.item_name)
     );
+  }
+
+  function hanleClickChampionImg(e, championName) {
+    e.stopPropagation();
+    let name = championName.toLowerCase().split(" ").join("_");
+    navigate(`/champions/${name}`, {
+      state: { champion_name: championName },
+    });
   }
 
   return (
@@ -61,6 +71,9 @@ function HexagonMinimap(props) {
               <div className="hexLink">
                 {props.champion_name !== undefined && (
                   <img
+                    onClick={(e) =>
+                      hanleClickChampionImg(e, props.champion_name)
+                    }
                     className="avatar-champion"
                     src={championDetail.champion_img_link}
                     alt={championDetail.champion_name}
@@ -86,6 +99,7 @@ function HexagonMinimap(props) {
                           className="popup-synergy-item"
                           key={item.synergy_name}
                           synergy_name={item.synergy_name}
+                          hidePopUpOnHover={true}
                         />
                       );
                     })}

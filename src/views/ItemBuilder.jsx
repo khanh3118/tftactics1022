@@ -3,7 +3,7 @@ import styled from "styled-components";
 import SelectDropDown from "components/common/SelectDropdown";
 import SearchOrigin from "components/common/SearchOrigin";
 import { DataContext } from "contexts/DataContext";
-import { useContext } from "react";
+import { Fragment, useContext } from "react";
 import { useState } from "react";
 import ItemInfo from "components/info/ItemInfo";
 import { useEffect } from "react";
@@ -30,7 +30,13 @@ function ItemBuilder() {
       (item) => item.item_name.toLowerCase() === itemDetailName.toLowerCase()
     )
   );
-  const [isBase, setIsBase] = useState(state?.item_name ? false : true);
+  const [isBase, setIsBase] = useState(() => {
+    let i = itemsData.find(
+      (i) => i.item_name.toLowerCase() === state?.item_name.toLowerCase()
+    );
+    if (i.is_combined === "false") return true;
+    if (i.is_combined === "true") return false;
+  });
   const [itemRecipes, setItemRecipes] = useState(
     itemsData.filter((item) => {
       return (
@@ -173,88 +179,94 @@ function ItemBuilder() {
         }
         mainContent={
           <ItemBuildMainContent>
-            <div className="main-content-title">
-              <img src={itemDetail.item_image} alt="" />
-              <span>{itemDetail.item_name}</span>
-            </div>
-            <div className="main-content-table">
-              <div className="main-content-table-header">
-                <div className="main-content-table-header-item">Recipe</div>
-                <div className="main-content-table-header-item">
-                  Combines Info
+            {itemRecipes.length > 0 ? (
+              <Fragment>
+                <div className="main-content-title">
+                  <img src={itemDetail.item_image} alt="" />
+                  <span>{itemDetail.item_name}</span>
                 </div>
-              </div>
-              <div className="main-content-table-items">
-                {itemRecipes.map((item) => {
-                  return (
-                    <div
-                      key={item.item_name}
-                      className="main-content-table-item"
-                    >
-                      <div className="main-content-table-item-recipe">
-                        <ItemInfo
-                          hanleClick={() => {
-                            setItemDetailName(item.recipe_1);
-                            setIsBase(true);
-                          }}
-                          disableRedirect={true}
-                          className="main-content-table-item-recipe-img"
-                          width="35px"
-                          height="35px"
-                          item_name={capitalize(item.recipe_1)}
-                        />
-                        <ItemInfo
-                          hanleClick={() => {
-                            setItemDetailName(item.recipe_2);
-                            setIsBase(true);
-                          }}
-                          disableRedirect={true}
-                          className="main-content-table-item-recipe-img"
-                          width="35px"
-                          height="35px"
-                          item_name={capitalize(item.recipe_2)}
-                        />
-                      </div>
-                      <div className="main-content-table-item-info">
-                        <ItemInfo
-                          hanleClick={() => {
-                            setItemDetailName(item.item_name);
-                            setIsBase(false);
-                          }}
-                          disableRedirect={true}
-                          className="main-content-table-item-info-img"
-                          width="35px"
-                          height="35px"
-                          item_name={item.item_name}
-                        />
-                        <div className="main-content-table-item-info-description">
-                          <p>{item.item_description}</p>
-                          {item.is_unique_item === "true" ? (
-                            <p className="special-item">
-                              [Unique - only 1 per champion]
-                            </p>
-                          ) : (
-                            ""
-                          )}
-                          {item.is_unique_aura === "true" ? (
-                            <p className="special-item">[Aura item]</p>
-                          ) : (
-                            ""
-                          )}
-                          {item.item_name === "Thief's Gloves" ? (
-                            <p className="special-item">
-                              [Consumes 3 item slots.]
-                            </p>
-                          ) : (
-                            ""
-                          )}
-                        </div>
-                      </div>
+                <div className="main-content-table">
+                  <div className="main-content-table-header">
+                    <div className="main-content-table-header-item">Recipe</div>
+                    <div className="main-content-table-header-item">
+                      Combines Info
                     </div>
-                  );
-                })}
-              </div>
-            </div>
+                  </div>
+                  <div className="main-content-table-items">
+                    {itemRecipes.map((item) => {
+                      return (
+                        <div
+                          key={item.item_name}
+                          className="main-content-table-item"
+                        >
+                          <div className="main-content-table-item-recipe">
+                            <ItemInfo
+                              hanleClick={() => {
+                                setItemDetailName(item.recipe_1);
+                                setIsBase(true);
+                              }}
+                              disableRedirect={true}
+                              className="main-content-table-item-recipe-img"
+                              width="35px"
+                              height="35px"
+                              item_name={capitalize(item.recipe_1)}
+                            />
+                            <ItemInfo
+                              hanleClick={() => {
+                                setItemDetailName(item.recipe_2);
+                                setIsBase(true);
+                              }}
+                              disableRedirect={true}
+                              className="main-content-table-item-recipe-img"
+                              width="35px"
+                              height="35px"
+                              item_name={capitalize(item.recipe_2)}
+                            />
+                          </div>
+                          <div className="main-content-table-item-info">
+                            <ItemInfo
+                              hanleClick={() => {
+                                setItemDetailName(item.item_name);
+                                setIsBase(false);
+                              }}
+                              disableRedirect={true}
+                              className="main-content-table-item-info-img"
+                              width="35px"
+                              height="35px"
+                              item_name={item.item_name}
+                            />
+                            <div className="main-content-table-item-info-description">
+                              <p>{item.item_description}</p>
+                              {item.is_unique_item === "true" ? (
+                                <p className="special-item">
+                                  [Unique - only 1 per champion]
+                                </p>
+                              ) : (
+                                ""
+                              )}
+                              {item.is_unique_aura === "true" ? (
+                                <p className="special-item">[Aura item]</p>
+                              ) : (
+                                ""
+                              )}
+                              {item.item_name === "Thief's Gloves" ? (
+                                <p className="special-item">
+                                  [Consumes 3 item slots.]
+                                </p>
+                              ) : (
+                                ""
+                              )}
+                            </div>
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              </Fragment>
+            ) : (
+              "Item can't be craft"
+            )}
           </ItemBuildMainContent>
         }
       />
