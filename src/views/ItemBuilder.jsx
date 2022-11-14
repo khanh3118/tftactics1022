@@ -15,7 +15,9 @@ function ItemBuilder() {
   const { itemsData } = useContext(DataContext);
   const [searctText, setSearctText] = useState("");
   const [baseItems, setBaseItems] = useState([
-    ...itemsData.filter((item) => item.is_combined === "false" && !item.is_trait),
+    ...itemsData.filter(
+      (item) => item.is_combined === "false" && !item.is_trait
+    ),
   ]);
   const [combinedItems, setCombinedItems] = useState([
     ...itemsData.filter((item) => item.is_combined === "true"),
@@ -24,7 +26,9 @@ function ItemBuilder() {
     state?.item_name || "B.F. Sword"
   );
   const [itemDetail, setItemDetail] = useState(
-    itemsData.find((item) => item.item_name === itemDetailName)
+    itemsData.find(
+      (item) => item.item_name.toLowerCase() === itemDetailName.toLowerCase()
+    )
   );
   const [isBase, setIsBase] = useState(state?.item_name ? false : true);
   const [itemRecipes, setItemRecipes] = useState(
@@ -46,12 +50,19 @@ function ItemBuilder() {
       );
     } else {
       setItemRecipes(
-        itemsData.filter((item) => item.item_name === itemDetailName)
+        itemsData.filter(
+          (item) =>
+            item.item_name.toLowerCase() === itemDetailName.toLowerCase()
+        )
       );
     }
   }, [itemDetailName]);
   useEffect(() => {
-    setItemDetail(itemsData.find((item) => item.item_name === itemDetailName));
+    setItemDetail(
+      itemsData.find(
+        (item) => item.item_name.toLowerCase() === itemDetailName.toLowerCase()
+      )
+    );
   }, [itemDetailName]);
   function hanleBaseItem(name) {
     setIsBase(true);
@@ -65,7 +76,8 @@ function ItemBuilder() {
     setSearctText(a);
   }
   function getItemClass(itemName) {
-    if (itemName === itemDetailName) return "base-item-avatar active";
+    if (itemName.toLowerCase() === itemDetailName.toLowerCase())
+      return "base-item-avatar active";
     return "base-item-avatar";
   }
   useEffect(() => {
@@ -107,6 +119,7 @@ function ItemBuilder() {
                   .map((item) => {
                     return (
                       <ItemInfo
+                        disableRedirect={true}
                         hanleClick={() => hanleBaseItem(item.item_name)}
                         key={item.item_name}
                         className={getItemClass(item.item_name)}
@@ -132,6 +145,7 @@ function ItemBuilder() {
                   .map((item) => {
                     return (
                       <ItemInfo
+                        disableRedirect={true}
                         hanleClick={() => hanleCombinedItem(item.item_name)}
                         key={item.item_name}
                         className={getItemClass(item.item_name)}
@@ -179,12 +193,22 @@ function ItemBuilder() {
                     >
                       <div className="main-content-table-item-recipe">
                         <ItemInfo
+                          hanleClick={() => {
+                            setItemDetailName(item.recipe_1);
+                            setIsBase(true);
+                          }}
+                          disableRedirect={true}
                           className="main-content-table-item-recipe-img"
                           width="35px"
                           height="35px"
                           item_name={capitalize(item.recipe_1)}
                         />
                         <ItemInfo
+                          hanleClick={() => {
+                            setItemDetailName(item.recipe_2);
+                            setIsBase(true);
+                          }}
+                          disableRedirect={true}
                           className="main-content-table-item-recipe-img"
                           width="35px"
                           height="35px"
@@ -193,6 +217,11 @@ function ItemBuilder() {
                       </div>
                       <div className="main-content-table-item-info">
                         <ItemInfo
+                          hanleClick={() => {
+                            setItemDetailName(item.item_name);
+                            setIsBase(false);
+                          }}
+                          disableRedirect={true}
                           className="main-content-table-item-info-img"
                           width="35px"
                           height="35px"

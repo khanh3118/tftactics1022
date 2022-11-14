@@ -81,7 +81,7 @@ function ChampionDetail(props) {
                   Damage: <span>{championDetail.champion_damage}</span>
                 </li>
                 <li>
-                  Atk Spd: <span>{championDetail.champion_atk_spd}</span>
+                  Atk Spd: <span>{championDetail.champion_akt_spd}</span>
                 </li>
                 <li>
                   Crit Rate: <span>{championDetail.champion_crit_rate}</span>
@@ -205,12 +205,13 @@ function ChampionDetail(props) {
                         {championsData
                           .filter(
                             (c) =>
-                              c.champion_origin.includes(
+                              (c.champion_origin.includes(
                                 t.synergy_name.toLowerCase()
                               ) ||
-                              c.champion_class.includes(
-                                t.synergy_name.toLowerCase()
-                              )
+                                c.champion_class.includes(
+                                  t.synergy_name.toLowerCase()
+                                )) &&
+                              c.champion_name !== championDetail.champion_name
                           )
                           .map((f) => {
                             return (
