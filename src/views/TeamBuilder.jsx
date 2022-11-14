@@ -459,6 +459,7 @@ export default function TeamBuilder() {
                     {allRecipe.map((a, index) => {
                       return (
                         <ItemInfo
+                          disableRedirect={true}
                           draggable={false}
                           key={a + index}
                           className="team-builder-drag-recipe-item-a"
@@ -478,6 +479,7 @@ export default function TeamBuilder() {
                     >
                       <span>
                         <ItemInfo
+                          disableRedirect={true}
                           draggable={false}
                           width="30px"
                           height="30px"
@@ -489,6 +491,7 @@ export default function TeamBuilder() {
                       </span>
                       <span>
                         <ItemInfo
+                          disableRedirect={true}
                           draggable={false}
                           width="24px"
                           height="24px"
@@ -499,6 +502,7 @@ export default function TeamBuilder() {
                       </span>
                       <span>
                         <ItemInfo
+                          disableRedirect={true}
                           width="24px"
                           height="24px"
                           draggable={false}
