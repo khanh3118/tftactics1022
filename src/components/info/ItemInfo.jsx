@@ -3,8 +3,10 @@ import { DataContext } from "contexts/DataContext";
 import { useContext, useState } from "react";
 import LoadingCycle from "components/common/LoadingCycle";
 import { clearSelected } from "utils/helper";
+import { useNavigate } from "react-router-dom";
 
 export default function ItemInfo(props) {
+  const navigate = useNavigate();
   const { itemsData } = useContext(DataContext);
   const [hiddenPopup, setHiddenPopup] = useState(true);
 
@@ -28,6 +30,12 @@ export default function ItemInfo(props) {
       setLoadDone(true);
     }, 150);
   }
+  function hanleOnClickItemImg(e, itemName) {
+    if (!props.disableRedirect) {
+      e.stopPropagation();
+      navigate("/itembuilder", { state: { item_name: itemName } });
+    }
+  }
   return (
     <ItemInfoDefault
       onMouseEnter={() => onMouseEnter()}
@@ -46,6 +54,7 @@ export default function ItemInfo(props) {
           className="avatar-item-img"
           src={itemDetail?.item_image}
           alt=""
+          onClick={(e) => hanleOnClickItemImg(e, itemDetail?.item_name)}
         />
         {hiddenPopup || !itemDetail || (
           <div className="avatar-item-popup">

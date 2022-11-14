@@ -599,6 +599,7 @@ export default function TeamBuilder() {
                           className={getItemClass(i.item_name)}
                         >
                           <ItemInfo
+                            disableRedirect={true}
                             draggable={true}
                             popupPosition="left"
                             width="30px"

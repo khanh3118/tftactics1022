@@ -38,7 +38,7 @@ function TeamComps() {
 
       let allItems = all.reduce((total, current) => {
         return total.concat(current.items);
-      }, [])
+      }, []);
 
       let traits = getTraitsBonus(allItems, uniqueSys, synergysData, all);
 
@@ -185,7 +185,11 @@ function TeamComps() {
               <span className="title-name">Filter</span>
               <button onClick={() => resetFilter()}>Reset</button>
             </div>
-            <SelectSide name="Playstyle" count={uniqueType.length}>
+            <SelectSide
+              expand={true}
+              name="Playstyle"
+              count={uniqueType.length}
+            >
               {uniqueType.map((type) => {
                 return (
                   <li

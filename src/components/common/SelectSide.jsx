@@ -3,8 +3,8 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { solid } from "@fortawesome/fontawesome-svg-core/import.macro";
 import { useState } from "react";
 
-export default function SelectSide({ children, name, count }) {
-  const [isExpand, setIsExpand] = useState(false);
+export default function SelectSide({ children, name, count, expand }) {
+  const [isExpand, setIsExpand] = useState(expand ? true : false);
 
   return (
     <SelectSideWrapper isExpand={isExpand} count={count}>
@@ -39,9 +39,12 @@ const SelectSideWrapper = styled.div`
       color: #88a0a7;
       line-height: 100%;
     }
+    span {
+      color: ${({ isExpand }) => isExpand && "white"};
+    }
     svg {
       transition: all 0.3s;
-      transform: ${({isExpand}) => isExpand && "rotate(-180deg)"};
+      transform: ${({ isExpand }) => isExpand && "rotate(-180deg)"};
     }
     &::after {
       transition: all 0.1s;

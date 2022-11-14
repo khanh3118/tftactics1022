@@ -27,6 +27,7 @@ import ChampionsView from "views/Champions";
 import MetaReport from "views/MetaReport";
 import { MetaReportProvider } from "contexts/MetaReportContext";
 import ChampionDetail from "views/ChampionDetail";
+import ScrollToTop from "components/common/ScrollToTop";
 
 const router = createBrowserRouter([
   {
@@ -114,7 +115,12 @@ const router = createBrowserRouter([
       },
       {
         path: "itembuilder",
-        element: <ItemBuilder />,
+        element: (
+          <ScrollToTop>
+            <ItemBuilder />
+          </ScrollToTop>
+        ),
+        errorElement: <div>item not found</div>,
       },
       {
         path: "teamcomps",
@@ -126,7 +132,11 @@ const router = createBrowserRouter([
       },
       {
         path: "champions/:name",
-        element: <ChampionDetail />,
+        element: (
+          <ScrollToTop>
+            <ChampionDetail />
+          </ScrollToTop>
+        ),
       },
     ],
   },
