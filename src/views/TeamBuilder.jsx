@@ -17,7 +17,7 @@ import Switch from "components/common/Switch";
 import HexagonTeamBuilder from "components/common/HexagonTeamBuilder";
 import { DataContext } from "contexts/DataContext";
 import TeamBuilderServices from "services/teambuilder";
-import { getTraitsBonus } from "utils/filter";
+import { capitalize, getTraitsBonus } from "utils/filter";
 
 const PartialTraitsItem = lazy(() =>
   import("components/common/PartialTraitsItem")
@@ -164,21 +164,22 @@ export default function TeamBuilder() {
   }, [newMembers]);
 
   // allitem but not contain trait item can not craft
-  function getAllItemCombined() {
+  function getAllItemCraftable() {
     return allItem.filter((a) => {
       let c = itemsData.find((i) => i.item_name === a);
       if (c.is_trait && c.is_combined === "false") return false;
       return true;
     });
   }
-  const [allItemCombined, setAllItemCombined] = useState(getAllItemCombined());
+  const [allItemCraftable, setAllItemCraftable] = useState(
+    getAllItemCraftable()
+  );
   useEffect(() => {
-    setAllItemCombined([...getAllItemCombined()]);
+    setAllItemCraftable([...getAllItemCraftable()]);
   }, [allItem]);
-
   /// all item recipes
   function getAllRecipe() {
-    return allItemCombined.reduce((all, curr) => {
+    return allItemCraftable.reduce((all, curr) => {
       let a = itemsData.find((i) => i.item_name === curr);
       return all.concat(a.recipe_1).concat(a.recipe_2);
     }, []);
@@ -186,7 +187,7 @@ export default function TeamBuilder() {
   const [allRecipe, setAllRecipe] = useState(getAllRecipe());
   useEffect(() => {
     setAllRecipe([...getAllRecipe()]);
-  }, [allItemCombined]);
+  }, [allItemCraftable]);
 
   // unique traits
   function getUniqueTraits() {
@@ -289,19 +290,31 @@ export default function TeamBuilder() {
       let item_name = e.dataTransfer.getData("item_name");
       if (is_empty === false) {
         setMembers((pre) => {
-          let a = pre.find((m) => Number(m.position) === position);
-          if (a.items.length < 3) {
-            let is_unique = itemsData.find(
-              (i) => i.item_name === item_name
-            ).is_unique_item;
-            if (is_unique === "false") {
-              a.items.push(item_name);
-            } else {
-              if (a.items.includes(item_name)) {
+          let member = pre.find((m) => Number(m.position) === position);
+          let championDetail = championsData.find(
+            (c) => c.champion_name === member.name
+          );
+          if (member.items.length < 3) {
+            let itemDetail = itemsData.find((i) => i.item_name === item_name);
+            if (itemDetail.is_unique_item === "true") {
+              if (member.items.includes(item_name)) {
                 setErrorMessage("Only one of these items can be equipped.");
+              } else if (
+                championDetail.champion_class.includes(
+                  itemDetail?.trait_name
+                ) ||
+                championDetail.champion_origin.includes(itemDetail?.trait_name)
+              ) {
+                setErrorMessage(
+                  `${championDetail.champion_name} is already a ${capitalize(
+                    itemDetail.trait_name
+                  )}.`
+                );
               } else {
-                a.items.push(item_name);
+                member.items.push(item_name);
               }
+            } else {
+              member.items.push(item_name);
             }
           } else {
             setErrorMessage("A champion can only have 3 items equipped.");
@@ -445,7 +458,7 @@ export default function TeamBuilder() {
                 {createElementsFromNumber(28)}
               </div>
               <div className="team-builder-drag-recipe">
-                {allRecipe.length === 0 && (
+                {allItem.length === 0 && (
                   <div className="team-builder-drag-recipe-empty">
                     <FontAwesomeIcon
                       size="lg"
@@ -471,7 +484,7 @@ export default function TeamBuilder() {
                     })}
                   </div>
                 )}
-                {allItemCombined.map((i, index) => {
+                {allItemCraftable.map((i, index) => {
                   return (
                     <div
                       key={i + index}
