@@ -12,6 +12,21 @@ function TopNavigation() {
             </NavLink>
           </li>
           <li>
+            <NavLink to="teambuilder" className="header-item">
+              Team Builder
+            </NavLink>
+          </li>
+          <li>
+            <NavLink to="/champions" className="header-item">
+              Champions
+            </NavLink>
+          </li>
+          <li>
+            <NavLink to="database" className="header-item">
+              Database
+            </NavLink>
+          </li>
+          <li>
             <NavLink to="/metareport" className="header-item">
               Meta Report
             </NavLink>
@@ -23,21 +38,6 @@ function TopNavigation() {
               activeclassname="active"
             >
               Item Builder
-            </NavLink>
-          </li>
-          <li>
-            <NavLink to="database" className="header-item">
-              Database
-            </NavLink>
-          </li>
-          <li>
-            <NavLink to="teambuilder" className="header-item">
-              Team Builder
-            </NavLink>
-          </li>
-          <li>
-            <NavLink to="/champions" className="header-item">
-              Champions
             </NavLink>
           </li>
           <li>
