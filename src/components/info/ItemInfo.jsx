@@ -1,11 +1,11 @@
 import styled from "styled-components";
 import { DataContext } from "contexts/DataContext";
-import { useContext, useState } from "react";
+import { useContext, useState, memo } from "react";
 import LoadingCycle from "components/common/LoadingCycle";
 import { clearSelected } from "utils/helper";
 import { useNavigate } from "react-router-dom";
 
-export default function ItemInfo(props) {
+const ItemInfo = memo((props) => {
   const navigate = useNavigate();
   const { itemsData } = useContext(DataContext);
   const [hiddenPopup, setHiddenPopup] = useState(true);
@@ -31,7 +31,7 @@ export default function ItemInfo(props) {
     }, 150);
   }
   function hanleOnClickItemImg(e, itemName) {
-    console.log(itemName)
+    console.log(itemName);
     if (!props.disableRedirect) {
       e.stopPropagation();
       navigate("/itembuilder", { state: { item_name: itemName } });
@@ -148,7 +148,9 @@ export default function ItemInfo(props) {
       </Wrapper>
     </ItemInfoDefault>
   );
-}
+});
+
+export default ItemInfo;
 
 const ItemInfoDefault = styled.div`
   position: relative;

@@ -2,7 +2,7 @@ import styled from "styled-components";
 import SynergyInfo from "./SynergyInfo";
 import { solid } from "@fortawesome/fontawesome-svg-core/import.macro";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { useContext, useState } from "react";
+import { useContext, useState, memo } from "react";
 import { DataContext } from "contexts/DataContext";
 import LoadingCycle from "components/common/LoadingCycle";
 import ItemInfo from "components/info/ItemInfo";
@@ -10,7 +10,7 @@ import { CHARACTER_BORDERS, BORDER_IMAGES } from "config/color";
 import { useNavigate } from "react-router-dom";
 import { clearSelected } from "utils/helper";
 
-function CharacterInfo(props) {
+const CharacterInfo = memo((props) => {
   const [hiddenPopup, setHiddenPopup] = useState(true);
   const [loadDone, setLoadDone] = useState(false);
   const { championsData, synergysData, itemsData } = useContext(DataContext);
@@ -142,7 +142,7 @@ function CharacterInfo(props) {
       </CharacterInfoDefault>
     )
   );
-}
+});
 
 export default CharacterInfo;
 

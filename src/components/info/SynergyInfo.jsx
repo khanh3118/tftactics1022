@@ -1,10 +1,10 @@
 import styled from "styled-components";
-import { useContext, useState } from "react";
+import { useContext, useState, memo } from "react";
 import { DataContext } from "contexts/DataContext";
 import LoadingCycle from "components/common/LoadingCycle";
 import { CHARACTER_BORDERS, BORDER_IMAGES } from "config/color";
 
-function SynergyInfo(props) {
+const SynergyInfo = memo((props) => {
   const { championsData, synergysData } = useContext(DataContext);
   const [loadDone, setLoadDone] = useState(false);
   const [hiddenPopup, setHiddenPopup] = useState(true);
@@ -63,7 +63,9 @@ function SynergyInfo(props) {
                           <span
                             className={
                               index + 1 === props.bonus_level ||
-                              (index === 0) & (props.bonus_level === 3) & (props.count === 1 || props.count === 3)
+                              (index === 0) &
+                                (props.bonus_level === 3) &
+                                (props.count === 1 || props.count === 3)
                                 ? "active"
                                 : ""
                             }
@@ -108,7 +110,7 @@ function SynergyInfo(props) {
       </div>
     </SynergyInfoDefault>
   );
-}
+});
 
 export default SynergyInfo;
 

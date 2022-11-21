@@ -5,7 +5,7 @@ import { capitalize } from "utils/filter";
 import { solid } from "@fortawesome/fontawesome-svg-core/import.macro";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Status from "components/common/Status";
-import React, { useState, useContext, lazy, Suspense } from "react";
+import React, { useState, useContext, lazy, Suspense, memo } from "react";
 import { DataContext } from "contexts/DataContext";
 import { BONUS_LEVEL_COLOR } from "config/color";
 
@@ -13,7 +13,7 @@ const SynergyInfo = lazy(() => import("components/info/SynergyInfo"));
 const ItemInfo = lazy(() => import("components/info/ItemInfo"));
 const MiniMap = lazy(() => import("components/common/MiniMap"));
 
-export default function TeamComp(props) {
+const TeamComp = memo((props) => {
   const { itemsData } = useContext(DataContext);
   const [expand, setExpand] = useState(false);
 
@@ -248,7 +248,9 @@ export default function TeamComp(props) {
       </div>
     </TeamCompWrapper>
   );
-}
+});
+
+export default TeamComp;
 
 const SynergyInfoWrapper = styled.div`
   margin-right: 5px;

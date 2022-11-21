@@ -1,12 +1,12 @@
 import styled from "styled-components";
 import TierStatus from "components/common/TierStatus";
 import CharacterInfo from "components/info/CharacterInfo";
-import React, { lazy, Suspense } from "react";
+import React, { lazy, Suspense, memo } from "react";
 import { BONUS_LEVEL_COLOR } from "config/color";
 
 const SynergyInfo = lazy(() => import("components/info/SynergyInfo"));
 
-export default function MetaInfo(props) {
+const MetaInfo = memo((props) => {
   function contestedColor(type) {
     if (type === "High") return { color: "red" };
     if (type === "Medium") return { color: "hsla(0,0%,100%,.9)" };
@@ -99,7 +99,9 @@ export default function MetaInfo(props) {
       </div>
     </MetaInfoWrapper>
   );
-}
+});
+
+export default MetaInfo;
 
 const SynergyInfoWrapper = styled.div`
   margin-right: 5px;
