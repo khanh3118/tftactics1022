@@ -6,6 +6,7 @@ import {
   Fragment,
   Suspense,
   lazy,
+  useMemo,
 } from "react";
 import { useLoaderData } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -135,7 +136,7 @@ export default function TeamBuilder() {
   const [members, setMembers] = useState(teamData || []);
 
   // merge member and championsData
-  function getNewMembers() {
+  const newMembers = useMemo(() => {
     return members?.map((member) => {
       let championDetail = championsData.find(
         (c) => c.champion_name === member.name
@@ -145,52 +146,34 @@ export default function TeamBuilder() {
         ...championDetail,
       };
     });
-  }
-  const [newMembers, setNewMembers] = useState(getNewMembers());
-  useEffect(() => {
-    setNewMembers([...getNewMembers()]);
-    setShared(false);
   }, [members]);
 
   /// all items
-  function getAllItem() {
+  const allItem = useMemo(() => {
     return newMembers.reduce((total, current) => {
       return total.concat(current.items);
     }, []);
-  }
-  const [allItem, setAllItem] = useState(getAllItem());
-  useEffect(() => {
-    setAllItem([...getAllItem()]);
   }, [newMembers]);
 
   // allitem but not contain trait item can not craft
-  function getAllItemCraftable() {
+  const allItemCraftable = useMemo(() => {
     return allItem.filter((a) => {
       let c = itemsData.find((i) => i.item_name === a);
       if (c.is_trait && c.is_combined === "false") return false;
       return true;
     });
-  }
-  const [allItemCraftable, setAllItemCraftable] = useState(
-    getAllItemCraftable()
-  );
-  useEffect(() => {
-    setAllItemCraftable([...getAllItemCraftable()]);
   }, [allItem]);
+
   /// all item recipes
-  function getAllRecipe() {
+  const allRecipe = useMemo(() => {
     return allItemCraftable.reduce((all, curr) => {
       let a = itemsData.find((i) => i.item_name === curr);
       return all.concat(a.recipe_1).concat(a.recipe_2);
     }, []);
-  }
-  const [allRecipe, setAllRecipe] = useState(getAllRecipe());
-  useEffect(() => {
-    setAllRecipe([...getAllRecipe()]);
   }, [allItemCraftable]);
 
   // unique traits
-  function getUniqueTraits() {
+  const uniqueTraits = useMemo(() => {
     return [
       ...new Set(
         newMembers.reduce((total, current) => {
@@ -200,28 +183,18 @@ export default function TeamBuilder() {
         }, [])
       ),
     ];
-  }
-  const [uniqueTraits, setUniqueTraits] = useState(getUniqueTraits());
-  useEffect(() => {
-    setUniqueTraits([...getUniqueTraits()]);
   }, [newMembers]);
 
   // hanle traits bonus
-  function getTraits() {
-    // add trait from item
+  const traits = useMemo(() => {
     let data = getTraitsBonus(allItem, uniqueTraits, synergysData, newMembers);
 
-    //sort data by bonus level --> count trait --> trait name
     return data.sort(
       (a, b) =>
         b.bonus_level - a.bonus_level ||
         b.count - a.count ||
         a.name.localeCompare(b.name)
     );
-  }
-  const [traits, setTraits] = useState(getTraits());
-  useEffect(() => {
-    setTraits([...getTraits()]);
   }, [allItem, uniqueTraits, newMembers]);
 
   // prepare data for each slot in board
