@@ -1,10 +1,10 @@
-import { useEffect, lazy, Suspense } from "react";
+import { useEffect, lazy, Suspense, useCallback } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { solid } from "@fortawesome/fontawesome-svg-core/import.macro";
 import styled from "styled-components";
 import { useContext, useState } from "react";
 import { DataContext } from "contexts/DataContext";
-import { useOutletContext, NavLink } from "react-router-dom";
+import { useOutletContext } from "react-router-dom";
 
 const CharacterInfo = lazy(() => import("components/info/CharacterInfo"));
 
@@ -85,50 +85,56 @@ function ChampionsStats() {
             if (filterOptions.name === "Champion")
               return b.champion_name.localeCompare(a.champion_name);
           }
+          return false;
         }),
     ]);
-  }, [filterOptions]);
+  }, [championsData, filterOptions, level]);
+
   useEffect(() => {
     setFilterOptions({
       ...filterOptions,
       searchText,
     });
-  }, [searchText]);
-  function hanleClick(e) {
-    let a = document.querySelectorAll(".table-header-item");
-    a.forEach((item) => {
-      item.className = "table-header-item";
-    });
-    e.target.className = "table-header-item increase";
-    setDecreased(false);
-    setFilterOptions({
-      ...filterOptions,
-      type: "increase",
-      name: e.target.innerText,
-    });
-    if (filterOptions.name === e.target.innerText) {
-      setDecreased((pre) => !pre);
-      if (decreased) {
-        e.target.className = "table-header-item increase";
-        setDecreased(false);
-        setFilterOptions({
-          ...filterOptions,
-          type: "increase",
-          name: e.target.innerText,
-        });
-      } else {
-        e.target.className = "table-header-item decrease";
-        setDecreased(true);
-        setFilterOptions({
-          ...filterOptions,
-          type: "decrease",
-          name: e.target.innerText,
-        });
-      }
-    }
-  }
+  }, [filterOptions, searchText]);
 
-  function hanleLevel(e, level) {
+  const hanleClick = useCallback(
+    (e) => {
+      let a = document.querySelectorAll(".table-header-item");
+      a.forEach((item) => {
+        item.className = "table-header-item";
+      });
+      e.target.className = "table-header-item increase";
+      setDecreased(false);
+      setFilterOptions({
+        ...filterOptions,
+        type: "increase",
+        name: e.target.innerText,
+      });
+      if (filterOptions.name === e.target.innerText) {
+        setDecreased((pre) => !pre);
+        if (decreased) {
+          e.target.className = "table-header-item increase";
+          setDecreased(false);
+          setFilterOptions({
+            ...filterOptions,
+            type: "increase",
+            name: e.target.innerText,
+          });
+        } else {
+          e.target.className = "table-header-item decrease";
+          setDecreased(true);
+          setFilterOptions({
+            ...filterOptions,
+            type: "decrease",
+            name: e.target.innerText,
+          });
+        }
+      }
+    },
+    [decreased, filterOptions]
+  );
+
+  const hanleLevel = useCallback((e, level) => {
     let svgs = document.querySelectorAll("#champions-stats .level svg");
     svgs.forEach((item) => {
       item.style.color = "white";
@@ -137,8 +143,9 @@ function ChampionsStats() {
       svgs[i].style.color = "orange";
     }
     setLevel(level);
-  }
-  function offenseSet() {
+  }, []);
+
+  const offenseSet = useCallback(() => {
     let a = document.querySelectorAll(".table-header-item");
     a.forEach((item) => {
       item.className = "table-header-item";
@@ -151,8 +158,8 @@ function ChampionsStats() {
       type: "decrease",
       name: "DPS",
     });
-  }
-  function defenseSet() {
+  }, [filterOptions]);
+  const defenseSet = useCallback(() => {
     let a = document.querySelectorAll(".table-header-item");
     a.forEach((item) => {
       item.className = "table-header-item";
@@ -165,7 +172,7 @@ function ChampionsStats() {
       type: "decrease",
       name: "Health",
     });
-  }
+  }, [filterOptions]);
   return (
     <ChampionsStatsDefault id="champions-stats">
       <div className="wrapper">

@@ -1,44 +1,52 @@
-import React from "react";
+import React, { lazy, Suspense } from "react";
 import ReactDOM from "react-dom/client";
 import "./index.css";
 import reportWebVitals from "./reportWebVitals";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import RootLayout from "./layouts/Root";
-import DatabaseLayout from "./views/Database/DatabaseLayout";
-import ItemBuilder from "./views/ItemBuilder";
 import Champions from "./views/Database/Contents/Champions";
 import ChampionsStats from "./views/Database/Contents/ChampionsStats";
 import Origins from "./views/Database/Contents/Origins";
 import Classes from "./views/Database/Contents/Classes";
 import "./firebase/main";
-import ChampionsManager, {
-  loader as ChampionsManagerLoader,
-} from "views/Manager/ChampionsManager";
-import ItemsManager from "views/Manager/ItemsManager";
-import SynergysManager from "views/Manager/SynergysManager";
-import SignUp from "components/auth/SignUp";
+import { loader as ChampionsManagerLoader } from "views/Manager/ChampionsManager";
 import { AuthProvider } from "contexts/AuthContext";
 import PrivateRoute from "components/auth/PrivateRoute";
 import { DataProvider } from "contexts/DataContext";
-import TeamComps from "views/TeamComps";
-import TeamCompsManager from "views/Manager/TeamCompsManager";
-import TeamBuilder, { loader as teamLoader } from "views/TeamBuilder";
-import ChampionsView from "views/Champions";
-import MetaReport from "views/MetaReport";
+import { loader as teamLoader } from "views/TeamBuilder";
 import { MetaReportProvider } from "contexts/MetaReportContext";
 import ChampionDetail from "views/ChampionDetail";
 import ScrollToTop from "components/common/ScrollToTop";
 
+const DatabaseLayout = lazy(() => import("./views/Database/DatabaseLayout"));
+const TeamComps = lazy(() => import("views/TeamComps"));
+const MetaReport = lazy(() => import("views/MetaReport"));
+const TeamBuilder = lazy(() => import("views/TeamBuilder"));
+const ItemBuilder = lazy(() => import("./views/ItemBuilder"));
+
+const ItemsManager = lazy(() => import("views/Manager/ItemsManager"));
+const SynergysManager = lazy(() => import("views/Manager/SynergysManager"));
+const SignUp = lazy(() => import("components/auth/SignUp"));
+const TeamCompsManager = lazy(() => import("views/Manager/TeamCompsManager"));
+const ChampionsView = lazy(() => import("views/Champions"));
+// const ChampionsManager = lazy(() => import("views/Manager/ChampionsManager"));
+
 const router = createBrowserRouter([
   {
     path: "/login",
-    element: <SignUp />,
+    element: (
+      <Suspense>
+        <SignUp />
+      </Suspense>
+    ),
   },
   {
     path: "/manager/origins",
     element: (
       <PrivateRoute>
-        <SynergysManager />
+        <Suspense>
+          <SynergysManager />
+        </Suspense>
       </PrivateRoute>
     ),
     loader: ChampionsManagerLoader,
@@ -47,7 +55,9 @@ const router = createBrowserRouter([
     path: "/manager/teamcomps",
     element: (
       <PrivateRoute>
-        <TeamCompsManager />
+        <Suspense>
+          <TeamCompsManager />
+        </Suspense>
       </PrivateRoute>
     ),
     loader: ChampionsManagerLoader,
@@ -56,7 +66,9 @@ const router = createBrowserRouter([
     path: "/manager/items",
     element: (
       <PrivateRoute>
-        <ItemsManager />
+        <Suspense>
+          <ItemsManager />
+        </Suspense>
       </PrivateRoute>
     ),
     loader: ChampionsManagerLoader,
@@ -67,13 +79,19 @@ const router = createBrowserRouter([
     children: [
       {
         path: "teambuilder",
-        element: <TeamBuilder />,
+        element: (
+          <Suspense>
+            <TeamBuilder />
+          </Suspense>
+        ),
       },
       {
         path: "/metareport",
         element: (
           <MetaReportProvider>
-            <MetaReport />
+            <Suspense>
+              <MetaReport />
+            </Suspense>
           </MetaReportProvider>
         ),
       },
@@ -84,7 +102,11 @@ const router = createBrowserRouter([
       },
       {
         path: "database/*",
-        element: <DatabaseLayout />,
+        element: (
+          <Suspense>
+            <DatabaseLayout />
+          </Suspense>
+        ),
         children: [
           {
             name: "champion",
@@ -117,18 +139,28 @@ const router = createBrowserRouter([
         path: "itembuilder",
         element: (
           <ScrollToTop>
-            <ItemBuilder />
+            <Suspense>
+              <ItemBuilder />
+            </Suspense>
           </ScrollToTop>
         ),
         errorElement: <div>item not found</div>,
       },
       {
         path: "teamcomps",
-        element: <TeamComps />,
+        element: (
+          <Suspense>
+            <TeamComps />
+          </Suspense>
+        ),
       },
       {
         path: "champions",
-        element: <ChampionsView />,
+        element: (
+          <Suspense>
+            <ChampionsView />
+          </Suspense>
+        ),
       },
       {
         path: "champions/:name",

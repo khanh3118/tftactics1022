@@ -18,7 +18,7 @@ function Origins() {
           .includes(searchText.trim().toLowerCase())
       )
     );
-  }, [searchText]);
+  }, [searchText, synergysData]);
   return (
     <OriginDefault id="origin-default">
       <div className="wrapper">

@@ -8,7 +8,7 @@ import CharacterInfo from "components/info/CharacterInfo";
 import SelectSide from "components/common/SelectSide";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { solid } from "@fortawesome/fontawesome-svg-core/import.macro";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 
 export default function Champions() {
   const { championsData, synergysData } = useContext(DataContext);
@@ -65,9 +65,9 @@ export default function Champions() {
           return filter.origins.length === 0 || result;
         }),
     ]);
-  }, [filter]);
+  }, [championsData, filter]);
 
-  function addAndRemoveOrigin(originName) {
+  const addAndRemoveOrigin = useCallback((originName) => {
     setFilter((pre) => {
       if (pre.origins.includes(originName)) {
         let position = pre.origins.indexOf(originName);
@@ -77,8 +77,9 @@ export default function Champions() {
       }
       return { ...pre };
     });
-  }
-  function addAndRemoveClass(className) {
+  }, []);
+
+  const addAndRemoveClass = useCallback((className) => {
     setFilter((pre) => {
       if (pre.classes.includes(className)) {
         let position = pre.classes.indexOf(className);
@@ -88,8 +89,9 @@ export default function Champions() {
       }
       return { ...pre };
     });
-  }
-  function addAndRemoveCost(cost) {
+  }, []);
+
+  const addAndRemoveCost = useCallback((cost) => {
     setFilter((pre) => {
       if (pre.costs.includes(cost)) {
         let position = pre.costs.indexOf(cost);
@@ -99,7 +101,7 @@ export default function Champions() {
       }
       return { ...pre };
     });
-  }
+  }, []);
 
   function createElementsFromNumber(n) {
     var elements = [];
@@ -119,35 +121,35 @@ export default function Champions() {
     return elements;
   }
 
-  function resetFilter() {
+  const resetFilter = useCallback(() => {
     setFilter({
       search_text: "",
       costs: [],
       classes: [],
       origins: [],
     });
-  }
+  }, []);
 
-  function removeCostFilter(cost) {
+  const removeCostFilter = useCallback((cost) => {
     setFilter((pre) => {
       pre.costs.splice(pre.costs.indexOf(cost), 1);
       return { ...pre };
     });
-  }
+  }, []);
 
-  function removeOriginFilter(originName) {
+  const removeOriginFilter = useCallback((originName) => {
     setFilter((pre) => {
       pre.origins.splice(pre.origins.indexOf(originName), 1);
       return { ...pre };
     });
-  }
+  }, []);
 
-  function removeClassFilter(className) {
+  const removeClassFilter = useCallback((className) => {
     setFilter((pre) => {
       pre.classes.splice(pre.classes.indexOf(className), 1);
       return { ...pre };
     });
-  }
+  }, []);
 
   return (
     <ChampionsWrapper>

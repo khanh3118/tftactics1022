@@ -7,6 +7,7 @@ import {
   Suspense,
   lazy,
   useMemo,
+  useCallback,
 } from "react";
 import { useLoaderData } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -35,18 +36,6 @@ export default function TeamBuilder() {
 
   // data from context
   const { championsData, synergysData, itemsData } = useContext(DataContext);
-
-  // hanle share
-  const [shared, setShared] = useState(false);
-  async function hanleShare() {
-    if (!shared && members.length > 0) {
-      let id = await TeamBuilderServices.saveTeam(members);
-      navigator.clipboard.writeText(
-        `${window.location.origin}/teambuilder/${id}`
-      );
-      setShared(true);
-    }
-  }
 
   // hanle show partial traits
   const [showPartialTraits, setShowPartialTraits] = useState(true);
@@ -97,7 +86,7 @@ export default function TeamBuilder() {
         );
       }
     });
-  }, [characterFilter]);
+  }, [championsData, characterFilter]);
 
   // hanle search items
   const [itemfilter, setItemfilter] = useState("");
@@ -120,7 +109,7 @@ export default function TeamBuilder() {
       );
       return data;
     });
-  }, [itemfilter]);
+  }, [itemfilter, itemsData]);
 
   // hanle error message
   const [errorMessage, setErrorMessage] = useState("");
@@ -135,6 +124,23 @@ export default function TeamBuilder() {
   // team members
   const [members, setMembers] = useState(teamData || []);
 
+  // hanle share
+  const [shared, setShared] = useState(false);
+  const hanleShare = useCallback(async () => {
+    if (!shared && members.length > 0) {
+      let id = await TeamBuilderServices.saveTeam(members);
+      navigator.clipboard.writeText(
+        `${window.location.origin}/teambuilder/${id}`
+      );
+      setShared(true);
+    }
+  }, [members, shared]);
+  useEffect(() => {
+    if (members.length > 0) {
+      setShared(false);
+    }
+  }, [members]);
+
   // merge member and championsData
   const newMembers = useMemo(() => {
     return members?.map((member) => {
@@ -146,7 +152,7 @@ export default function TeamBuilder() {
         ...championDetail,
       };
     });
-  }, [members]);
+  }, [championsData, members]);
 
   /// all items
   const allItem = useMemo(() => {
@@ -162,7 +168,7 @@ export default function TeamBuilder() {
       if (c.is_trait && c.is_combined === "false") return false;
       return true;
     });
-  }, [allItem]);
+  }, [allItem, itemsData]);
 
   /// all item recipes
   const allRecipe = useMemo(() => {
@@ -170,7 +176,7 @@ export default function TeamBuilder() {
       let a = itemsData.find((i) => i.item_name === curr);
       return all.concat(a.recipe_1).concat(a.recipe_2);
     }, []);
-  }, [allItemCraftable]);
+  }, [allItemCraftable, itemsData]);
 
   // unique traits
   const uniqueTraits = useMemo(() => {
@@ -195,7 +201,7 @@ export default function TeamBuilder() {
         b.count - a.count ||
         a.name.localeCompare(b.name)
     );
-  }, [allItem, uniqueTraits, newMembers]);
+  }, [allItem, uniqueTraits, synergysData, newMembers]);
 
   // prepare data for each slot in board
   function getHexagonData(position) {

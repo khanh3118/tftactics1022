@@ -1,7 +1,14 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { solid } from "@fortawesome/fontawesome-svg-core/import.macro";
 import styled from "styled-components";
-import { useContext, useState, useEffect, lazy, Suspense } from "react";
+import {
+  useContext,
+  useState,
+  useEffect,
+  lazy,
+  Suspense,
+  useCallback,
+} from "react";
 import { DataContext } from "contexts/DataContext";
 import { useOutletContext } from "react-router-dom";
 
@@ -26,53 +33,56 @@ function Champions() {
       )
     );
   }, [championsData, searchText]);
-  function hanleClick(e) {
-    let a = document.querySelectorAll(".table-header-item");
-    a.forEach((item) => {
-      item.className = "table-header-item";
-    });
-    let sortType = e.target.innerText;
-    if (sortType === "Champion") {
-      setIncreaseByCost(false);
-      if (increaseByName === false) {
-        setIncreaseByName(true);
-        setC_data([
-          ...championsData.sort((a, b) =>
-            a.champion_name.localeCompare(b.champion_name)
-          ),
-        ]);
-        e.target.className = "table-header-item increase";
-      } else {
-        setIncreaseByName(false);
-        setC_data([
-          ...championsData.sort((a, b) =>
-            b.champion_name.localeCompare(a.champion_name)
-          ),
-        ]);
-        e.target.className = "table-header-item decrease";
-      }
-    }
-    if (sortType === "Cost") {
-      setIncreaseByName(false);
-      if (increaseByCost === false) {
-        setIncreaseByCost(true);
-        setC_data([
-          ...championsData.sort((a, b) =>
-            a.champion_cost.localeCompare(b.champion_cost)
-          ),
-        ]);
-        e.target.className = "table-header-item increase";
-      } else {
+  const hanleClick = useCallback(
+    (e) => {
+      let a = document.querySelectorAll(".table-header-item");
+      a.forEach((item) => {
+        item.className = "table-header-item";
+      });
+      let sortType = e.target.innerText;
+      if (sortType === "Champion") {
         setIncreaseByCost(false);
-        setC_data([
-          ...championsData.sort((a, b) =>
-            b.champion_cost.localeCompare(a.champion_cost)
-          ),
-        ]);
-        e.target.className = "table-header-item decrease";
+        if (increaseByName === false) {
+          setIncreaseByName(true);
+          setC_data([
+            ...championsData.sort((a, b) =>
+              a.champion_name.localeCompare(b.champion_name)
+            ),
+          ]);
+          e.target.className = "table-header-item increase";
+        } else {
+          setIncreaseByName(false);
+          setC_data([
+            ...championsData.sort((a, b) =>
+              b.champion_name.localeCompare(a.champion_name)
+            ),
+          ]);
+          e.target.className = "table-header-item decrease";
+        }
       }
-    }
-  }
+      if (sortType === "Cost") {
+        setIncreaseByName(false);
+        if (increaseByCost === false) {
+          setIncreaseByCost(true);
+          setC_data([
+            ...championsData.sort((a, b) =>
+              a.champion_cost.localeCompare(b.champion_cost)
+            ),
+          ]);
+          e.target.className = "table-header-item increase";
+        } else {
+          setIncreaseByCost(false);
+          setC_data([
+            ...championsData.sort((a, b) =>
+              b.champion_cost.localeCompare(a.champion_cost)
+            ),
+          ]);
+          e.target.className = "table-header-item decrease";
+        }
+      }
+    },
+    [championsData, increaseByCost, increaseByName]
+  );
   return (
     <ChampionsDefault id="champions-default">
       <div className="wrapper">

@@ -3,7 +3,7 @@ import styled from "styled-components";
 import SelectDropDown from "components/common/SelectDropdown";
 import SearchOrigin from "components/common/SearchOrigin";
 import { DataContext } from "contexts/DataContext";
-import { useContext, useState, useEffect } from "react";
+import { useContext, useState, useEffect, useCallback } from "react";
 import Button from "components/common/Button";
 import Status from "components/common/Status";
 import CompInfo from "components/info/CompInfo";
@@ -14,7 +14,7 @@ function TeamComps() {
   const { championsData, synergysData, teamcompsData } =
     useContext(DataContext);
 
-  const [includedTraits, setIncludedTraits] = useState(() => {
+  const [includedTraits] = useState(() => {
     let result = teamcompsData.map((team_detail) => {
       let all = team_detail.members.map((member) => {
         let championDetail = championsData.find(
@@ -51,7 +51,7 @@ function TeamComps() {
   });
 
   const [filteredData, setFilteredData] = useState(includedTraits);
-  const [uniqueType, setUniqueType] = useState(() => {
+  const [uniqueType] = useState(() => {
     let result = [];
     teamcompsData.forEach((t) => {
       result.push(t.type);
@@ -122,7 +122,7 @@ function TeamComps() {
           return filter.origins.length === 0 || result;
         }),
     ]);
-  }, [filter]);
+  }, [filter, includedTraits]);
 
   function hanleSeach(searchText) {
     setFilter((pre) => {
@@ -133,7 +133,7 @@ function TeamComps() {
     });
   }
 
-  function addAndRemoveOrigin(originName) {
+  const addAndRemoveOrigin = useCallback((originName) => {
     setFilter((pre) => {
       if (pre.origins.includes(originName)) {
         let position = pre.origins.indexOf(originName);
@@ -143,8 +143,9 @@ function TeamComps() {
       }
       return { ...pre };
     });
-  }
-  function addAndRemoveClass(className) {
+  }, []);
+
+  const addAndRemoveClass = useCallback((className) => {
     setFilter((pre) => {
       if (pre.classes.includes(className)) {
         let position = pre.classes.indexOf(className);
@@ -154,9 +155,9 @@ function TeamComps() {
       }
       return { ...pre };
     });
-  }
+  }, []);
 
-  function addAndRemoveStyle(type) {
+  const addAndRemoveStyle = useCallback((type) => {
     setFilter((pre) => {
       if (pre.styles.includes(type)) {
         let position = pre.styles.indexOf(type);
@@ -166,16 +167,17 @@ function TeamComps() {
       }
       return { ...pre };
     });
-  }
+  }, []);
 
-  function resetFilter() {
+  const resetFilter = useCallback(() => {
     setFilter({
       search_text: "",
       styles: [],
       classes: [],
       origins: [],
     });
-  }
+  }, []);
+
   return (
     <TeamCompsWrapper id="item-builder">
       <MainLayout
