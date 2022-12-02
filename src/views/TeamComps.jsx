@@ -355,6 +355,27 @@ const TeamCompsMainContent = styled.div`
       align-items: center;
     }
   }
+  @media (max-width: 1024px) {
+    padding-top: 20px;
+    .teamcomps-title {
+      flex-wrap: wrap;
+      .teamcomps-title-patch {
+        width: 100%;
+        margin-bottom: 10px;
+        #defaul-button {
+          width: 100%;
+          justify-content: center;
+        }
+      }
+      .teamcomps-title-tier {
+        width: 100%;
+        .teamcomps-title-patch-btn {
+          width: 100%;
+          justify-content: center;
+        }
+      }
+    }
+  }
 `;
 
 const TeamCompsWrapper = styled.div`
@@ -383,6 +404,23 @@ const Title = styled.div`
     .search {
       border-radius: 0%;
       width: 300px;
+    }
+  }
+  @media (max-width: 1024px) {
+    flex-wrap: wrap;
+    .title-1 {
+      width: 100%;
+      justify-content: space-between;
+      .name {
+        margin-right: 0;
+      }
+    }
+    .title-2 {
+      width: 100%;
+      margin-top: 10px;
+      .search {
+        width: 100%;
+      }
     }
   }
 `;

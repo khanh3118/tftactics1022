@@ -223,4 +223,21 @@ const Title = styled.div`
       border-radius: 0%;
     }
   }
+  @media (max-width: 1024px) {
+    flex-wrap: wrap;
+    .title-1 {
+      width: 100%;
+      justify-content: space-between;
+      margin-bottom: 10px;
+      .name {
+        margin-right: 0;
+      }
+    }
+    .title-2 {
+      width: 100%;
+      .search {
+        border-radius: 0%;
+      }
+    }
+  }
 `;

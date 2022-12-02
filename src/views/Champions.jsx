@@ -352,6 +352,49 @@ const ChampionsMainContent = styled.div`
       }
     }
   }
+  @media (max-width: 1024px) {
+    padding-top: 20px;
+    .champions-filter {
+      display: grid;
+      grid-template-columns: repeat(4, 25%);
+      .champions-filter-item {
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        background-color: #d47559;
+        padding: 6px 13px;
+        border-radius: 4px;
+        margin: 0 5px 10px;
+        &:hover {
+          background-color: #de9782;
+        }
+        span {
+        }
+        svg {
+        }
+      }
+    }
+    .champions-wrapper {
+      display: grid;
+      grid-template-columns: repeat(6, 16.6666666667%);
+      .champions-item {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: flex-start;
+        padding: 8px 15px;
+        .champions-item-img {
+          margin-bottom: 3px;
+        }
+        span {
+          color: #88a0a7;
+          font-size: 14px;
+          text-align: center;
+        }
+      }
+    }
+  }
 `;
 
 const Title = styled.div`
@@ -373,6 +416,23 @@ const Title = styled.div`
   .title-2 {
     .search {
       border-radius: 0%;
+    }
+  }
+  @media (max-width: 1024px) {
+    flex-wrap: wrap;
+    .title-1 {
+      width: 100%;
+      justify-content: space-between;
+      margin-bottom: 10px;
+      .name {
+        margin-right: 0;
+      }
+    }
+    .title-2 {
+      width: 100%;
+      .search {
+        border-radius: 0%;
+      }
     }
   }
 `;

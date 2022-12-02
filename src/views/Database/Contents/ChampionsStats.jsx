@@ -95,7 +95,7 @@ function ChampionsStats() {
       ...filterOptions,
       searchText,
     });
-  }, [filterOptions, searchText]);
+  }, [searchText]);
 
   const hanleClick = useCallback(
     (e) => {

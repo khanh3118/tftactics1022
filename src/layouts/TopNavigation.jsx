@@ -1,42 +1,41 @@
 import { NavLink, Link } from "react-router-dom";
 import styled from "styled-components";
 
-function TopNavigation() {
+function TopNavigation(props) {
   return (
-    <TopNavigationDefault id="header-navigation">
+    <TopNavigationDefault
+      id="header-navigation"
+      isOpenNaviagtion={props.isOpenNaviagtion}
+    >
       <div className="wrapper">
         <ul>
           <li>
-            <NavLink to="teamcomps" className="header-item">
+            <NavLink onClick={() => props.hanleClickLink()} to="teamcomps" className="header-item">
               Team Comps
             </NavLink>
           </li>
           <li>
-            <NavLink to="teambuilder" className="header-item">
+            <NavLink onClick={() => props.hanleClickLink()} to="teambuilder" className="header-item">
               Team Builder
             </NavLink>
           </li>
           <li>
-            <NavLink to="/champions" className="header-item">
+            <NavLink onClick={() => props.hanleClickLink()} to="/champions" className="header-item">
               Champions
             </NavLink>
           </li>
           <li>
-            <NavLink to="database" className="header-item">
+            <NavLink onClick={() => props.hanleClickLink()} to="database" className="header-item">
               Database
             </NavLink>
           </li>
           <li>
-            <NavLink to="/metareport" className="header-item">
+            <NavLink onClick={() => props.hanleClickLink()} to="/metareport" className="header-item">
               Meta Report
             </NavLink>
           </li>
           <li>
-            <NavLink
-              to="itembuilder"
-              className="header-item"
-              activeclassname="active"
-            >
+            <NavLink onClick={() => props.hanleClickLink()} to="itembuilder" className="header-item">
               Item Builder
             </NavLink>
           </li>
@@ -108,6 +107,41 @@ const TopNavigationDefault = styled.div`
       color: white;
       &::after {
         width: 100%;
+      }
+    }
+  }
+  @media (max-width: 1024px) {
+    padding-left: 45px;
+    padding-right: 45px;
+    position: absolute;
+    width: 100%;
+    height: unset;
+    z-index: 99999999;
+    background-color: #0d202b;
+    padding-top: 40px;
+    transition: all 0.3s;
+    opacity: ${({ isOpenNaviagtion }) => (isOpenNaviagtion ? 1 : 0)};
+    visibility: ${({ isOpenNaviagtion }) =>
+      isOpenNaviagtion ? "visible" : "hidden"};
+    .wrapper {
+      min-height: 100vh;
+      ul {
+        flex-direction: column;
+        li {
+          height: unset;
+          flex-grow: unset;
+          padding: 20px;
+          .header-item {
+            height: unset;
+            font-size: 16px;
+            &::after {
+              display: none;
+            }
+          }
+          .header-item:hover {
+            color: white;
+          }
+        }
       }
     }
   }

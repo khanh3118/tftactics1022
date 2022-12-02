@@ -3,29 +3,32 @@ import TopNavigation from "layouts/TopNavigation";
 import Content from "layouts/Content";
 import { Outlet } from "react-router-dom";
 import styled from "styled-components";
-import { useContext, useEffect } from "react";
+import { useContext, useEffect, useState } from "react";
 import { DataContext } from "contexts/DataContext";
 import Footer from "layouts/Footer";
 import { useNavigate } from "react-router-dom";
 
 function RootLayout() {
+  const [isOpenNaviagtion, setIsOpenNaviagtion] = useState(false);
   const { isLoading } = useContext(DataContext);
   const navigate = useNavigate();
   useEffect(() => {
-    if (window.location.pathname === "/")
-      navigate("/teamcomps");
+    if (window.location.pathname === "/") navigate("/teamcomps");
   }, []);
   return (
     <RootLayoutDefault id="root-layout">
       <div className="my-content">
-        A simple version clone of Tftactics site use ReactJs :)) ---
-        Origin site here:{" "}
+        A simple version clone of Tftactics site use ReactJs :)) --- Origin site
+        here:{" "}
         <a href="https://tftactics.gg/" target="_blank" rel="noreferrer">
           https://tftactics.gg
         </a>
       </div>
-      <Header />
-      <TopNavigation />
+      <Header hanleClickNavigationBtn={() => setIsOpenNaviagtion((pre) => !pre)} />
+      <TopNavigation
+        isOpenNaviagtion={isOpenNaviagtion}
+        hanleClickLink={() => setIsOpenNaviagtion(false)}
+      />
       <Content>{isLoading || <Outlet />}</Content>
       <Footer />
     </RootLayoutDefault>

@@ -36,4 +36,8 @@ const FooterWrapper = styled.div`
       max-width: none;
     }
   }
+  @media (max-width: 1024px) {
+    padding-left: 45px;
+    padding-right: 45px;
+  }
 `;

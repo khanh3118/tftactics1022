@@ -2,8 +2,10 @@ import SelectDropdown from "components/common/SelectDropdown";
 import SearchOrigin from "components/common/SearchOrigin";
 import Button from "components/common/Button";
 import styled from "styled-components";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { solid } from "@fortawesome/fontawesome-svg-core/import.macro";
 
-function Header() {
+function Header(props) {
   return (
     <RootHeaderDefault id="root-header">
       <div className="wrapper">
@@ -29,6 +31,12 @@ function Header() {
         <div className="download">
           <Button className="download-btn" btnText="download app" />
         </div>
+        <FontAwesomeIcon
+          onClick={() => props.hanleClickNavigationBtn()}
+          className="navigation-btn"
+          icon={solid("bars")}
+          size="xl"
+        />
       </div>
     </RootHeaderDefault>
   );
@@ -71,6 +79,34 @@ const RootHeaderDefault = styled.div`
         span {
           text-transform: uppercase;
         }
+      }
+    }
+    .navigation-btn {
+      display: none;
+    }
+  }
+  @media (max-width: 1024px) {
+    padding-left: 45px;
+    padding-right: 45px;
+    .wrapper {
+      .icon-version {
+        .icon {
+          img {
+          }
+        }
+      }
+      .search-bar {
+        margin: 0 30px 0 15px;
+      }
+      .download {
+        display: none;
+        .download-btn {
+          span {
+          }
+        }
+      }
+      .navigation-btn {
+        display: block;
       }
     }
   }

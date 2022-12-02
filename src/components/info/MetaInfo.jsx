@@ -246,4 +246,9 @@ const MetaInfoWrapper = styled.div`
       }
     }
   }
+  @media (max-width: 1024px) {
+    .item-line-1-member {
+      flex-wrap: wrap;
+    }
+  }
 `;

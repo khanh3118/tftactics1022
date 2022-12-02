@@ -22,6 +22,10 @@ const ContentDefault = styled.div`
   min-height: 100vh;
   padding-top: 45px;
   background-color: #0d202b;
+  @media (max-width: 1024px) {
+    padding-left: 45px;
+    padding-right: 45px;
+  }
 `;
 
 const Wrapper = styled.div`
